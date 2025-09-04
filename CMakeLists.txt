@@ -9,6 +9,8 @@ add_executable(GhostGame src/main.c
 		src/game/game.h
 		src/core/logging.h
 		src/core/logging.c
+		src/game/sdl_interface.c
+		src/game/sdl_interface.h
 )
 
 include_directories(src)

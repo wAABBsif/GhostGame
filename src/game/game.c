@@ -1,19 +1,17 @@
 ﻿#include <stdbool.h>
 #include "game.h"
+
+#include "sdl_interface.h"
 #include "core/logging.h"
 
-static bool _is_ready_to_quit = false;
-
-static bool _game_init(void);
+static void _game_init(void);
 static void _game_update(void);
 static void _game_terminate(void);
 static bool _is_game_running(void);
 
 void game_run(void)
 {
-	if (!_game_init())
-		return;
-
+	_game_init();
 	log_message("Completed initialization");
 
 	while (_is_game_running())
@@ -25,22 +23,22 @@ void game_run(void)
 	log_message("Completed termination");
 }
 
-static bool _game_init(void)
+static void _game_init(void)
 {
-	return true;
+	sdl_interface_init();
 }
 
 static void _game_update(void)
 {
-
+	sdl_interface_update();
 }
 
 static void _game_terminate(void)
 {
-
+	sdl_interface_terminate();
 }
 
 static bool _is_game_running(void)
 {
-	return !_is_ready_to_quit;
+	return !sdl_interface_ready_to_quit();
 }
