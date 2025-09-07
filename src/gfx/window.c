@@ -3,12 +3,14 @@
 #include <stddef.h>
 
 #include "core/logging.h"
+#include "glad/glad.h"
+#include "SDL3/SDL_events.h"
 
 static SDL_Window *s_window = NULL;
 
 const char *WINDOW_TITLE = "Ghost Game";
-const int WINDOW_WIDTH = 320;
-const int WINDOW_HEIGHT = 240;
+static int s_window_width = 320;
+static int s_window_height = 240;
 const SDL_WindowFlags WINDOW_FLAGS =
 {
 	SDL_WINDOW_OPENGL
@@ -18,11 +20,17 @@ const SDL_WindowFlags WINDOW_FLAGS =
 SDL_Window *window_create(void)
 {
 	log_message("Creating window...");
-	s_window = SDL_CreateWindow(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_FLAGS);
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+	s_window = SDL_CreateWindow(WINDOW_TITLE, s_window_width, s_window_height, WINDOW_FLAGS);
 	if (s_window == NULL)
 	{
 		log_error("Failed to create window (SDL Error: %s)\n", SDL_GetError());
 	}
+
 	return s_window;
 }
 
@@ -34,4 +42,22 @@ void window_destroy(void)
 SDL_Window *window_get_handle(void)
 {
 	return s_window;
+}
+
+void window_handle_event(const SDL_Event *event)
+{
+	if (event->type != SDL_EVENT_WINDOW_RESIZED)
+		return;
+
+	s_window_width = event->window.data1;
+	s_window_height = event->window.data2;
+
+	glViewport(0, 0, s_window_width, s_window_height);
+	log_message("Resizing window (%i, %i)", s_window_width, s_window_height);
+}
+
+void window_get_size(int *width, int *height)
+{
+	*width = s_window_width;
+	*height = s_window_height;
 }

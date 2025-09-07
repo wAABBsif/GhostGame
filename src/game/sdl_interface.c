@@ -1,5 +1,6 @@
 ﻿#include "sdl_interface.h"
 #include "core/logging.h"
+#include "gfx/window.h"
 #include "SDL3/SDL.h"
 
 const SDL_InitFlags INIT_FLAGS =
@@ -52,5 +53,6 @@ void _sdl_interface_handle_events(void)
 	{
 		if (event.type == SDL_EVENT_QUIT)
 			_is_ready_to_quit = true;
+		window_handle_event(&event);
 	}
 }

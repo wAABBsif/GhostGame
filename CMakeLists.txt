@@ -15,6 +15,7 @@ add_executable(GhostGame src/main.c
 		src/gfx/gfx.h
 		src/gfx/window.c
 		src/gfx/window.h
+		lib/GLAD/src/glad.c
 )
 
 include_directories(src)
@@ -34,6 +35,11 @@ target_link_libraries(${PROJECT_NAME} SDL3_mixer::SDL3_mixer)
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} OpenGL::GL)
 
+include_directories(lib/GLAD/include)
+
 if (WIN32)
 	set(CMAKE_EXE_LINKER_FLAGS "-static")
 endif()
+
+execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/res
+		${CMAKE_BINARY_DIR}/res)
