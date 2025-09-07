@@ -3,6 +3,7 @@
 
 #include "sdl_interface.h"
 #include "core/logging.h"
+#include "gfx/gfx.h"
 
 static void _game_init(void);
 static void _game_update(void);
@@ -14,7 +15,7 @@ void game_run(void)
 	_game_init();
 	log_message("Completed initialization");
 
-	while (_is_game_running())
+	while ((_is_game_running()))
 	{
 		_game_update();
 	}
@@ -26,15 +27,18 @@ void game_run(void)
 static void _game_init(void)
 {
 	sdl_interface_init();
+	gfx_init();
 }
 
 static void _game_update(void)
 {
 	sdl_interface_update();
+	gfx_draw();
 }
 
 static void _game_terminate(void)
 {
+	gfx_terminate();
 	sdl_interface_terminate();
 }
 
