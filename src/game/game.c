@@ -2,6 +2,7 @@
 #include "game.h"
 
 #include "sdl_interface.h"
+#include "core/game_time.h"
 #include "core/logging.h"
 #include "gfx/gfx.h"
 
@@ -27,11 +28,13 @@ void game_run(void)
 static void _game_init(void)
 {
 	sdl_interface_init();
+	game_time_init();
 	gfx_init();
 }
 
 static void _game_update(void)
 {
+	game_time_update();
 	sdl_interface_update();
 	gfx_draw();
 }
