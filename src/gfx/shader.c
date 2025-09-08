@@ -40,7 +40,7 @@ static char *s_open_shader_file(const char* name, const char *extension)
 	strcpy(filename, name);
 	strcat(filename, extension);
 
-	FILE* file = fopen(filename, "r");
+	FILE* file = fopen(filename, "rb");
 	if (file == NULL)
 		return NULL;
 
@@ -49,11 +49,9 @@ static char *s_open_shader_file(const char* name, const char *extension)
 	fseek(file, 0, SEEK_SET);
 
 	char *buffer = malloc(size + 1);
-	fread(buffer, size, 1, file);
+	fread(buffer, 1, size, file);
+	buffer[size] = 0;
 
-	buffer[size - 7] = 0;
-
-	fclose(file);
 	return buffer;
 }
 
@@ -95,7 +93,7 @@ shader* shader_load(const char* name)
 	}
 
 	const shader_program vert_shader = s_compile_shader(vert_glsl, GL_VERTEX_SHADER);
-	const shader_program frag_shader = s_compile_shader(vert_glsl, GL_FRAGMENT_SHADER);
+	const shader_program frag_shader = s_compile_shader(frag_glsl, GL_FRAGMENT_SHADER);
 
 	free(vert_glsl);
 	free(frag_glsl);
