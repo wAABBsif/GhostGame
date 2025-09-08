@@ -18,6 +18,10 @@ add_executable(GhostGame src/main.c
 		lib/GLAD/src/glad.c
 		src/core/game_time.h
 		src/core/game_time.c
+		src/gfx/shader.c
+		src/gfx/shader.h
+		src/core/hashmap.c
+		src/core/hashmap.h
 )
 
 include_directories(src)

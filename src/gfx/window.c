@@ -36,12 +36,18 @@ SDL_Window *window_create(void)
 
 void window_destroy(void)
 {
-
+	SDL_DestroyWindow(s_window);
 }
 
 SDL_Window *window_get_handle(void)
 {
 	return s_window;
+}
+
+void window_get_size(int *width, int *height)
+{
+	*width = s_window_width;
+	*height = s_window_height;
 }
 
 void window_handle_event(const SDL_Event *event)
@@ -54,10 +60,4 @@ void window_handle_event(const SDL_Event *event)
 
 	glViewport(0, 0, s_window_width, s_window_height);
 	log_message("Resizing window (%i, %i)", s_window_width, s_window_height);
-}
-
-void window_get_size(int *width, int *height)
-{
-	*width = s_window_width;
-	*height = s_window_height;
 }
