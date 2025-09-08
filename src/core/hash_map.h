@@ -3,7 +3,13 @@
 
 typedef size_t hash;
 
-typedef struct hash_map hash_map;
+typedef struct hash_map
+{
+	size_t entry_size;
+	size_t size;
+	size_t capacity;
+	void *entries;
+} hash_map;
 
 /**
  * Turns a string key into a hash
@@ -36,7 +42,7 @@ void hash_map_destroy(hash_map *map);
  * \param data a pointer to the element that should be added
  * \returns a pointer to the element stored in the hashmap
  */
-hash *hash_map_add(hash_map *map, const hash *data);
+void *hash_map_add(hash_map *map, const void *data);
 
 /**
  * Removes an element from a hash map
@@ -53,7 +59,7 @@ void hash_map_remove(hash_map *map, size_t index);
  * \param index the index of the element
  * \returns a pointer to the element
  */
-hash *hash_map_index(const hash_map *map, size_t index);
+void *hash_map_index(const hash_map *map, size_t index);
 
 /**
  * Binary searches for the index of a hash map element between two indices

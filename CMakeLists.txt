@@ -20,8 +20,8 @@ add_executable(GhostGame src/main.c
 		src/core/game_time.c
 		src/gfx/shader.c
 		src/gfx/shader.h
-		src/core/hashmap.c
-		src/core/hashmap.h
+		src/core/hash_map.c
+		src/core/hash_map.h
 )
 
 include_directories(src)

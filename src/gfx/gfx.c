@@ -6,69 +6,11 @@
 #include "glad/glad.h"
 #include <SDL3/SDL_opengl.h>
 
+#include "shader.h"
 #include "window.h"
 #include "SDL3/SDL_video.h"
 
-static const char* vertex =
-	"#version 330 core\n"
-	"\n"
-	"layout(location = 0) in vec4 position;\n"
-	"\n"
-	"void main()\n"
-	"{\n"
-	"	gl_Position = position;\n"
-	"}\n";
-
-static const char* fragment =
-	"#version 330 core\n"
-	"\n"
-	"layout(location = 0) out vec4 color;\n"
-	"\n"
-	"void main()\n"
-	"{\n"
-	"	color = vec4(1, 0, 0, 1);\n"
-	"}\n";
-
 static SDL_GLContext s_context = NULL;
-
-static uint32_t s_compile_shader(const char *source, uint32_t shader_type)
-{
-	uint32_t id = glCreateShader(shader_type);
-	glShaderSource(id, 1, &source, NULL);
-	glCompileShader(id);
-
-	int32_t result;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-	if (result == GL_FALSE)
-	{
-		int length;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char *message = malloc(length);
-		glGetShaderInfoLog(id, length, &length, message);
-		log_message("Shader error: %s", message);
-		glDeleteShader(id);
-		return 0;
-	}
-
-	return id;
-}
-
-static int s_create_shader(const char *vertex, const char *fragment)
-{
-	const uint32_t program = glCreateProgram();
-	const uint32_t vs = s_compile_shader(vertex, GL_VERTEX_SHADER);
-	const uint32_t fs = s_compile_shader(fragment, GL_FRAGMENT_SHADER);
-
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-	glLinkProgram(program);
-	glValidateProgram(program);
-
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-
-	return program;
-}
 
 void gfx_init(void)
 {
@@ -86,6 +28,8 @@ void gfx_init(void)
 		log_message("Failed to initialize GLAD");
 		return;
 	}
+
+	shader_init();
 
 	int width, height;
 	window_get_size(&width, &height);
@@ -131,8 +75,7 @@ void gfx_init(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	uint32_t shader = s_create_shader(vertex, fragment);
-	glUseProgram(shader);
+	shader_set(*shader_get("res/test"));
 }
 
 void gfx_draw(void)
@@ -148,5 +91,6 @@ void gfx_terminate(void)
 {
 	log_message("Terminating graphics...");
 
+	shader_clear();
 	window_destroy();
 }

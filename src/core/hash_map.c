@@ -1,17 +1,9 @@
-﻿#include "hashmap.h"
+﻿#include "hash_map.h"
 
 #include <stdlib.h>
 #include <string.h>
 
 #include "logging.h"
-
-typedef struct hash_map
-{
-	size_t entry_size;
-	size_t size;
-	size_t capacity;
-	void *entries;
-} hash_map;
 
 hash hash_string(const char *key)
 {
@@ -40,7 +32,7 @@ void hash_map_destroy(hash_map *map)
 	free(map->entries);
 }
 
-hash *hash_map_add(hash_map *map, const hash *data)
+void *hash_map_add(hash_map *map, const void *data)
 {
 	if (map->size >= map->capacity)
 	{
@@ -53,8 +45,8 @@ hash *hash_map_add(hash_map *map, const hash *data)
 
 	if (map->size >= 1)
 	{
-		new_index = hash_map_get_range(map, *data, 0, map->size - 1);
-		if (*hash_map_index(map, new_index) == *data)
+		new_index = hash_map_get_range(map, *(hash*)data, 0, map->size - 1);
+		if (*(hash*)hash_map_index(map, new_index) == *(hash*)data)
 		{
 			log_error("Key already exists.");
 			return NULL;
@@ -77,7 +69,7 @@ void hash_map_remove(hash_map *map, const size_t index)
 	memmove(loc, hash_map_index(map, index + 1), sizeof(map->entry_size) * (map->size - index));
 }
 
-hash *hash_map_index(const hash_map *map, size_t index)
+void *hash_map_index(const hash_map *map, size_t index)
 {
 	index *= map->entry_size;
 	return (hash*)((char*)map->entries + index);
@@ -89,7 +81,7 @@ size_t hash_map_get_range(const hash_map *map, const hash h, const size_t start_
 		return start_index;
 
 	const size_t mid = (start_index + end_index) / 2;
-	const hash mid_hash = *hash_map_index(map, mid);
+	const hash mid_hash = *(hash*)hash_map_index(map, mid);
 
 	if (mid_hash < h)
 		return hash_map_get_range(map, h, mid + 1, end_index);
@@ -104,7 +96,7 @@ size_t hash_map_get(const hash_map *map, const hash h)
 		return -1;
 
 	const size_t index = hash_map_get_range(map, h, 0, map->size - 1);
-	if (*hash_map_index(map, index) != h)
+	if (*(hash*)hash_map_index(map, index) != h)
 		return -1;
 
 	return index;
