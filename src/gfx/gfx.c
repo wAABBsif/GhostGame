@@ -1,5 +1,6 @@
 ﻿#include "gfx.h"
 
+#include <math.h>
 #include <stdlib.h>
 
 #include "core/logging.h"
@@ -8,6 +9,7 @@
 
 #include "shader.h"
 #include "window.h"
+#include "core/game_time.h"
 #include "SDL3/SDL_video.h"
 
 static SDL_GLContext s_context = NULL;
@@ -75,7 +77,9 @@ void gfx_init(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	shader_set(*shader_get("res/test"));
+	const shader_t s = shader_get("res/test");
+	shader_set(s);
+	shader_set_float("test", 0.5f);
 }
 
 void gfx_draw(void)

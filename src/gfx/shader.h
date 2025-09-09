@@ -1,23 +1,21 @@
 ﻿#pragma once
+#include <stdbool.h>
 #include <stdint.h>
 #include "core/hash_map.h"
 
 typedef uint32_t shader_program;
 
-typedef struct shader
+struct shader
 {
 	hash key;
 	shader_program program;
-} shader;
+};
+typedef struct shader *shader_t;
 
-/**
- * Initializes shader system for use
- */
+// Initializes shader system for use
 void shader_init(void);
 
-/**
- * Unloads and destroys all used shaders
- */
+// Unloads and destroys all used shaders
 void shader_clear(void);
 
 /**
@@ -26,7 +24,7 @@ void shader_clear(void);
  * \param name the name of the file without a file extension
  * \returns the loaded shader
  */
-shader* shader_load(const char* name);
+shader_t shader_load(const char* name);
 
 /**
  * Unloads a shader
@@ -41,17 +39,14 @@ void shader_unload(const char* name);
  * \param name the name of the file without a file extension
  * \returns the requested shader
  */
-shader* shader_get(const char* name);
+shader_t shader_get(const char* name);
 
-/**
- * Loads a shader for use in rendering operations
- *
- * \param s the shader to be used
- */
-void shader_set(shader s);
+// Loads a shader for use in rendering operations
+void shader_set(const shader_t s);
 
-
-/**
- * Unloads shader from being used in rendering operations
- */
+// Unloads shader from being used in rendering operations
 void shader_reset(void);
+
+void shader_set_int32_t(const char *name, int32_t value);
+void shader_set_uint32_t(const char *name, uint32_t value);
+void shader_set_float(const char *name, float value);
