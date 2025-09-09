@@ -77,7 +77,7 @@ void gfx_init(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	const shader_t s = shader_get("res/test");
+	const shader_h s = shader_get("res/test");
 	shader_set(s);
 	shader_set_float("test", 0.5f);
 }

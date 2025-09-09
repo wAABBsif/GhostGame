@@ -10,7 +10,7 @@ struct shader
 	hash key;
 	shader_program program;
 };
-typedef struct shader *shader_t;
+typedef struct shader *shader_h;
 
 // Initializes shader system for use
 void shader_init(void);
@@ -24,7 +24,7 @@ void shader_clear(void);
  * \param name the name of the file without a file extension
  * \returns the loaded shader
  */
-shader_t shader_load(const char* name);
+shader_h shader_load(const char* name);
 
 /**
  * Unloads a shader
@@ -39,10 +39,10 @@ void shader_unload(const char* name);
  * \param name the name of the file without a file extension
  * \returns the requested shader
  */
-shader_t shader_get(const char* name);
+shader_h shader_get(const char* name);
 
 // Loads a shader for use in rendering operations
-void shader_set(const shader_t s);
+void shader_set(const shader_h s);
 
 // Unloads shader from being used in rendering operations
 void shader_reset(void);

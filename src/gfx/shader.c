@@ -15,7 +15,7 @@ const char* FRAG_EXTENSION = ".frag.glsl";
 
 const int MAX_SHADERS = 64;
 
-static shader_t s_active_shader;
+static shader_h s_active_shader;
 static hash_map s_shaders;
 
 void shader_init(void)
@@ -80,7 +80,7 @@ static shader_program s_compile_shader(const char *source, uint32_t shader_type)
 	return id;
 }
 
-shader_t shader_load(const char* name)
+shader_h shader_load(const char* name)
 {
 	char *vert_glsl = s_open_shader_file(name, VERT_EXTENSION);
 	char *frag_glsl = s_open_shader_file(name, FRAG_EXTENSION);
@@ -133,12 +133,12 @@ void shader_unload(const char* name)
 		return;
 	}
 
-	const shader_t s = hash_map_index(&s_shaders, index);
+	const shader_h s = hash_map_index(&s_shaders, index);
 	glDeleteProgram(s->program);
 	hash_map_remove(&s_shaders, index);
 }
 
-shader_t shader_get(const char* name)
+shader_h shader_get(const char* name)
 {
 	const size_t index = hash_map_get(&s_shaders, hash_string(name));
 	if (index == -1)
@@ -150,7 +150,7 @@ shader_t shader_get(const char* name)
 	return hash_map_index(&s_shaders, index);
 }
 
-void shader_set(const shader_t s)
+void shader_set(const shader_h s)
 {
 	s_active_shader = s;
 	glUseProgram(s->program);
