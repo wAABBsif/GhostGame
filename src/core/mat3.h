@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-/* This is technically a 3x2 matrix which we'll treat as a 3x3 matrix.
- * 3x2 matrices can individually account for translation, rotation, and scaling
+/* This is technically a 2x3 matrix which we'll treat as a 3x3 matrix.
+ * 2x3 matrices can individually account for translation, rotation, and scaling
  * However, in order to do multiple transformations, we must multiply matrices.
  * To multiply matrices, the amount of rows in the first must equal the amount of columns in the second.
  * So, if all of our matrices represent the same amount of transformations, we'd need 3x3 matrices.

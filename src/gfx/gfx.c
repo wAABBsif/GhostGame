@@ -10,6 +10,8 @@
 #include "shader.h"
 #include "window.h"
 #include "core/game_time.h"
+#include "core/mat3.h"
+#include "game/camera.h"
 #include "SDL3/SDL_video.h"
 
 static SDL_GLContext s_context = NULL;
@@ -48,10 +50,10 @@ void gfx_init(void)
 
 	const float vertices[] =
 	{
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.5f,  0.5f, 0.0f,
-		 -0.5f,  0.5f, 0.0f
+		-160,  -120,  0.0f,
+		 160,  -120,  0.0f,
+		 160,   120,  0.0f,
+		 -160,  120,  0.0f
 	};
 
 	const unsigned int indices[] =
@@ -79,11 +81,32 @@ void gfx_init(void)
 
 	const shader_h s = shader_get("res/test");
 	shader_set(s);
-	shader_set_float("test", 0.5f);
 }
+
+vec2 position = VEC2_ZERO;
+float rotation = 0.0;
+float scale = 160;
 
 void gfx_draw(void)
 {
+	int height;
+	window_get_size(NULL, &height);
+
+	bool *keys = SDL_GetKeyboardState(NULL);
+	position.x += keys[SDL_SCANCODE_D] * game_time_get_delta() * 400;
+	position.x -= keys[SDL_SCANCODE_A] * game_time_get_delta() * 400;
+	position.y += keys[SDL_SCANCODE_W] * game_time_get_delta() * 400;
+	position.y -= keys[SDL_SCANCODE_S] * game_time_get_delta() * 400;
+
+	rotation -= keys[SDL_SCANCODE_Q] * game_time_get_delta() * 4;
+	rotation += keys[SDL_SCANCODE_E] * game_time_get_delta() * 4;
+
+	scale -= keys[SDL_SCANCODE_Z] * game_time_get_delta() * 400;
+	scale += keys[SDL_SCANCODE_X] * game_time_get_delta() * 400;
+
+	const camera c = {position, rotation, scale};
+	const mat3 m = world_to_screen_matrix(&c);
+	shader_set_mat3("test", m);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);

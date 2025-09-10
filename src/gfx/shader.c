@@ -7,6 +7,8 @@
 
 #include "core/hash_map.h"
 #include "core/logging.h"
+#include "core/mat3.h"
+#include "core/vec2.h"
 #include "glad/glad.h"
 #include "SDL3/SDL_opengl.h"
 
@@ -175,4 +177,14 @@ void shader_set_uint32_t(const char *name, const uint32_t value)
 void shader_set_float(const char *name, const float value)
 {
 	glUniform1f(glGetUniformLocation(s_active_shader->program, name), value);
+}
+
+void shader_set_vec2(const char* name, const vec2 value)
+{
+	glUniform2f(glGetUniformLocation(s_active_shader->program, name), value.x, value.y);
+}
+
+void shader_set_mat3(const char *name, const mat3 value)
+{
+ 	glUniformMatrix3fv(glGetUniformLocation(s_active_shader->program, name), 1, true, &value.m);
 }
