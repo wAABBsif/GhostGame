@@ -11,11 +11,11 @@
 
 typedef struct mat3
 {
-	float m[3][2];
+	float m[2][3];
 } mat3;
 
-#define M_02 0
-#define M_12 0
+#define M_20 0
+#define M_21 0
 #define M_22 1
 
 #define MAT3_IDENTITY (mat3){\
@@ -35,10 +35,6 @@ mat3 mat3_from_translation(vec2 translation);
 mat3 mat3_from_rotation(float angle);
 mat3 mat3_from_scale(vec2 scale);
 mat3 mat3_from_trs(vec2 translation, float rotation, vec2 scale);
-
-vec2 mat3_to_translation(mat3 m);
-float mat3_to_rotation(mat3 m);
-vec2 mat3_to_scale(mat3 m);
 
 mat3 mat3_translate(mat3 m, vec2 translation);
 mat3 mat3_rotate(mat3 m, float angle);
