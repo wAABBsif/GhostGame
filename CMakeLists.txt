@@ -24,6 +24,8 @@ add_executable(GhostGame src/main.c
 		src/core/hash_map.h
 		src/core/vec2.c
 		src/core/vec2.h
+		src/core/mat3.c
+		src/core/mat3.h
 )
 
 include_directories(src)

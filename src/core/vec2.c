@@ -1,10 +1,7 @@
 ﻿#include "vec2.h"
 #include <math.h>
 
-const vec2 VEC2_ZERO = {0.0f, 0.0f};
-const vec2 VEC2_ONE = {1.0f, 1.0f};
-const vec2 VEC2_UNIT_X = {1.0f, 0.0f};
-const vec2 VEC2_UNIT_Y = {0.0f, 1.0f};
+#include "mat3.h"
 
 vec2 vec2_from_angle(const float angle)
 {
@@ -39,6 +36,15 @@ vec2 vec2_div(const vec2 v, const float scalar)
 vec2 vec2_scale(const vec2 a, const vec2 b)
 {
 	return (vec2){a.x * b.x, a.y * b.y};
+}
+
+vec2 vec2_transform(const vec2 v, const mat3 m)
+{
+	const vec2 v1 = vec2_mul((vec2){m.m[0][0], m.m[0][1]}, v.x);
+	const vec2 v2 = vec2_mul((vec2){m.m[1][0], m.m[1][1]}, v.y);
+	const vec2 v3 = (vec2){m.m[2][0], m.m[2][1]};
+
+	return vec2_add(vec2_add(v1, v2), v3);
 }
 
 float vec2_sqr_mag(const vec2 v)
