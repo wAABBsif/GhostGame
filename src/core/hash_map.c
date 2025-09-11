@@ -54,7 +54,7 @@ void *hash_map_add(hash_map *map, const void *data)
 
 		loc = hash_map_index(map, new_index);
 		new_index++;
-		memmove(hash_map_index(map, new_index + 1), loc, map->entry_size * (map->size - new_index));
+		memmove(hash_map_index(map, new_index), loc, map->entry_size * (map->size - new_index + 1));
 	}
 
 	memcpy(loc, data, map->entry_size);

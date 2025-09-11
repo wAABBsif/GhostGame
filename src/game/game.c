@@ -16,7 +16,7 @@ void game_run(void)
 	_game_init();
 	log_message("Completed initialization");
 
-	while ((_is_game_running()))
+	while (_is_game_running())
 	{
 		_game_update();
 	}

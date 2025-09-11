@@ -3,6 +3,7 @@
 #include <stddef.h>
 
 #include "core/logging.h"
+#include "game/camera.h"
 #include "glad/glad.h"
 #include "SDL3/SDL_events.h"
 
@@ -52,7 +53,9 @@ void window_handle_event(const SDL_Event *event)
 	s_window_width = event->window.data1;
 	s_window_height = event->window.data2;
 
-	glViewport(0, 0, s_window_width, s_window_height);
+	camera_create_texture(get_main_camera());
+	camera_create_renderbuffer(get_main_camera());
+
 	log_message("Resizing window (%i, %i)", s_window_width, s_window_height);
 }
 
