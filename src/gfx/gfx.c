@@ -85,7 +85,7 @@ void gfx_init(void)
 
 vec2 position = VEC2_ZERO;
 float rotation = 0.0;
-float scale = 160;
+float size = 240;
 
 void gfx_draw(void)
 {
@@ -101,10 +101,10 @@ void gfx_draw(void)
 	rotation -= keys[SDL_SCANCODE_Q] * game_time_get_delta() * 4;
 	rotation += keys[SDL_SCANCODE_E] * game_time_get_delta() * 4;
 
-	scale -= keys[SDL_SCANCODE_Z] * game_time_get_delta() * 400;
-	scale += keys[SDL_SCANCODE_X] * game_time_get_delta() * 400;
+	size -= keys[SDL_SCANCODE_Z] * game_time_get_delta() * 400;
+	size += keys[SDL_SCANCODE_X] * game_time_get_delta() * 400;
 
-	const camera c = {position, rotation, scale};
+	const camera c = {position, rotation, size};
 	const mat3 m = world_to_screen_matrix(&c);
 	shader_set_mat3("test", m);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
