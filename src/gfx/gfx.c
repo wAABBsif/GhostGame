@@ -24,7 +24,7 @@ uint32_t ibo;
 
 void test_init(void)
 {
-	cam = (camera){0, 0, 0, 240, 240};
+	cam = (camera){0, 0, 0, 320, 320};
 	camera_create(&cam);
 	set_main_camera(&cam);
 

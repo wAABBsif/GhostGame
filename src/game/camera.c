@@ -62,7 +62,7 @@ void camera_terminate()
 static vec2 get_matrix_scale(const float scale)
 {
 	const float aspect = window_get_aspect_ratio();
-	return (vec2){2 / scale / aspect, 2 / scale};
+	return (vec2){2 / scale, 2 / scale * aspect};
 }
 
 void set_main_camera(camera *cam)
@@ -171,7 +171,7 @@ void camera_free_texture(const camera *cam)
 vec2 camera_get_render_size(const camera *cam)
 {
 	const float aspect = window_get_aspect_ratio();
-	return (vec2){aspect * cam->render_size, cam->render_size};
+	return (vec2){cam->render_size, cam->render_size / aspect};
 }
 
 mat3 world_to_camera_matrix(const camera *cam)
