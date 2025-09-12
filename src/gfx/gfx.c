@@ -57,7 +57,7 @@ void test_init(void)
 
 void test_update(void)
 {
-	bool *keys = SDL_GetKeyboardState(NULL);
+	const bool *keys = SDL_GetKeyboardState(NULL);
 	cam.position.x += keys[SDL_SCANCODE_D] * game_time_get_delta() * 400;
 	cam.position.x -= keys[SDL_SCANCODE_A] * game_time_get_delta() * 400;
 	cam.position.y += keys[SDL_SCANCODE_W] * game_time_get_delta() * 400;
