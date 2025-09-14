@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 #include "core/logging.h"
-#include "game/camera.h"
+#include "camera.h"
 #include "glad/glad.h"
 #include "SDL3/SDL_events.h"
 

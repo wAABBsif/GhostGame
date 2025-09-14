@@ -26,8 +26,12 @@ add_executable(GhostGame src/main.c
 		src/core/vec2.h
 		src/core/mat3.c
 		src/core/mat3.h
-		src/game/camera.c
-		src/game/camera.h
+		src/gfx/camera.c
+		src/gfx/camera.h
+		src/gfx/tile_render.c
+		src/gfx/tile_render.h
+		src/gfx/texture.c
+		src/gfx/texture.h
 )
 
 include_directories(src)

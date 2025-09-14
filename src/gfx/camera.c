@@ -10,7 +10,7 @@
 static uint32_t s_vertex_array;
 static uint32_t s_vertex_buffer;
 static uint32_t s_index_buffer;
-static shader_h s_shader;
+static shader s_shader;
 static camera *s_main_camera;
 
 typedef struct camera_quad_vertex

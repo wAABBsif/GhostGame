@@ -11,48 +11,19 @@
 #include "window.h"
 #include "core/game_time.h"
 #include "core/mat3.h"
-#include "game/camera.h"
+#include "camera.h"
+#include "tile_render.h"
 #include "SDL3/SDL_video.h"
 
 static SDL_GLContext s_context = NULL;
 
 camera cam;
 
-uint32_t vao;
-uint32_t vbo;
-uint32_t ibo;
-
 void test_init(void)
 {
 	cam = (camera){0, 0, 0, 320, 320};
 	camera_create(&cam);
 	set_main_camera(&cam);
-
-	const float vertices[] =
-	{
-		-160,  -120,  0.0f,
-		 160,  -120,  0.0f,
-		 160,   120,  0.0f,
-		 -160,  120,  0.0f
-	};
-
-	const unsigned int indices[] = QUAD_INDICES;
-
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-	glEnableVertexAttribArray(0);
-
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
 }
 
 void test_update(void)
@@ -88,7 +59,9 @@ void gfx_init(void)
 	}
 
 	shader_init();
+	texture_init();
 	camera_init();
+	tile_rendering_init();
 
 	int width, height;
 	window_get_size(&width, &height);
@@ -111,15 +84,8 @@ void gfx_draw(void)
 
 	camera_bind_framebuffer(&cam);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glBindVertexArray(vao);
 
-	const shader_h s = shader_get("res/test");
-	shader_set(s);
-
-	const mat3 m = world_to_screen_matrix(&cam);
-	shader_set_mat3(s, "test", m);
-
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+	tile_rendering_draw();
 
 	camera_unbind_framebuffer();
 	camera_render_to_screen(&cam);
@@ -132,6 +98,8 @@ void gfx_terminate(void)
 	log_message("Terminating graphics...");
 
 	shader_clear();
+	texture_clear();
 	camera_terminate();
 	window_destroy();
+	tile_rendering_terminate();
 }

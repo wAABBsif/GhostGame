@@ -15,21 +15,15 @@
 const char* VERT_EXTENSION = ".vert.glsl";
 const char* FRAG_EXTENSION = ".frag.glsl";
 
-const int MAX_SHADERS = 64;
+const int MAX_SHADERS = 16;
 
-static shader_h s_active_shader;
+static hash s_active_shader;
 static hash_map s_shaders;
-
-static struct shader s_shader_get_raw(const shader_h handle)
-{
-	const size_t index = hash_map_get(&s_shaders, handle);
-	return *(struct shader*)hash_map_index(&s_shaders, index);
-}
 
 void shader_init(void)
 {
 	log_message("Initializing shaders...");
-	hash_map_create(&s_shaders, sizeof(struct shader), MAX_SHADERS);
+	hash_map_create(&s_shaders, sizeof(shader), MAX_SHADERS);
 	s_active_shader = 0;
 }
 
@@ -38,7 +32,7 @@ void shader_clear(void)
 	log_message("Clearing shaders...");
 	for (int i = 0; i < s_shaders.size; i++)
 	{
-		const struct shader *s = (struct shader *)hash_map_index(&s_shaders, i);
+		const shader *s = (shader *)hash_map_index(&s_shaders, i);
 		glDeleteProgram(s->program);
 	}
 
@@ -88,7 +82,7 @@ static shader_program s_compile_shader(const char *source, const uint32_t shader
 	return id;
 }
 
-shader_h shader_load(const char* name)
+shader shader_load(const char* name)
 {
 	char *vert_glsl = s_open_shader_file(name, VERT_EXTENSION);
 	char *frag_glsl = s_open_shader_file(name, FRAG_EXTENSION);
@@ -100,7 +94,7 @@ shader_h shader_load(const char* name)
 			free(frag_glsl);
 		if (vert_glsl)
 			free(vert_glsl);
-		return 0;
+		return (shader){};
 	}
 
 	const shader_program vert_shader = s_compile_shader(vert_glsl, GL_VERTEX_SHADER);
@@ -116,10 +110,10 @@ shader_h shader_load(const char* name)
 			glDeleteShader(vert_shader);
 		if (frag_shader)
 			glDeleteShader(frag_shader);
-		return 0;
+		return (shader){};
 	}
 
-	const struct shader result = (struct shader){hash_string(name), glCreateProgram()};
+	const shader result = (shader){hash_string(name), glCreateProgram()};
 
 	glAttachShader(result.program, vert_shader);
 	glAttachShader(result.program, frag_shader);
@@ -129,39 +123,41 @@ shader_h shader_load(const char* name)
 	glDeleteShader(vert_shader);
 	glDeleteShader(frag_shader);
 
+	log_message("Loaded shader %s", name);
+
 	hash_map_add(&s_shaders, &result);
-	return result.key;
+	return result;
 }
 
-void shader_unload(const shader_h shader)
+void shader_unload(const hash h)
 {
-	const size_t index = hash_map_get(&s_shaders, shader);
+	const size_t index = hash_map_get(&s_shaders, h);
 	if (index == -1)
 	{
 		log_warning("Shader not found, so can't unload!");
 		return;
 	}
 
-	const struct shader raw_shader = s_shader_get_raw(shader);;
-	glDeleteProgram(raw_shader.program);
+	const shader s = *(shader*)hash_map_index(&s_shaders, index);
+	glDeleteProgram(s.program);
 	hash_map_remove(&s_shaders, index);
 }
 
-shader_h shader_get(const char* name)
+shader shader_get(const char* name)
 {
-	if (hash_map_get(&s_shaders, hash_string(name)) == -1)
+	const hash h = hash_string(name);
+	if (hash_map_get(&s_shaders, h) == -1)
 	{
 		log_warning("Shader %s not found, so loading instead!", name);
 		return shader_load(name);
 	}
-	return hash_string(name);
+	return *(shader*)hash_map_index(&s_shaders, hash_map_get(&s_shaders, h));
 }
 
-void shader_set(const shader_h s)
+void shader_set(const shader s)
 {
-	s_active_shader = s;
-	const struct shader raw_shader = s_shader_get_raw(s);
-	glUseProgram(raw_shader.program);
+	s_active_shader = s.key;
+	glUseProgram(s.program);
 }
 
 void shader_reset(void)
@@ -170,32 +166,27 @@ void shader_reset(void)
 	glUseProgram(0);
 }
 
-void shader_set_int32_t(const shader_h shader, const char *name, const int32_t value)
+void shader_set_int32_t(const shader shader, const char *name, const int32_t value)
 {
-	const struct shader raw_shader = s_shader_get_raw(shader);
-	glUniform1i(glGetUniformLocation(raw_shader.program, name), value);
+	glUniform1i(glGetUniformLocation(shader.program, name), value);
 }
 
-void shader_set_uint32_t(const shader_h shader, const char *name, const uint32_t value)
+void shader_set_uint32_t(const shader shader, const char *name, const uint32_t value)
 {
-	const struct shader raw_shader = s_shader_get_raw(shader);
-	glUniform1ui(glGetUniformLocation(raw_shader.program, name), value);
+	glUniform1ui(glGetUniformLocation(shader.program, name), value);
 }
 
-void shader_set_float(const shader_h shader, const char *name, const float value)
+void shader_set_float(const shader shader, const char *name, const float value)
 {
-	const struct shader raw_shader = s_shader_get_raw(shader);
-	glUniform1f(glGetUniformLocation(raw_shader.program, name), value);
+	glUniform1f(glGetUniformLocation(shader.program, name), value);
 }
 
-void shader_set_vec2(const shader_h shader, const char *name, const vec2 value)
+void shader_set_vec2(const shader shader, const char *name, const vec2 value)
 {
-	const struct shader raw_shader = s_shader_get_raw(shader);
-	glUniform2f(glGetUniformLocation(raw_shader.program, name), value.x, value.y);
+	glUniform2f(glGetUniformLocation(shader.program, name), value.x, value.y);
 }
 
-void shader_set_mat3(const shader_h shader, const char *name, const mat3 value)
+void shader_set_mat3(const shader shader, const char *name, const mat3 value)
 {
-	const struct shader raw_shader = s_shader_get_raw(shader);
- 	glUniformMatrix3fv(glGetUniformLocation(raw_shader.program, name), 1, true, &value.m);
+ 	glUniformMatrix3fv(glGetUniformLocation(shader.program, name), 1, true, (float *)&value.m);
 }

@@ -1,0 +1,90 @@
+﻿#include "texture.h"
+
+#include "core/logging.h"
+#include "glad/glad.h"
+#include "SDL3_image/SDL_image.h"
+
+const int MAX_TEXTURES = 256;
+
+static hash s_active_texture;
+static hash_map s_textures;
+
+void texture_init(void)
+{
+	log_message("Initializing textures...");
+	hash_map_create(&s_textures, sizeof(texture), MAX_TEXTURES);
+	s_active_texture = 0;
+}
+
+void texture_clear(void)
+{
+	log_message("Clearing textures...");
+	for (int i = 0; i < s_textures.size; i++)
+	{
+		const texture *s = (texture *)hash_map_index(&s_textures, i);
+		glDeleteTextures(1, &s->id);
+	}
+
+	hash_map_destroy(&s_textures);
+}
+
+texture texture_load(const char* name)
+{
+	SDL_Surface *raw_img = IMG_Load(name);
+	if (raw_img == NULL)
+	{
+		log_error("Failed to load texture from file \"%s\"", name);
+		return (texture){};
+	}
+
+	const SDL_Surface *img = SDL_ConvertSurface(raw_img, SDL_PIXELFORMAT_RGBA32);
+	SDL_DestroySurface(raw_img);
+
+	texture t;
+	t.key = hash_string(name);
+	t.width = img->w;
+	t.height = img->h;
+
+	glGenTextures(1, &t.id);
+	glBindTexture(GL_TEXTURE_2D, t.id);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, t.width, t.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->pixels);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	log_message("Loaded texture %s", name);
+
+	hash_map_add(&s_textures, &t);
+	return t;
+}
+
+void texture_unload(const hash h)
+{
+	const size_t index = hash_map_get(&s_textures, h);
+	if (index == -1)
+	{
+		log_warning("Texture not found, so can't unload!");
+		return;
+	}
+
+	const texture t = *(texture*)hash_map_index(&s_textures, h);
+	glDeleteProgram(t.id);
+	hash_map_remove(&s_textures, index);
+}
+
+texture texture_get(const char* name)
+{
+	const hash h = hash_string(name);
+	if (hash_map_get(&s_textures, h) == -1)
+	{
+		log_warning("Texture %s not found, so loading instead!", name);
+		return texture_load(name);
+	}
+	return *(texture *)hash_map_index(&s_textures, hash_map_get(&s_textures, h));
+}
+
+void texture_set(const texture s, const int slot)
+{
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, s.id);
+}
