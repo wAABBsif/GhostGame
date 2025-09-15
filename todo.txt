@@ -1,3 +1,8 @@
+implement sound
+implement music
+
+implement tile object (FFRRZZZZ IIIIIIII)
+
 create file format
 load file format
 level editor
