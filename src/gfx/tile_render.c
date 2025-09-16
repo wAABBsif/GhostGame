@@ -4,22 +4,27 @@
 #include "gfx.h"
 #include "shader.h"
 #include "texture.h"
+#include "core/game_time.h"
+#include "core/logging.h"
 #include "core/mat3.h"
+#include "game/tile.h"
 #include "glad/glad.h"
 
 #define MAX_TILES 512
 
-#define TILE_VERTEX_X_OFFSET 22
-#define TILE_VERTEX_Y_OFFSET 12
-#define TILE_VERTEX_Z_OFFSET 8
-#define TILE_VERTEX_U_OFFSET 4
-#define TILE_VERTEX_V_OFFSET 0
+#define TILE_VERTEX_X_OFFSET  22
+#define TILE_VERTEX_Y_OFFSET  12
+#define TILE_VERTEX_Z_OFFSET  8
+#define TILE_VERTEX_U_OFFSET  4
+#define TILE_VERTEX_V_OFFSET  0
+#define TILE_VERTEX_UV_OFFSET 0
 
-#define TILE_VERTEX_X_MASK 0b1111111111
-#define TILE_VERTEX_Y_MASK 0b1111111111
-#define TILE_VERTEX_Z_MASK 0b1111
-#define TILE_VERTEX_U_MASK 0b1111
-#define TILE_VERTEX_V_MASK 0b1111
+#define TILE_VERTEX_X_MASK  0b1111111111
+#define TILE_VERTEX_Y_MASK  0b1111111111
+#define TILE_VERTEX_Z_MASK  0b1111
+#define TILE_VERTEX_U_MASK  0b1111
+#define TILE_VERTEX_V_MASK  0b1111
+#define TILE_VERTEX_UV_MASK 0b11111111
 
 static uint32_t s_vertex_array;
 static uint32_t s_vertex_buffer;
@@ -68,6 +73,12 @@ void tile_rendering_terminate()
 
 void tile_rendering_add_tile(const tile_quad tile)
 {
+	if (s_tile_count >= MAX_TILES)
+	{
+		log_error("Max tile count reached!");
+		return;
+	}
+
 	s_tile_quads[s_tile_count] = tile;
 	s_tile_count++;
 }
@@ -79,27 +90,42 @@ void tile_rendering_set_texture(const texture texture)
 
 tile_vertex tile_vertex_set_x(const tile_vertex vertex, const uint32_t x)
 {
-	return vertex | (x << TILE_VERTEX_X_OFFSET);
+	return (vertex & ~(TILE_VERTEX_X_MASK << TILE_VERTEX_X_OFFSET)) | (x << TILE_VERTEX_X_OFFSET);
 }
 
 tile_vertex tile_vertex_set_y(const tile_vertex vertex, const uint32_t y)
 {
-	return vertex | (y << TILE_VERTEX_Y_OFFSET);
+	return (vertex & ~(TILE_VERTEX_Y_MASK << TILE_VERTEX_Y_OFFSET)) | (y << TILE_VERTEX_Y_OFFSET);
 }
 
-tile_vertex tile_vertex_set_z(const tile_vertex vertex, const uint32_t index)
+tile_vertex tile_vertex_set_z(const tile_vertex vertex, const uint32_t z)
 {
-	return vertex | (index << TILE_VERTEX_Z_OFFSET);
+	return (vertex & ~(TILE_VERTEX_Z_MASK << TILE_VERTEX_Z_OFFSET)) | (z << TILE_VERTEX_Y_OFFSET);
 }
 
 tile_vertex tile_vertex_set_u(const tile_vertex vertex, const uint32_t u)
 {
-	return vertex | (u << TILE_VERTEX_U_OFFSET);
+	return (vertex & ~(TILE_VERTEX_U_MASK << TILE_VERTEX_U_OFFSET)) | (u << TILE_VERTEX_U_OFFSET);
 }
 
 tile_vertex tile_vertex_set_v(const tile_vertex vertex, const uint32_t v)
 {
-	return vertex | (v << TILE_VERTEX_V_OFFSET);
+	return (vertex & ~(TILE_VERTEX_V_MASK << TILE_VERTEX_V_OFFSET)) | (v << TILE_VERTEX_V_OFFSET);
+}
+
+tile_vertex tile_vertex_set_xy(const tile_vertex vertex, const uint32_t x, const uint32_t y)
+{
+	return tile_vertex_set_y(tile_vertex_set_x(vertex, x), y);
+}
+
+tile_vertex tile_vertex_set_uv(const tile_vertex vertex, const uint32_t uv)
+{
+	return vertex | (uv << TILE_VERTEX_UV_OFFSET);
+}
+
+tile_vertex tile_vertex_set_all(const tile_vertex vertex, const uint32_t x, const uint32_t y, const uint32_t z, const uint32_t uv)
+{
+	return tile_vertex_set_uv(tile_vertex_set_z(tile_vertex_set_xy(vertex, x, y), z), uv);
 }
 
 uint16_t tile_vertex_get_x(const tile_vertex vertex)
@@ -127,42 +153,26 @@ uint8_t tile_vertex_get_v(const tile_vertex vertex)
 	return (vertex >> TILE_VERTEX_V_OFFSET) & TILE_VERTEX_V_MASK;
 }
 
+uint8_t tile_vertex_get_uv(const tile_vertex vertex)
+{
+	return (vertex >> TILE_VERTEX_UV_OFFSET) & TILE_VERTEX_UV_MASK;
+}
+
 mat3 m;
 
 void tile_rendering_draw(void)
 {
-	tile_rendering_set_texture(texture_get("res/tiles/test_tile.png"));
+	set_tilemap_atlas(texture_get("res/tiles/test_tile.png"));
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 32; i++)
 	{
-		tile_quad quad = {};
-
-		quad.vertices[0] = tile_vertex_set_x(quad.vertices[0], i);
-		quad.vertices[0] = tile_vertex_set_y(quad.vertices[0], 1);
-		quad.vertices[0] = tile_vertex_set_z(quad.vertices[0], 0);
-		quad.vertices[0] = tile_vertex_set_u(quad.vertices[0], i % 2 + 0);
-		quad.vertices[0] = tile_vertex_set_v(quad.vertices[0], i / 2 + 1);
-
-		quad.vertices[1] = tile_vertex_set_x(quad.vertices[1], i);
-		quad.vertices[1] = tile_vertex_set_y(quad.vertices[1], 0);
-		quad.vertices[1] = tile_vertex_set_z(quad.vertices[1], 0);
-		quad.vertices[1] = tile_vertex_set_u(quad.vertices[1], i % 2 + 0);
-		quad.vertices[1] = tile_vertex_set_v(quad.vertices[1], i / 2 + 0);
-
-		quad.vertices[2] = tile_vertex_set_x(quad.vertices[2], i + 1);
-		quad.vertices[2] = tile_vertex_set_y(quad.vertices[2], 0);
-		quad.vertices[2] = tile_vertex_set_z(quad.vertices[2], 0);
-		quad.vertices[2] = tile_vertex_set_u(quad.vertices[2], i % 2 + 1);
-		quad.vertices[2] = tile_vertex_set_v(quad.vertices[2], i / 2 + 0);
-
-		quad.vertices[3] = tile_vertex_set_x(quad.vertices[3], i + 1);
-		quad.vertices[3] = tile_vertex_set_y(quad.vertices[3], 1);
-		quad.vertices[3] = tile_vertex_set_z(quad.vertices[3], 0);
-		quad.vertices[3] = tile_vertex_set_u(quad.vertices[3], i % 2 + 1);
-		quad.vertices[3] = tile_vertex_set_v(quad.vertices[3], i / 2 + 1);
-
-		tile_rendering_add_tile(quad);
+		for (int j = 0; j < 16; j++)
+		{
+			tile_draw(i, j, (tile){TILE_FLIP_X_MASK, 1});
+		}
 	}
+
+	log_message("%f", game_time_get_fps());
 
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(tile_quad) * s_tile_count, s_tile_quads);
