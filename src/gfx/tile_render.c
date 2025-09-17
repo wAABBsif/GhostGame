@@ -14,7 +14,7 @@
 #include "glad/glad.h"
 #include "SDL3/SDL_keyboard.h"
 
-#define MAX_TILES 960
+#define MAX_TILES 1024
 
 #define TILE_VERTEX_X_OFFSET  22
 #define TILE_VERTEX_Y_OFFSET  12

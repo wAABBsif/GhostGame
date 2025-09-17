@@ -4,7 +4,7 @@
 #include "glad/glad.h"
 #include "SDL3_image/SDL_image.h"
 
-const int MAX_TEXTURES = 50;
+const int MAX_TEXTURES = 64;
 
 static hash s_active_texture;
 static hash_map s_textures;

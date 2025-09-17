@@ -15,7 +15,7 @@
 const char* VERT_EXTENSION = ".vert.glsl";
 const char* FRAG_EXTENSION = ".frag.glsl";
 
-const int MAX_SHADERS = 24;
+const int MAX_SHADERS = 32;
 
 static hash s_active_shader;
 static hash_map s_shaders;
