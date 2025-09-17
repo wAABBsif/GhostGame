@@ -4,7 +4,7 @@
 #include "glad/glad.h"
 #include "SDL3_image/SDL_image.h"
 
-const int MAX_TEXTURES = 256;
+const int MAX_TEXTURES = 50;
 
 static hash s_active_texture;
 static hash_map s_textures;
@@ -30,6 +30,12 @@ void texture_clear(void)
 
 texture texture_load(const char* name)
 {
+	if (s_textures.size >= MAX_TEXTURES)
+	{
+		log_warning("Attempted to add texture when there are already too many textures!");
+		return (texture){};
+	}
+
 	SDL_Surface *raw_img = IMG_Load(name);
 	if (raw_img == NULL)
 	{

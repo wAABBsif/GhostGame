@@ -39,6 +39,9 @@ void test_update(void)
 
 	cam.size -= keys[SDL_SCANCODE_Z] * game_time_get_delta() * 400;
 	cam.size += keys[SDL_SCANCODE_X] * game_time_get_delta() * 400;
+
+	vec2 min, max;
+	camera_get_bounds(&cam, &min, &max);
 }
 
 void gfx_init(void)

@@ -1,5 +1,8 @@
 ﻿#include "tile_render.h"
 
+#include <stdlib.h>
+#include <time.h>
+
 #include "camera.h"
 #include "gfx.h"
 #include "shader.h"
@@ -9,14 +12,15 @@
 #include "core/mat3.h"
 #include "game/tile.h"
 #include "glad/glad.h"
+#include "SDL3/SDL_keyboard.h"
 
-#define MAX_TILES 512
+#define MAX_TILES 960
 
 #define TILE_VERTEX_X_OFFSET  22
 #define TILE_VERTEX_Y_OFFSET  12
 #define TILE_VERTEX_Z_OFFSET  8
-#define TILE_VERTEX_U_OFFSET  4
-#define TILE_VERTEX_V_OFFSET  0
+#define TILE_VERTEX_U_OFFSET  0
+#define TILE_VERTEX_V_OFFSET  4
 #define TILE_VERTEX_UV_OFFSET 0
 
 #define TILE_VERTEX_X_MASK  0b1111111111
@@ -69,18 +73,6 @@ void tile_rendering_terminate()
 	glDeleteVertexArrays(1, &s_vertex_array);
 	glDeleteBuffers(1, &s_vertex_buffer);
 	glDeleteBuffers(1, &s_index_buffer);
-}
-
-void tile_rendering_add_tile(const tile_quad tile)
-{
-	if (s_tile_count >= MAX_TILES)
-	{
-		log_error("Max tile count reached!");
-		return;
-	}
-
-	s_tile_quads[s_tile_count] = tile;
-	s_tile_count++;
 }
 
 void tile_rendering_set_texture(const texture texture)
@@ -158,21 +150,100 @@ uint8_t tile_vertex_get_uv(const tile_vertex vertex)
 	return (vertex >> TILE_VERTEX_UV_OFFSET) & TILE_VERTEX_UV_MASK;
 }
 
-mat3 m;
+void tile_rendering_add_tile(uint16_t x, uint16_t y, const tile t)
+{
+	if (s_tile_count >= MAX_TILES)
+	{
+		log_warning("Attempting to render too many tiles!");
+		return;
+	}
+
+	//culling
+	vec2 min, max;
+	camera_get_bounds(get_main_camera(), &min, &max);
+
+	x *= 16;
+	y *= 16;
+
+	if (x < min.x - 16 || x > max.x || y < min.y - 16 || y > max.y)
+		return;
+
+	x /= 16;
+	y /= 16;
+
+
+	//textureIndex 0 is reserved for "empty" tiles
+	if (t.textureIndex == 0)
+		return;
+
+	//rendering
+	const uint8_t z = tile_get_z(t);
+
+	tile_quad quad = {};
+	quad.vertices[0] = tile_vertex_set_all(0, x + 0, y + 1, z, t.textureIndex + 0);
+	quad.vertices[1] = tile_vertex_set_all(0, x + 0, y + 0, z, t.textureIndex + 16);
+	quad.vertices[2] = tile_vertex_set_all(0, x + 1, y + 0, z, t.textureIndex + 17);
+	quad.vertices[3] = tile_vertex_set_all(0, x + 1, y + 1, z, t.textureIndex + 1);
+
+	if (tile_is_flip_x(t))
+	{
+		tile_quad nquad;
+		nquad.vertices[0] = tile_vertex_set_x(quad.vertices[0], tile_vertex_get_x(quad.vertices[3]));
+		nquad.vertices[1] = tile_vertex_set_x(quad.vertices[1], tile_vertex_get_x(quad.vertices[2]));
+		nquad.vertices[2] = tile_vertex_set_x(quad.vertices[2], tile_vertex_get_x(quad.vertices[1]));
+		nquad.vertices[3] = tile_vertex_set_x(quad.vertices[3], tile_vertex_get_x(quad.vertices[0]));
+
+		quad = nquad;
+	}
+
+	if (tile_is_flip_y(t))
+	{
+		tile_quad nquad;
+		nquad.vertices[0] = tile_vertex_set_y(quad.vertices[0], tile_vertex_get_y(quad.vertices[1]));
+		nquad.vertices[1] = tile_vertex_set_y(quad.vertices[1], tile_vertex_get_y(quad.vertices[0]));
+		nquad.vertices[2] = tile_vertex_set_y(quad.vertices[2], tile_vertex_get_y(quad.vertices[3]));
+		nquad.vertices[3] = tile_vertex_set_y(quad.vertices[3], tile_vertex_get_y(quad.vertices[2]));
+
+		quad = nquad;
+	}
+
+	if (tile_is_rotate_ccw(t))
+	{
+		tile_quad nquad;
+		nquad.vertices[0] = tile_vertex_set_xy(quad.vertices[0], tile_vertex_get_x(quad.vertices[3]), tile_vertex_get_y(quad.vertices[3]));
+		nquad.vertices[1] = tile_vertex_set_xy(quad.vertices[1], tile_vertex_get_x(quad.vertices[0]), tile_vertex_get_y(quad.vertices[0]));
+		nquad.vertices[2] = tile_vertex_set_xy(quad.vertices[2], tile_vertex_get_x(quad.vertices[1]), tile_vertex_get_y(quad.vertices[1]));
+		nquad.vertices[3] = tile_vertex_set_xy(quad.vertices[3], tile_vertex_get_x(quad.vertices[2]), tile_vertex_get_y(quad.vertices[2]));
+
+		quad = nquad;
+	}
+
+	if (tile_is_rotate_cw(t))
+	{
+		tile_quad nquad;
+		nquad.vertices[0] = tile_vertex_set_xy(quad.vertices[0], tile_vertex_get_x(quad.vertices[1]), tile_vertex_get_y(quad.vertices[1]));
+		nquad.vertices[1] = tile_vertex_set_xy(quad.vertices[1], tile_vertex_get_x(quad.vertices[2]), tile_vertex_get_y(quad.vertices[2]));
+		nquad.vertices[2] = tile_vertex_set_xy(quad.vertices[2], tile_vertex_get_x(quad.vertices[3]), tile_vertex_get_y(quad.vertices[3]));
+		nquad.vertices[3] = tile_vertex_set_xy(quad.vertices[3], tile_vertex_get_x(quad.vertices[0]), tile_vertex_get_y(quad.vertices[0]));
+
+		quad = nquad;
+	}
+
+	s_tile_quads[s_tile_count] = quad;
+	s_tile_count++;
+}
 
 void tile_rendering_draw(void)
 {
 	set_tilemap_atlas(texture_get("res/tiles/test_tile.png"));
 
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < 30; i++)
 	{
-		for (int j = 0; j < 16; j++)
+		for (int j = 0; j < 30; j++)
 		{
-			tile_draw(i, j, (tile){TILE_FLIP_X_MASK, 1});
+			tile_rendering_add_tile(i, j, (tile){0, (j * i) % 4 + 1});
 		}
 	}
-
-	log_message("%f", game_time_get_fps());
 
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(tile_quad) * s_tile_count, s_tile_quads);
@@ -184,5 +255,6 @@ void tile_rendering_draw(void)
 
 	glBindVertexArray(s_vertex_array);
 	glDrawElements(GL_TRIANGLES, 6 * s_tile_count, GL_UNSIGNED_INT, 0);
+	log_message("%i", s_tile_count);
 	s_tile_count = 0;
 }

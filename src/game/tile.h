@@ -24,4 +24,3 @@ bool tile_is_rotate_cw(tile t);
 uint8_t tile_get_z(tile t);
 
 void set_tilemap_atlas(texture t);
-void tile_draw(uint16_t x, uint16_t y, tile t);

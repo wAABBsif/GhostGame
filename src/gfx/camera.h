@@ -32,10 +32,16 @@ void camera_free_renderbuffer(const camera *cam);
 void camera_free_texture(const camera *cam);
 
 vec2 camera_get_render_size(const camera *cam);
+
 mat3 world_to_camera_matrix(const camera *cam);
+mat3 camera_to_world_matrix(const camera *cam);
 mat3 camera_to_screen_matrix(const camera *cam);
+mat3 screen_to_camera_matrix(const camera *cam);
 mat3 world_to_screen_matrix(const camera *cam);
+mat3 screen_to_world_matrix(const camera *cam);
 
 void camera_bind_framebuffer(const camera* cam);
 void camera_unbind_framebuffer(void);
 void camera_render_to_screen(const camera *cam);
+
+void camera_get_bounds(const camera *cam, vec2 *bounds_min, vec2 *bounds_max);

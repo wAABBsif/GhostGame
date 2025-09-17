@@ -57,7 +57,7 @@ mat3 mat3_from_translation(const vec2 translation)
 {
 	return (mat3)
 	{
-		1, 0, -translation.x,
+		1, 0, translation.x,
 		0, 1, translation.y
 	};
 }
@@ -69,8 +69,8 @@ mat3 mat3_from_rotation(const float angle)
 
 	return (mat3)
 	{
-		c, s, 0,
-		-s, c, 0,
+		c, -s, 0,
+		s, c, 0,
 	};
 }
 

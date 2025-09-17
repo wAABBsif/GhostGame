@@ -15,7 +15,7 @@
 const char* VERT_EXTENSION = ".vert.glsl";
 const char* FRAG_EXTENSION = ".frag.glsl";
 
-const int MAX_SHADERS = 16;
+const int MAX_SHADERS = 24;
 
 static hash s_active_shader;
 static hash_map s_shaders;
@@ -84,6 +84,12 @@ static shader_program s_compile_shader(const char *source, const uint32_t shader
 
 shader shader_load(const char* name)
 {
+	if (s_shaders.size >= MAX_SHADERS)
+	{
+		log_warning("Attempted to add shader when there are already too many shaders!");
+		return (shader){};
+	}
+
 	char *vert_glsl = s_open_shader_file(name, VERT_EXTENSION);
 	char *frag_glsl = s_open_shader_file(name, FRAG_EXTENSION);
 

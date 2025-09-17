@@ -1,3 +1,4 @@
+#include <math.h>
 #include "camera.h"
 
 #include "gfx/window.h"
@@ -21,10 +22,10 @@ typedef struct camera_quad_vertex
 
 const camera_quad_vertex vertices[] =
 {
-	{-1, +1, +0, +0},
-	{-1, -1, +0, +1},
-	{+1, -1, +1, +1},
-	{+1, +1, +1, +0}
+	{-1, +1, +0, +1},
+	{-1, -1, +0, +0},
+	{+1, -1, +1, +0},
+	{+1, +1, +1, +1}
 };
 
 void camera_init()
@@ -63,6 +64,12 @@ static vec2 get_matrix_scale(const float scale)
 {
 	const float aspect = window_get_aspect_ratio();
 	return (vec2){2 / scale, 2 / scale * aspect};
+}
+
+static vec2 get_matrix_scale_inverted(const float scale)
+{
+	const float aspect = window_get_aspect_ratio();
+	return (vec2){scale / 2, scale / 2 / aspect};
 }
 
 void set_main_camera(camera *cam)
@@ -176,7 +183,12 @@ vec2 camera_get_render_size(const camera *cam)
 
 mat3 world_to_camera_matrix(const camera *cam)
 {
-	return mat3_translate(mat3_from_rotation(cam->rotation), cam->position);
+	return mat3_translate(mat3_from_rotation(cam->rotation), vec2_neg(cam->position));
+}
+
+mat3 camera_to_world_matrix(const camera *cam)
+{
+	return mat3_rotate(mat3_from_translation(cam->position), -cam->rotation);
 }
 
 mat3 camera_to_screen_matrix(const camera *cam)
@@ -184,9 +196,19 @@ mat3 camera_to_screen_matrix(const camera *cam)
 	return mat3_from_scale(get_matrix_scale(cam->size));
 }
 
+mat3 screen_to_camera_matrix(const camera *cam)
+{
+	return mat3_from_scale(get_matrix_scale_inverted(cam->size));
+}
+
 mat3 world_to_screen_matrix(const camera *cam)
 {
 	return mat3_multiply(camera_to_screen_matrix(cam), world_to_camera_matrix(cam));
+}
+
+mat3 screen_to_world_matrix(const camera *cam)
+{
+	return mat3_multiply(camera_to_world_matrix(cam), screen_to_camera_matrix(cam));
 }
 
 void camera_bind_framebuffer(const camera* cam)
@@ -221,4 +243,17 @@ void camera_render_to_screen(const camera *cam)
 	glBindVertexArray(s_vertex_array);
 	glBindTexture(GL_TEXTURE_2D, cam->texture);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+void camera_get_bounds(const camera *cam, vec2 *bounds_min, vec2 *bounds_max)
+{
+	const mat3 m = screen_to_world_matrix(cam);
+
+	const vec2 a = vec2_transform((vec2){-1, 1}, m);
+	const vec2 b = vec2_transform((vec2){-1, -1}, m);
+	const vec2 c = vec2_transform((vec2){1, -1}, m);
+	const vec2 d = vec2_transform((vec2){1, 1}, m);
+
+	*bounds_min = (vec2){fminf(fminf(a.x, b.x), fminf(c.x, d.x)), fminf(fminf(a.y, b.y), fminf(c.y, d.y))};
+	*bounds_max = (vec2){fmaxf(fmaxf(a.x, b.x), fmaxf(c.x, d.x)), fmaxf(fmaxf(a.y, b.y), fmaxf(c.y, d.y))};
 }
