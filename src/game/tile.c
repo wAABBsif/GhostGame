@@ -4,6 +4,10 @@
 
 #include "gfx/tile_render.h"
 
+static tile_chunk_ref s_chunk_refs[TILE_CHUNK_SIZE * TILE_CHUNK_SIZE];
+static tile_chunk* s_tile_chunks;
+static uint16_t s_tile_chunk_count;
+
 bool tile_is_flip_x(const tile t)
 {
 	return t.transform & TILE_FLIP_X_MASK;

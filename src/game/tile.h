@@ -4,12 +4,27 @@
 
 typedef struct texture texture;
 
+#define TILE_CHUNK_SIZE 32
+#define MAX_TILE_COUNT 1024
+#define MAX_CHUNK_COUNT MAX_TILE_COUNT / TILE_CHUNK_SIZE
+
 //LAYOUT: FFRRZZZZ IIIIIIII
 typedef struct tile
 {
 	char transform;
 	char textureIndex;
 } tile;
+
+typedef struct tile_chunk
+{
+	tile tiles[TILE_CHUNK_SIZE * TILE_CHUNK_SIZE];
+} tile_chunk;
+
+typedef struct tile_chunk_ref
+{
+	uint8_t x;
+	uint8_t y;
+} tile_chunk_ref;
 
 #define TILE_FLIP_X_MASK     0b10000000
 #define TILE_FLIP_Y_MASK     0b01000000
