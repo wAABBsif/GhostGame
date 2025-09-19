@@ -1,13 +1,9 @@
 ﻿#include <stdint.h>
 
 #include "game_time.h"
-#include "SDL3/SDL_timer.h"
 
-typedef struct game_timer
-{
-	float start;
-	float end;
-} game_timer;
+#include "logging.h"
+#include "SDL3/SDL_timer.h"
 
 static float s_nanoseconds_to_seconds(const uint64_t nanoseconds)
 {

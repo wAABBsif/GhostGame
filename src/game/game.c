@@ -2,6 +2,7 @@
 #include "game.h"
 
 #include "sdl_interface.h"
+#include "tile.h"
 #include "core/game_time.h"
 #include "core/logging.h"
 #include "gfx/gfx.h"
@@ -30,12 +31,14 @@ static void _game_init(void)
 	sdl_interface_init();
 	game_time_init();
 	gfx_init();
+	tile_map_init();
 }
 
 static void _game_update(void)
 {
 	game_time_update();
 	sdl_interface_update();
+	tile_map_update();
 	gfx_draw();
 }
 

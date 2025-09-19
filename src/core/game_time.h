@@ -1,5 +1,9 @@
 ﻿#pragma once
-typedef struct game_timer game_timer;
+typedef struct game_timer
+{
+	float start;
+	float end;
+} game_timer;
 
 void game_time_init(void);
 void game_time_update(void);

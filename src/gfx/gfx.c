@@ -13,6 +13,7 @@
 #include "core/mat3.h"
 #include "camera.h"
 #include "tile_render.h"
+#include "game/tile.h"
 #include "SDL3/SDL_video.h"
 
 static SDL_GLContext s_context = NULL;

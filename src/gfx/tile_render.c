@@ -237,14 +237,6 @@ void tile_rendering_draw(void)
 {
 	set_tilemap_atlas(texture_get("res/tiles/test_tile.png"));
 
-	for (int i = 0; i < 30; i++)
-	{
-		for (int j = 0; j < 30; j++)
-		{
-			tile_rendering_add_tile(i, j, (tile){0, (j * i) % 4 + 1});
-		}
-	}
-
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(tile_quad) * s_tile_count, s_tile_quads);
 
@@ -255,6 +247,6 @@ void tile_rendering_draw(void)
 
 	glBindVertexArray(s_vertex_array);
 	glDrawElements(GL_TRIANGLES, 6 * s_tile_count, GL_UNSIGNED_INT, 0);
-	log_message("%i", s_tile_count);
+
 	s_tile_count = 0;
 }

@@ -1,8 +1,2 @@
-implement sound
-implement music
-
-implement tile object (FFRRZZZZ IIIIIIII)
-
-create file format
-load file format
-level editor
+tile 0 - (512) 256 - 1280
+tile 1 - (1024) 768 - 1280
