@@ -10,9 +10,9 @@ static float s_nanoseconds_to_seconds(const uint64_t nanoseconds)
 	return nanoseconds / 1000000000.0f;
 }
 
-const float FPS_TIME_INTERVAL = 0.05f;
+const float FPS_TIME_INTERVAL = 0.0f;
 static float s_fps_timer;
-static float s_fps_points[10];
+static float s_fps_points[1024];
 
 float s_prev_elapsed_time;
 float s_elapsed_time;
