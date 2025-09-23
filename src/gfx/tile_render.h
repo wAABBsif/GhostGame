@@ -12,6 +12,8 @@ typedef struct tile_quad
 } tile_quad;
 
 typedef struct tile tile;
+typedef struct tile_chunk tile_chunk;
+typedef struct tile_chunk_pos tile_chunk_pos;
 
 void tile_rendering_init();
 void tile_rendering_terminate();
@@ -33,7 +35,7 @@ tile_vertex tile_vertex_set_v(tile_vertex vertex, uint32_t v);
 tile_vertex tile_vertex_set_xy(tile_vertex vertex, uint32_t x, uint32_t y);
 //uv < 256
 tile_vertex tile_vertex_set_uv(tile_vertex vertex, uint32_t uv);
-tile_vertex tile_vertex_set_all(tile_vertex vertex, uint32_t x, uint32_t y, uint32_t z, uint32_t uv);
+tile_vertex tile_vertex_set_all(uint32_t x, uint32_t y, uint32_t z, uint32_t uv);
 
 uint16_t tile_vertex_get_x(tile_vertex vertex);
 uint16_t tile_vertex_get_y(tile_vertex vertex);
@@ -42,6 +44,7 @@ uint8_t tile_vertex_get_u(tile_vertex vertex);
 uint8_t tile_vertex_get_v(tile_vertex vertex);
 uint8_t tile_vertex_get_uv(tile_vertex vertex);
 
-void tile_rendering_add_tile(const uint16_t x, const uint16_t y, const tile t);
+void tile_rendering_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chunk *chunk);
+void tile_rendering_clear_tiles();
 
 void tile_rendering_draw(void);

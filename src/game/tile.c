@@ -12,6 +12,7 @@
 static tile_chunk_pos s_chunk_pos[TILE_CHUNK_SIZE * TILE_CHUNK_SIZE];
 static tile_chunk* s_chunks;
 static int16_t s_chunk_count;
+static int16_t s_prev_active_chunks[4];
 static int16_t s_active_chunks[4];
 
 void tile_map_init()
@@ -42,11 +43,6 @@ void tile_map_update()
 {
 	const camera *cam = get_main_camera();
 
-	for (int i = 0; i < 4; i++)
-	{
-		s_active_chunks[i] = -1;
-	}
-
 	for (int i = 0; i < s_chunk_count; i++)
 	{
 		const vec2 chunk_pos = (vec2){s_chunk_pos[i].x * TILE_CHUNK_COMBINED_SIZE, s_chunk_pos[i].y * TILE_CHUNK_COMBINED_SIZE};
@@ -69,22 +65,23 @@ void tile_map_update()
 		}
 	}
 
-	for (int i = 0; i < 4; i++)
+	if (memcmp(s_active_chunks, s_prev_active_chunks, sizeof(s_prev_active_chunks)) != 0)
 	{
-		if (s_active_chunks[i] < 0)
-			continue;
+		tile_rendering_clear_tiles();
 
-		const tile_chunk *chunk = &s_chunks[s_active_chunks[i]];
-		const tile_chunk_pos pos = s_chunk_pos[s_active_chunks[i]];
-
-		for (int tile = 0; tile < TILE_CHUNK_SIZE * TILE_CHUNK_SIZE; tile++)
+		for (int i = 0; i < 4; i++)
 		{
-			const uint16_t x = tile % TILE_CHUNK_SIZE + pos.x * TILE_CHUNK_SIZE;
-			const uint16_t y = tile / TILE_CHUNK_SIZE + pos.y * TILE_CHUNK_SIZE;
+			if (s_active_chunks[i] < 0)
+				continue;
 
-			tile_rendering_add_tile(x, y, chunk->tiles[tile]);
+			const tile_chunk *chunk = &s_chunks[s_active_chunks[i]];
+			const tile_chunk_pos pos = s_chunk_pos[s_active_chunks[i]];
+
+			tile_rendering_add_tile_chunk(pos, chunk);
 		}
 	}
+
+	memcpy(s_prev_active_chunks, s_active_chunks, sizeof(s_active_chunks));
 }
 
 bool tile_is_flip_x(const tile t)
