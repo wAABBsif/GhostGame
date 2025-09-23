@@ -51,8 +51,8 @@ void tile_rendering_init()
 	glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(tile_vertex), 0);
 	glEnableVertexAttribArray(0);
 
-	const uint32_t quad_indices[6] = QUAD_INDICES;
-	uint32_t indices[6 * MAX_TILES];
+	const uint16_t quad_indices[6] = QUAD_INDICES;
+	uint16_t indices[6 * MAX_TILES];
 	for (int i = 0; i < 6 * MAX_TILES; i++)
 	{
 		const int index = i % 6;
@@ -243,5 +243,5 @@ void tile_rendering_draw(void)
 	shader_set_mat3(s_shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
 
 	glBindVertexArray(s_vertex_array);
-	glDrawElements(GL_TRIANGLES, 6 * s_tile_count, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6 * s_tile_count, GL_UNSIGNED_SHORT, 0);
 }
