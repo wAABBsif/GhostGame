@@ -36,7 +36,6 @@ static uint32_t s_index_buffer;
 static shader s_shader;
 static texture s_texture;
 
-static tile_quad s_tile_quads[MAX_TILES];
 static uint16_t s_tile_count;
 
 void tile_renderer_init()
@@ -46,7 +45,7 @@ void tile_renderer_init()
 
 	glGenBuffers(1, &s_vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(s_tile_quads), s_tile_quads, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(tile_quad) * MAX_TILES, NULL, GL_DYNAMIC_DRAW);
 
 	glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(tile_vertex), 0);
 	glEnableVertexAttribArray(0);
@@ -152,6 +151,8 @@ uint8_t tile_vertex_get_uv(const tile_vertex vertex)
 
 void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chunk *chunk)
 {
+	tile_quad quads[TILE_CHUNK_SIZE * TILE_CHUNK_SIZE];
+
 	for (uint16_t i = 0; i < TILE_CHUNK_SIZE * TILE_CHUNK_SIZE; i++)
 	{
 		if (s_tile_count >= MAX_TILES)
@@ -170,59 +171,59 @@ void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chu
 		//rendering
 		const uint8_t z = tile_get_z(chunk->tiles[i]);
 
-		tile_quad quad = {};
-		quad.vertices[0] = tile_vertex_set_all(x + 0, y + 1, z, chunk->tiles[i].textureIndex + 0);
-		quad.vertices[1] = tile_vertex_set_all(x + 0, y + 0, z, chunk->tiles[i].textureIndex + 16);
-		quad.vertices[2] = tile_vertex_set_all(x + 1, y + 0, z, chunk->tiles[i].textureIndex + 17);
-		quad.vertices[3] = tile_vertex_set_all(x + 1, y + 1, z, chunk->tiles[i].textureIndex + 1);
+		quads[i].vertices[0] = tile_vertex_set_all(x + 0, y + 1, z, chunk->tiles[i].textureIndex + 0);
+		quads[i].vertices[1] = tile_vertex_set_all(x + 0, y + 0, z, chunk->tiles[i].textureIndex + 16);
+		quads[i].vertices[2] = tile_vertex_set_all(x + 1, y + 0, z, chunk->tiles[i].textureIndex + 17);
+		quads[i].vertices[3] = tile_vertex_set_all(x + 1, y + 1, z, chunk->tiles[i].textureIndex + 1);
 
 		if (tile_is_flip_x(chunk->tiles[i]))
 		{
 			tile_quad nquad;
-			nquad.vertices[0] = tile_vertex_set_x(quad.vertices[0], tile_vertex_get_x(quad.vertices[3]));
-			nquad.vertices[1] = tile_vertex_set_x(quad.vertices[1], tile_vertex_get_x(quad.vertices[2]));
-			nquad.vertices[2] = tile_vertex_set_x(quad.vertices[2], tile_vertex_get_x(quad.vertices[1]));
-			nquad.vertices[3] = tile_vertex_set_x(quad.vertices[3], tile_vertex_get_x(quad.vertices[0]));
+			nquad.vertices[0] = tile_vertex_set_x(quads[i].vertices[0], tile_vertex_get_x(quads[i].vertices[3]));
+			nquad.vertices[1] = tile_vertex_set_x(quads[i].vertices[1], tile_vertex_get_x(quads[i].vertices[2]));
+			nquad.vertices[2] = tile_vertex_set_x(quads[i].vertices[2], tile_vertex_get_x(quads[i].vertices[1]));
+			nquad.vertices[3] = tile_vertex_set_x(quads[i].vertices[3], tile_vertex_get_x(quads[i].vertices[0]));
 
-			quad = nquad;
+			quads[i] = nquad;
 		}
 
 		if (tile_is_flip_y(chunk->tiles[i]))
 		{
 			tile_quad nquad;
-			nquad.vertices[0] = tile_vertex_set_y(quad.vertices[0], tile_vertex_get_y(quad.vertices[1]));
-			nquad.vertices[1] = tile_vertex_set_y(quad.vertices[1], tile_vertex_get_y(quad.vertices[0]));
-			nquad.vertices[2] = tile_vertex_set_y(quad.vertices[2], tile_vertex_get_y(quad.vertices[3]));
-			nquad.vertices[3] = tile_vertex_set_y(quad.vertices[3], tile_vertex_get_y(quad.vertices[2]));
+			nquad.vertices[0] = tile_vertex_set_y(quads[i].vertices[0], tile_vertex_get_y(quads[i].vertices[1]));
+			nquad.vertices[1] = tile_vertex_set_y(quads[i].vertices[1], tile_vertex_get_y(quads[i].vertices[0]));
+			nquad.vertices[2] = tile_vertex_set_y(quads[i].vertices[2], tile_vertex_get_y(quads[i].vertices[3]));
+			nquad.vertices[3] = tile_vertex_set_y(quads[i].vertices[3], tile_vertex_get_y(quads[i].vertices[2]));
 
-			quad = nquad;
+			quads[i] = nquad;
 		}
 
 		if (tile_is_rotate_ccw(chunk->tiles[i]))
 		{
 			tile_quad nquad;
-			nquad.vertices[0] = tile_vertex_set_xy(quad.vertices[0], tile_vertex_get_x(quad.vertices[3]), tile_vertex_get_y(quad.vertices[3]));
-			nquad.vertices[1] = tile_vertex_set_xy(quad.vertices[1], tile_vertex_get_x(quad.vertices[0]), tile_vertex_get_y(quad.vertices[0]));
-			nquad.vertices[2] = tile_vertex_set_xy(quad.vertices[2], tile_vertex_get_x(quad.vertices[1]), tile_vertex_get_y(quad.vertices[1]));
-			nquad.vertices[3] = tile_vertex_set_xy(quad.vertices[3], tile_vertex_get_x(quad.vertices[2]), tile_vertex_get_y(quad.vertices[2]));
+			nquad.vertices[0] = tile_vertex_set_xy(quads[i].vertices[0], tile_vertex_get_x(quads[i].vertices[3]), tile_vertex_get_y(quads[i].vertices[3]));
+			nquad.vertices[1] = tile_vertex_set_xy(quads[i].vertices[1], tile_vertex_get_x(quads[i].vertices[0]), tile_vertex_get_y(quads[i].vertices[0]));
+			nquad.vertices[2] = tile_vertex_set_xy(quads[i].vertices[2], tile_vertex_get_x(quads[i].vertices[1]), tile_vertex_get_y(quads[i].vertices[1]));
+			nquad.vertices[3] = tile_vertex_set_xy(quads[i].vertices[3], tile_vertex_get_x(quads[i].vertices[2]), tile_vertex_get_y(quads[i].vertices[2]));
 
-			quad = nquad;
+			quads[i] = nquad;
 		}
 
 		if (tile_is_rotate_cw(chunk->tiles[i]))
 		{
 			tile_quad nquad;
-			nquad.vertices[0] = tile_vertex_set_xy(quad.vertices[0], tile_vertex_get_x(quad.vertices[1]), tile_vertex_get_y(quad.vertices[1]));
-			nquad.vertices[1] = tile_vertex_set_xy(quad.vertices[1], tile_vertex_get_x(quad.vertices[2]), tile_vertex_get_y(quad.vertices[2]));
-			nquad.vertices[2] = tile_vertex_set_xy(quad.vertices[2], tile_vertex_get_x(quad.vertices[3]), tile_vertex_get_y(quad.vertices[3]));
-			nquad.vertices[3] = tile_vertex_set_xy(quad.vertices[3], tile_vertex_get_x(quad.vertices[0]), tile_vertex_get_y(quad.vertices[0]));
+			nquad.vertices[0] = tile_vertex_set_xy(quads[i].vertices[0], tile_vertex_get_x(quads[i].vertices[1]), tile_vertex_get_y(quads[i].vertices[1]));
+			nquad.vertices[1] = tile_vertex_set_xy(quads[i].vertices[1], tile_vertex_get_x(quads[i].vertices[2]), tile_vertex_get_y(quads[i].vertices[2]));
+			nquad.vertices[2] = tile_vertex_set_xy(quads[i].vertices[2], tile_vertex_get_x(quads[i].vertices[3]), tile_vertex_get_y(quads[i].vertices[3]));
+			nquad.vertices[3] = tile_vertex_set_xy(quads[i].vertices[3], tile_vertex_get_x(quads[i].vertices[0]), tile_vertex_get_y(quads[i].vertices[0]));
 
-			quad = nquad;
+			quads[i] = nquad;
 		}
 
-		s_tile_quads[s_tile_count] = quad;
 		s_tile_count++;
 	}
+
+	glBufferSubData(GL_ARRAY_BUFFER, (s_tile_count - TILE_CHUNK_SIZE * TILE_CHUNK_SIZE) * sizeof(tile_quad), sizeof(tile_quad) * TILE_CHUNK_SIZE * TILE_CHUNK_SIZE, quads);
 }
 
 void tile_renderer_clear_tiles()
@@ -235,7 +236,6 @@ void tile_renderer_draw(void)
 	set_tilemap_atlas(texture_get("res/tiles/test_tile.png"));
 
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(tile_quad) * s_tile_count, s_tile_quads);
 
 	shader_set(s_shader);
 	texture_set(s_texture, 0);
