@@ -9,7 +9,7 @@
 #include "gfx/tile_render.h"
 #include "SDL3/SDL_keyboard.h"
 
-static tile_chunk_pos s_chunk_pos[TILE_CHUNK_SIZE * TILE_CHUNK_SIZE];
+static tile_chunk_pos s_chunk_pos[MAX_CHUNK_COUNT * MAX_CHUNK_COUNT];
 static tile_chunk* s_chunks;
 static int16_t s_chunk_count;
 static int16_t s_prev_active_chunks[4];
