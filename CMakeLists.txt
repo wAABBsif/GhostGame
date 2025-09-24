@@ -34,6 +34,9 @@ add_executable(GhostGame src/main.c
 		src/gfx/texture.h
 		src/game/tile.c
 		src/game/tile.h
+		src/gfx/sprite.c
+		src/gfx/sprite.h
+		src/gfx/color.h
 )
 
 include_directories(src)

@@ -20,14 +20,14 @@ static SDL_GLContext s_context = NULL;
 
 camera cam;
 
-void test_init(void)
+void test_camera_init(void)
 {
 	cam = (camera){0, 0, 0, 320, 320};
 	camera_create(&cam);
 	set_main_camera(&cam);
 }
 
-void test_update(void)
+void test_camera_update(void)
 {
 	const bool *keys = SDL_GetKeyboardState(NULL);
 	cam.position.x += keys[SDL_SCANCODE_D] * game_time_get_delta() * 400;
@@ -65,7 +65,7 @@ void gfx_init(void)
 	shader_init();
 	texture_init();
 	camera_init();
-	tile_rendering_init();
+	tile_renderer_init();
 
 	int width, height;
 	window_get_size(&width, &height);
@@ -79,17 +79,17 @@ void gfx_init(void)
 
 	SDL_GL_SetSwapInterval(0);
 
-	test_init();
+	test_camera_init();
 }
 
 void gfx_draw(void)
 {
-	test_update();
+	test_camera_update();
 
 	camera_bind_framebuffer(&cam);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	tile_rendering_draw();
+	tile_renderer_draw();
 
 	camera_unbind_framebuffer();
 	camera_render_to_screen(&cam);
@@ -105,5 +105,5 @@ void gfx_terminate(void)
 	texture_clear();
 	camera_terminate();
 	window_destroy();
-	tile_rendering_terminate();
+	tile_renderer_terminate();
 }

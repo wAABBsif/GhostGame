@@ -67,7 +67,7 @@ void tile_map_update()
 
 	if (memcmp(s_active_chunks, s_prev_active_chunks, sizeof(s_prev_active_chunks)) != 0)
 	{
-		tile_rendering_clear_tiles();
+		tile_renderer_clear_tiles();
 
 		for (int i = 0; i < 4; i++)
 		{
@@ -77,7 +77,7 @@ void tile_map_update()
 			const tile_chunk *chunk = &s_chunks[s_active_chunks[i]];
 			const tile_chunk_pos pos = s_chunk_pos[s_active_chunks[i]];
 
-			tile_rendering_add_tile_chunk(pos, chunk);
+			tile_renderer_add_tile_chunk(pos, chunk);
 		}
 	}
 
@@ -111,5 +111,5 @@ uint8_t tile_get_z(const tile t)
 
 void set_tilemap_atlas(const texture t)
 {
-	tile_rendering_set_texture(t);
+	tile_renderer_set_texture(t);
 }

@@ -39,7 +39,7 @@ static texture s_texture;
 static tile_quad s_tile_quads[MAX_TILES];
 static uint16_t s_tile_count;
 
-void tile_rendering_init()
+void tile_renderer_init()
 {
 	glGenVertexArrays(1, &s_vertex_array);
 	glBindVertexArray(s_vertex_array);
@@ -68,14 +68,14 @@ void tile_rendering_init()
 	s_shader = shader_get("res/shaders/tile");
 }
 
-void tile_rendering_terminate()
+void tile_renderer_terminate()
 {
 	glDeleteVertexArrays(1, &s_vertex_array);
 	glDeleteBuffers(1, &s_vertex_buffer);
 	glDeleteBuffers(1, &s_index_buffer);
 }
 
-void tile_rendering_set_texture(const texture texture)
+void tile_renderer_set_texture(const texture texture)
 {
 	s_texture = texture;
 }
@@ -150,7 +150,7 @@ uint8_t tile_vertex_get_uv(const tile_vertex vertex)
 	return (vertex >> TILE_VERTEX_UV_OFFSET) & TILE_VERTEX_UV_MASK;
 }
 
-void tile_rendering_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chunk *chunk)
+void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chunk *chunk)
 {
 	for (uint16_t i = 0; i < TILE_CHUNK_SIZE * TILE_CHUNK_SIZE; i++)
 	{
@@ -225,12 +225,12 @@ void tile_rendering_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_ch
 	}
 }
 
-void tile_rendering_clear_tiles()
+void tile_renderer_clear_tiles()
 {
 	s_tile_count = 0;
 }
 
-void tile_rendering_draw(void)
+void tile_renderer_draw(void)
 {
 	set_tilemap_atlas(texture_get("res/tiles/test_tile.png"));
 
