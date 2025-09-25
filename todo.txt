@@ -1,7 +1,8 @@
+implement audio
 implement sound
 implement music
 
-implement tile object (FFRRZZZZ IIIIIIII)
+create sprite
 
 create file format
 load file format

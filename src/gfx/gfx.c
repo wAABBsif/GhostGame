@@ -94,7 +94,7 @@ void gfx_draw(void)
 	camera_unbind_framebuffer();
 	camera_render_to_screen(&cam);
 
-	SDL_GL_SwapWindow(window_get_handle());
+	SDL_GL_SwapWindow(window_get_sdl_handle());
 }
 
 void gfx_terminate(void)

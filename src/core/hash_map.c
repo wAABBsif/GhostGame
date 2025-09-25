@@ -7,8 +7,8 @@
 
 hash hash_string(const char *key)
 {
-	size_t hash = 5381;
-	size_t c = 0;
+	ssize_t hash = 5381;
+	ssize_t c = 0;
 
 	while ((c = *key++))
 		hash = (hash << 5) + hash + c;
@@ -16,7 +16,7 @@ hash hash_string(const char *key)
 	return hash;
 }
 
-void hash_map_create(hash_map *map, const size_t entry_size, const size_t capacity)
+void hash_map_create(hash_map *map, const ssize_t entry_size, const ssize_t capacity)
 {
 	map->entry_size = entry_size;
 	map->size = 0;
@@ -32,15 +32,15 @@ void hash_map_destroy(hash_map *map)
 	free(map->entries);
 }
 
-void *hash_map_add(hash_map *map, const void *data)
+ssize_t hash_map_add(hash_map *map, const void *data)
 {
 	if (map->size >= map->capacity)
 	{
 		log_error("Attempted to add new elements to hash_map at full capacity.");
-		return NULL;
+		return -1;
 	}
 
-	size_t new_index = 0;
+	ssize_t new_index = 0;
 	hash *loc = hash_map_index(map, new_index);
 
 	if (map->size >= 1)
@@ -49,7 +49,7 @@ void *hash_map_add(hash_map *map, const void *data)
 		if (*(hash*)hash_map_index(map, new_index) == *(hash*)data)
 		{
 			log_error("Key already exists.");
-			return NULL;
+			return -1;
 		}
 
 		loc = hash_map_index(map, new_index);
@@ -59,28 +59,28 @@ void *hash_map_add(hash_map *map, const void *data)
 
 	memcpy(loc, data, map->entry_size);
 	map->size++;
-	return loc;
+	return new_index;
 }
 
-void hash_map_remove(hash_map *map, const size_t index)
+void hash_map_remove(hash_map *map, const ssize_t index)
 {
 	map->size--;
 	hash *loc = hash_map_index(map, index);
 	memmove(loc, hash_map_index(map, index + 1), sizeof(map->entry_size) * (map->size - index));
 }
 
-void *hash_map_index(const hash_map *map, size_t index)
+void *hash_map_index(const hash_map *map, ssize_t index)
 {
 	index *= map->entry_size;
 	return (hash*)((char*)map->entries + index);
 }
 
-size_t hash_map_get_range(const hash_map *map, const hash h, const size_t start_index, const size_t end_index)
+ssize_t hash_map_get_range(const hash_map *map, const hash h, const ssize_t start_index, const ssize_t end_index)
 {
 	if (start_index >= end_index)
 		return start_index;
 
-	const size_t mid = (start_index + end_index) / 2;
+	const ssize_t mid = (start_index + end_index) / 2;
 	const hash mid_hash = *(hash*)hash_map_index(map, mid);
 
 	if (mid_hash < h)
@@ -90,12 +90,12 @@ size_t hash_map_get_range(const hash_map *map, const hash h, const size_t start_
 	return mid;
 }
 
-size_t hash_map_get(const hash_map *map, const hash h)
+ssize_t hash_map_get(const hash_map *map, const hash h)
 {
 	if (map->size < 1)
 		return -1;
 
-	const size_t index = hash_map_get_range(map, h, 0, map->size - 1);
+	const ssize_t index = hash_map_get_range(map, h, 0, map->size - 1);
 	if (*(hash*)hash_map_index(map, index) != h)
 		return -1;
 

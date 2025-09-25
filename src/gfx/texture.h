@@ -1,19 +1,12 @@
 ﻿#pragma once
 #include <stdint.h>
-#include "core/hash_map.h"
+#include "core/hash.h"
 
 typedef struct vec2 vec2;
 typedef struct mat3 mat3;
 
 typedef uint32_t texture_id;
-
-typedef struct texture
-{
-	hash key;
-	texture_id id;
-	uint32_t width;
-	uint32_t height;
-} texture;
+typedef hash texture_h;
 
 // Initializes texture system for use
 void texture_init(void);
@@ -27,7 +20,7 @@ void texture_clear(void);
  * \param name the name of the file
  * \returns the loaded texture
  */
-texture texture_load(const char* name);
+texture_h texture_load(const char* name);
 
 /**
  * Unloads a texture
@@ -42,7 +35,9 @@ void texture_unload(const hash h);
  * \param name the name of the file
  * \returns the requested texture
  */
-texture texture_get(const char* name);
+texture_h texture_get(const char* name);
 
 // Loads a texture for use in rendering operations
-void texture_set(texture s, int slot);
+void texture_set(texture_h t, int slot);
+
+texture_id texture_get_id(texture_h t);

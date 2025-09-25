@@ -2,6 +2,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "gfx/texture.h"
+
 typedef struct texture texture;
 
 #define TILE_SIZE 16
@@ -44,4 +46,4 @@ bool tile_is_rotate_ccw(tile t);
 bool tile_is_rotate_cw(tile t);
 uint8_t tile_get_z(tile t);
 
-void set_tilemap_atlas(texture t);
+void set_tilemap_atlas(texture_h t);

@@ -4,7 +4,7 @@
 
 SDL_Window *window_create(void);
 void window_destroy(void);
-SDL_Window *window_get_handle(void);
-void window_handle_event(const SDL_Event *event);
+SDL_Window *window_get_sdl_handle(void);
+void window_handle_sdl_event(const SDL_Event *event);
 void window_get_size(int *width, int *height);
 float window_get_aspect_ratio(void);

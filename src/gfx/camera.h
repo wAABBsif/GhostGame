@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include "texture.h"
 #include "core/vec2.h"
 
 typedef struct camera
@@ -12,7 +13,7 @@ typedef struct camera
 	uint32_t render_size;
 	uint32_t framebuffer;
 	uint32_t renderbuffer;
-	uint32_t texture;
+	texture_id texture;
 } camera;
 
 void camera_init();

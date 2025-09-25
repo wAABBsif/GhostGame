@@ -33,8 +33,8 @@
 static uint32_t s_vertex_array;
 static uint32_t s_vertex_buffer;
 static uint32_t s_index_buffer;
-static shader s_shader;
-static texture s_texture;
+static shader_h s_shader;
+static texture_h s_texture;
 
 static uint16_t s_tile_count;
 
@@ -74,7 +74,7 @@ void tile_renderer_terminate()
 	glDeleteBuffers(1, &s_index_buffer);
 }
 
-void tile_renderer_set_texture(const texture texture)
+void tile_renderer_set_texture(const texture_h texture)
 {
 	s_texture = texture;
 }
@@ -238,7 +238,7 @@ void tile_renderer_draw(void)
 
 	shader_set(s_shader);
 	texture_set(s_texture, 0);
-	shader_set_uint32_t(s_shader, "tile_atlas", s_texture.id);
+	shader_set_uint32_t(s_shader, "tile_atlas", texture_get_id(s_texture));
 	shader_set_mat3(s_shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
 
 	glBindVertexArray(s_vertex_array);

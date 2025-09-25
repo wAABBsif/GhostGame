@@ -18,7 +18,7 @@ typedef struct tile_chunk_pos tile_chunk_pos;
 void tile_renderer_init();
 void tile_renderer_terminate();
 
-void tile_renderer_set_texture(texture texture);
+void tile_renderer_set_texture(texture_h texture);
 
 //x < 1024
 tile_vertex tile_vertex_set_x(tile_vertex vertex, uint32_t x);

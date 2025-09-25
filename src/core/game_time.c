@@ -41,7 +41,7 @@ void game_time_update(void)
 		for (int i = sizeof(s_fps_points) / sizeof(s_fps_points[0]) - 1; i >= 1; i--)
 			s_fps_points[i] = s_fps_points[i - 1];
 
-		s_fps_points[0] = 1.0f / game_time_get_delta();
+		s_fps_points[0] = game_time_get_delta();
 	}
 }
 
@@ -57,16 +57,16 @@ float game_time_get_delta(void)
 
 float game_time_get_fps(void)
 {
-	float fps = 0.0f;
+	float delta = 0.0f;
 	const int size = sizeof(s_fps_points) / sizeof(s_fps_points[0]);
 
 	for (int i = 0; i < size; i++)
 	{
-		fps += s_fps_points[i];
+		delta += s_fps_points[i];
 	}
 
-	fps /= (float)size;
-	return fps;
+	delta /= (float)size;
+	return 1.0f / delta;
 }
 
 void game_timer_start(game_timer *timer)

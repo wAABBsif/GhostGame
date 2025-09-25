@@ -109,7 +109,7 @@ uint8_t tile_get_z(const tile t)
 	return t.transform & TILE_Z_MASK;
 }
 
-void set_tilemap_atlas(const texture t)
+void set_tilemap_atlas(const texture_h t)
 {
 	tile_renderer_set_texture(t);
 }
