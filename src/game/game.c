@@ -3,6 +3,7 @@
 
 #include "sdl_interface.h"
 #include "tile.h"
+#include "audio/audio.h"
 #include "core/game_time.h"
 #include "core/logging.h"
 #include "gfx/gfx.h"
@@ -31,6 +32,7 @@ static void _game_init(void)
 	sdl_interface_init();
 	game_time_init();
 	gfx_init();
+	audio_init();
 	tile_map_init();
 }
 
@@ -44,6 +46,7 @@ static void _game_update(void)
 
 static void _game_terminate(void)
 {
+	audio_terminate();
 	gfx_terminate();
 	sdl_interface_terminate();
 }

@@ -37,6 +37,13 @@ add_executable(GhostGame src/main.c
 		src/gfx/sprite.c
 		src/gfx/sprite.h
 		src/gfx/color.h
+		src/audio/audio.c
+		src/audio/audio.h
+		src/audio/music.c
+		src/audio/music.h
+		src/audio/sfx.c
+		src/audio/sfx.h
+		src/core/hash.h
 )
 
 include_directories(src)
