@@ -1,4 +1,4 @@
-﻿#include "tile_render.h"
+﻿#include "tile_renderer.h"
 
 #include <stdlib.h>
 #include <time.h>

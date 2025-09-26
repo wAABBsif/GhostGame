@@ -77,4 +77,4 @@ ssize_t hash_map_get_range(const hash_map *map, hash h, ssize_t start_index, ssi
  * \param h the hash of the element
  * \returns either the index of the element if it exists; otherwise, -1
  */
-ssize_t hash_map_get(const hash_map *map, hash h);
+ssize_t hash_map_get_index(const hash_map *map, hash h);

@@ -1,8 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include "color.h"
-
-#define MAX_SPRITES 256
+#include "game/sprite.h"
 
 typedef struct sprite_vertex
 {
@@ -12,20 +10,20 @@ typedef struct sprite_vertex
 	uint16_t texture_x;
 	uint16_t texture_y;
 
-	uint16_t texture_w;
-	uint16_t texture_h;
-
 	color    color;
 	uint8_t  z;
-	uint8_t  flags;
+	uint8_t  texture_index;
 } sprite_vertex;
 
-typedef struct sprite
+typedef struct sprite_quad
 {
 	sprite_vertex vertices[4];
-} sprite;
+} sprite_quad;
 
 void sprite_renderer_init();
 void sprite_renderer_terminate();
 
+uint8_t sprite_renderer_get_texture(texture_h h);
+
+void sprite_renderer_queue_sprite(sprite s);
 void sprite_renderer_draw();

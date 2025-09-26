@@ -28,14 +28,14 @@ add_executable(GhostGame src/main.c
 		src/core/mat3.h
 		src/gfx/camera.c
 		src/gfx/camera.h
-		src/gfx/tile_render.c
-		src/gfx/tile_render.h
+		src/gfx/tile_renderer.c
+		src/gfx/tile_renderer.h
 		src/gfx/texture.c
 		src/gfx/texture.h
 		src/game/tile.c
 		src/game/tile.h
-		src/gfx/sprite.c
-		src/gfx/sprite.h
+		src/gfx/sprite_renderer.c
+		src/gfx/sprite_renderer.h
 		src/gfx/color.h
 		src/audio/audio.c
 		src/audio/audio.h
@@ -44,6 +44,8 @@ add_executable(GhostGame src/main.c
 		src/audio/sfx.c
 		src/audio/sfx.h
 		src/core/hash.h
+		src/game/sprite.c
+		src/game/sprite.h
 )
 
 include_directories(src)

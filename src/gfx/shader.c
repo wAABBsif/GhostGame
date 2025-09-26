@@ -145,7 +145,7 @@ shader_h shader_load(const char* name)
 
 void shader_unload(const hash h)
 {
-	const size_t index = hash_map_get(&s_shaders, h);
+	const size_t index = hash_map_get_index(&s_shaders, h);
 	if (index == -1)
 	{
 		log_warning("Shader not found, so can't unload!");
@@ -160,19 +160,19 @@ void shader_unload(const hash h)
 shader_h shader_get(const char* name)
 {
 	const hash h = hash_string(name);
-	const ssize_t index = hash_map_get(&s_shaders, h);
+	const ssize_t index = hash_map_get_index(&s_shaders, h);
 
 	if (index < 0)
 	{
 		log_warning("Shader %s not found, so loading instead!", name);
 		return shader_load(name);
 	}
-	return ((shader *)hash_map_get(&s_shaders, h))->key;
+	return ((shader *)hash_map_get_index(&s_shaders, h))->key;
 }
 
 void shader_set(const shader_h s)
 {
-	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get(&s_shaders, s));
+	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get_index(&s_shaders, s));
 	glUseProgram(sh->program);
 }
 
@@ -183,30 +183,30 @@ void shader_reset(void)
 
 void shader_set_int32_t(const shader_h s, const char *name, const int32_t value)
 {
-	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get(&s_shaders, s));
+	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get_index(&s_shaders, s));
 	glUniform1i(glGetUniformLocation(sh->program, name), value);
 }
 
 void shader_set_uint32_t(const shader_h s, const char *name, const uint32_t value)
 {
-	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get(&s_shaders, s));
+	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get_index(&s_shaders, s));
 	glUniform1ui(glGetUniformLocation(sh->program, name), value);
 }
 
 void shader_set_float(const shader_h s, const char *name, const float value)
 {
-	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get(&s_shaders, s));
+	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get_index(&s_shaders, s));
 	glUniform1f(glGetUniformLocation(sh->program, name), value);
 }
 
 void shader_set_vec2(const shader_h s, const char *name, const vec2 value)
 {
-	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get(&s_shaders, s));
+	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get_index(&s_shaders, s));
 	glUniform2f(glGetUniformLocation(sh->program, name), value.x, value.y);
 }
 
 void shader_set_mat3(const shader_h s, const char *name, const mat3 value)
 {
-	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get(&s_shaders, s));
+	const shader *sh = (shader *)hash_map_index(&s_shaders, hash_map_get_index(&s_shaders, s));
  	glUniformMatrix3fv(glGetUniformLocation(sh->program, name), 1, true, (float *)&value.m);
 }

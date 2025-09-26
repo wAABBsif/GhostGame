@@ -76,7 +76,7 @@ texture_h texture_load(const char* name)
 
 void texture_unload(const hash h)
 {
-	const size_t index = hash_map_get(&s_textures, h);
+	const size_t index = hash_map_get_index(&s_textures, h);
 	if (index == -1)
 	{
 		log_warning("Texture not found, so can't unload!");
@@ -91,7 +91,7 @@ void texture_unload(const hash h)
 texture_h texture_get(const char* name)
 {
 	const hash h = hash_string(name);
-	const ssize_t index = hash_map_get(&s_textures, h);
+	const ssize_t index = hash_map_get_index(&s_textures, h);
 
 	if (index < 0)
 	{
@@ -109,6 +109,6 @@ void texture_set(const texture_h t, const int slot)
 
 texture_id texture_get_id(const texture_h t)
 {
-	const texture *tex = (texture *)hash_map_index(&s_textures, hash_map_get(&s_textures, t));
+	const texture *tex = (texture *)hash_map_index(&s_textures, hash_map_get_index(&s_textures, t));
 	return tex->id;
 }

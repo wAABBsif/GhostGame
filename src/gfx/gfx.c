@@ -12,7 +12,7 @@
 #include "core/game_time.h"
 #include "core/mat3.h"
 #include "camera.h"
-#include "tile_render.h"
+#include "tile_renderer.h"
 #include "game/tile.h"
 #include "SDL3/SDL_video.h"
 

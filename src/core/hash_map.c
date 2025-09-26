@@ -90,7 +90,7 @@ ssize_t hash_map_get_range(const hash_map *map, const hash h, const ssize_t star
 	return mid;
 }
 
-ssize_t hash_map_get(const hash_map *map, const hash h)
+ssize_t hash_map_get_index(const hash_map *map, const hash h)
 {
 	if (map->size < 1)
 		return -1;

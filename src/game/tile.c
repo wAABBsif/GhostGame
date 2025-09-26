@@ -6,7 +6,7 @@
 #include "core/game_time.h"
 #include "core/logging.h"
 #include "gfx/camera.h"
-#include "gfx/tile_render.h"
+#include "gfx/tile_renderer.h"
 #include "SDL3/SDL_keyboard.h"
 
 static tile_chunk_pos s_chunk_pos[MAX_CHUNK_COUNT * MAX_CHUNK_COUNT];
