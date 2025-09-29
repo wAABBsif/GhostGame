@@ -12,6 +12,7 @@
 #include "core/game_time.h"
 #include "core/mat3.h"
 #include "camera.h"
+#include "sprite_renderer.h"
 #include "tile_renderer.h"
 #include "game/tile.h"
 #include "SDL3/SDL_video.h"
@@ -65,6 +66,7 @@ void gfx_init(void)
 	shader_init();
 	texture_init();
 	camera_init();
+	sprite_renderer_init();
 	tile_renderer_init();
 
 	int width, height;
@@ -90,6 +92,7 @@ void gfx_draw(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	tile_renderer_draw();
+	sprite_renderer_draw();
 
 	camera_unbind_framebuffer();
 	camera_render_to_screen(&cam);
@@ -105,5 +108,6 @@ void gfx_terminate(void)
 	texture_clear();
 	camera_terminate();
 	window_destroy();
+	sprite_renderer_terminate();
 	tile_renderer_terminate();
 }

@@ -112,3 +112,10 @@ texture_id texture_get_id(const texture_h t)
 	const texture *tex = (texture *)hash_map_index(&s_textures, hash_map_get_index(&s_textures, t));
 	return tex->id;
 }
+
+void texture_get_size(const texture_h t, uint32_t *width, uint32_t *height)
+{
+	const texture *tex = (texture *)hash_map_index(&s_textures, hash_map_get_index(&s_textures, t));
+	*width = tex->width;
+	*height = tex->height;
+}

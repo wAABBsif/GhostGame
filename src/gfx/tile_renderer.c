@@ -221,6 +221,7 @@ void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chu
 		}
 	}
 
+	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
 	glBufferSubData(GL_ARRAY_BUFFER, s_tile_count * sizeof(tile_quad), sizeof(tile_quad) * TILE_CHUNK_SIZE * TILE_CHUNK_SIZE, quads);
 	s_tile_count += TILE_CHUNK_SIZE * TILE_CHUNK_SIZE;
 }

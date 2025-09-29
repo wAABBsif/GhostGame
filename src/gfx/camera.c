@@ -183,12 +183,12 @@ vec2 camera_get_render_size(const camera *cam)
 
 mat3 world_to_camera_matrix(const camera *cam)
 {
-	return mat3_translate(mat3_from_rotation(cam->rotation), vec2_neg(cam->position));
+	return mat3_translate(mat3_from_rotation(-cam->rotation), vec2_neg(cam->position));
 }
 
 mat3 camera_to_world_matrix(const camera *cam)
 {
-	return mat3_rotate(mat3_from_translation(cam->position), -cam->rotation);
+	return mat3_rotate(mat3_from_translation(cam->position), cam->rotation);
 }
 
 mat3 camera_to_screen_matrix(const camera *cam)

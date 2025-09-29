@@ -85,7 +85,7 @@ mat3 mat3_from_scale(const vec2 scale)
 
 mat3 mat3_from_trs(const vec2 translation, const float rotation, const vec2 scale)
 {
-	return mat3_translate(mat3_rotate(mat3_from_scale(scale), rotation), translation);
+	return mat3_scale(mat3_rotate(mat3_from_translation(translation), rotation), scale);
 }
 
 mat3 mat3_translate(const mat3 m, const vec2 translation)

@@ -8,6 +8,7 @@
 #include "gfx.h"
 #include "shader.h"
 #include "tile_renderer.h"
+#include "core/game_time.h"
 #include "core/logging.h"
 #include "core/mat3.h"
 #include "glad/glad.h"
@@ -32,7 +33,7 @@ void sprite_renderer_init()
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(s_quads), NULL, GL_DYNAMIC_DRAW);
 
-	glVertexAttribIPointer(0, 3, GL_UNSIGNED_INT, sizeof(tile_vertex), 0);
+	glVertexAttribIPointer(0, 3, GL_UNSIGNED_INT, sizeof(sprite_vertex), 0);
 	glEnableVertexAttribArray(0);
 
 	const uint16_t quad_indices[6] = QUAD_INDICES;
@@ -75,6 +76,7 @@ uint8_t sprite_renderer_get_texture(const texture_h h)
 	}
 
 	s_textures[i] = h;
+	s_texture_count++;
 	return i;
 }
 
@@ -84,8 +86,8 @@ void sprite_renderer_queue_sprite(sprite s)
 		return log_warning("Max sprite count reached!");
 
 	const vec2 position = {s.x, s.y};
-	const float rotation = {s.rotation / 65536.0 * M_PI * 2};
-	const vec2 scale = {s.scale_x / 16.0f, s.scale_y / 16.0f};
+	const float rotation = {s.rotation / 65536.0f * M_PI * 2};
+	const vec2 scale = {s.scale_x, s.scale_y};
 
 	const vec2 vertex_coords[4] =
 	{
@@ -97,14 +99,17 @@ void sprite_renderer_queue_sprite(sprite s)
 
 	const uint16_t tex_coords[8] =
 	{
-		s.texture_x, s.texture_y,
 		s.texture_x, s.texture_y - s.texture_h,
-		s.texture_x + s.texture_w, s.texture_y - s.texture_h,
+		s.texture_x, s.texture_y,
 		s.texture_x + s.texture_w, s.texture_y,
+		s.texture_x + s.texture_w, s.texture_y - s.texture_h,
 	};
 
 	const mat3 matrix = mat3_from_trs(position, rotation, scale);
+
 	const uint8_t texture = sprite_renderer_get_texture(s.texture);
+	uint32_t texture_w, texture_h;
+	texture_get_size(s.texture, &texture_w, &texture_h);
 
 	sprite_quad quad;
 	for (uint8_t i = 0; i < 4; i++)
@@ -112,12 +117,13 @@ void sprite_renderer_queue_sprite(sprite s)
 		const vec2 vpos = vec2_transform(vertex_coords[i], matrix);
 		quad.vertices[i] = (sprite_vertex)
 		{
-			vpos.x, vpos.y,
-			tex_coords[i * 2], tex_coords[i * 2 + 1],
+			vpos.x + 0.5f, vpos.y + 0.5f,
+			tex_coords[i * 2] / (float)texture_w * 65535, tex_coords[i * 2 + 1] / (float)texture_h * 65535,
 			s.color,
 			s.z, texture
 		};
 	}
+
 
 	s_quads[s_quad_count] = quad;
 	s_quad_count++;
@@ -125,17 +131,37 @@ void sprite_renderer_queue_sprite(sprite s)
 
 void sprite_renderer_draw()
 {
+	sprite s;
+	s.x = 120;
+	s.y = 24;
+	s.rotation = (uint16_t)(game_time_get_elapsed() * 5000);
+	s.scale_x = 0x10;
+	s.scale_y = 0x10;
+	s.color = WHITE;
+	s.z = 2;
+	s.texture = texture_get("res/sprites/test.png");
+	s.texture_w = 16;
+	s.texture_h = 16;
+	s.texture_x = 0;
+	s.texture_y = 16;
+	sprite_draw(s);
+
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(sprite_quad) * s_quad_count, s_quads);
 
 	shader_set(s_shader);
 
 	for (uint8_t i = 0; i < s_texture_count; i++)
 	{
 		texture_set(s_textures[i], i);
-		char* loc = "textures[%i]";
-		sprintf(loc, loc, i);
+		char loc[16];
+
+		const char* format = "textures[%i].samp";
+		sprintf(loc, format, i);
 		shader_set_uint32_t(s_shader, loc, texture_get_id(s_textures[i]));
 	}
+
+	log_message("%i", s_quads[0].vertices[1].y);
 
 	shader_set_mat3(s_shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
 
