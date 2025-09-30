@@ -7,8 +7,6 @@
 #include "core/vec2.h"
 #include "gfx.h"
 #include "shader.h"
-#include "tile_renderer.h"
-#include "core/game_time.h"
 #include "core/logging.h"
 #include "core/mat3.h"
 #include "glad/glad.h"
@@ -21,8 +19,8 @@ static shader_h s_shader;
 static uint8_t s_texture_count;
 static texture_h s_textures[MAX_SPRITE_TEXTURES];
 
-static uint16_t s_quad_count;
-static sprite_quad s_quads[MAX_SPRITES];
+static uint16_t s_quad_counts[MAX_SPRITE_LAYERS];
+static sprite_quad s_quads[MAX_SPRITES_PER_LAYER][MAX_SPRITE_LAYERS];
 
 void sprite_renderer_init()
 {
@@ -37,8 +35,8 @@ void sprite_renderer_init()
 	glEnableVertexAttribArray(0);
 
 	const uint16_t quad_indices[6] = QUAD_INDICES;
-	uint16_t indices[6 * MAX_SPRITES];
-	for (int i = 0; i < 6 * MAX_SPRITES; i++)
+	uint16_t indices[6 * MAX_SPRITES_TOTAL];
+	for (int i = 0; i < 6 * MAX_SPRITES_TOTAL; i++)
 	{
 		const int index = i % 6;
 		const int tile = i / 6;
@@ -82,8 +80,12 @@ uint8_t sprite_renderer_get_texture(const texture_h h)
 
 void sprite_renderer_queue_sprite(sprite s)
 {
-	if (s_quad_count >= MAX_SPRITES)
-		return log_warning("Max sprite count reached!");
+	while (s_quad_counts[s.z] >= MAX_SPRITES_PER_LAYER)
+	{
+		if (s.z >= MAX_SPRITE_LAYERS)
+			return log_error("Cannot render sprite!");
+		s.z++;
+	}
 
 	const vec2 position = {s.x, s.y};
 	const float rotation = {s.rotation / 65536.0f * M_PI * 2};
@@ -125,12 +127,27 @@ void sprite_renderer_queue_sprite(sprite s)
 	}
 
 
-	s_quads[s_quad_count] = quad;
-	s_quad_count++;
+	s_quads[s.z][s_quad_counts[s.z]] = quad;
+	s_quad_counts[s.z]++;
 }
 
 void sprite_renderer_draw()
 {
+	sprite s2;
+	s2.x = 120 + cosf(game_time_get_elapsed()) * 60;
+	s2.y = 24;
+	s2.rotation = 0;
+	s2.scale_x = 0x10;
+	s2.scale_y = 0x10;
+	s2.color = WHITE;
+	s2.z = 3;
+	s2.texture = texture_get("res/sprites/test2.png");
+	s2.texture_w = 16;
+	s2.texture_h = 16;
+	s2.texture_x = 0;
+	s2.texture_y = 16;
+	sprite_draw(s2);
+
 	sprite s;
 	s.x = 120;
 	s.y = 24;
@@ -147,27 +164,32 @@ void sprite_renderer_draw()
 	sprite_draw(s);
 
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(sprite_quad) * s_quad_count, s_quads);
+
+	uint32_t sprite_count = 0;
+	for (int i = 0; i < MAX_SPRITE_LAYERS; i++)
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, sprite_count * sizeof(sprite_quad), sizeof(sprite_quad) * s_quad_counts[i], s_quads[i]);
+		sprite_count += s_quad_counts[i];
+	}
 
 	shader_set(s_shader);
 
-	for (uint8_t i = 0; i < s_texture_count; i++)
+	for (int i = 0; i < s_texture_count; i++)
 	{
 		texture_set(s_textures[i], i);
 		char loc[16];
 
-		const char* format = "textures[%i].samp";
+		const char* format = "textures[%i]";
 		sprintf(loc, format, i);
-		shader_set_uint32_t(s_shader, loc, texture_get_id(s_textures[i]));
+		shader_set_int32_t(s_shader, loc, i);
 	}
-
-	log_message("%i", s_quads[0].vertices[1].y);
 
 	shader_set_mat3(s_shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
 
 	glBindVertexArray(s_vertex_array);
-	glDrawElements(GL_TRIANGLES, 6 * s_quad_count, GL_UNSIGNED_SHORT, 0);
+	glDrawElements(GL_TRIANGLES, 6 * sprite_count, GL_UNSIGNED_SHORT, 0);
 
-	s_quad_count = 0;
+	for (int i = 0; i < MAX_SPRITE_LAYERS; i++)
+		s_quad_counts[i] = 0;
 	s_texture_count = 0;
 }

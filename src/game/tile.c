@@ -24,7 +24,7 @@ void tile_map_init()
 		s_chunk_pos[i] = (tile_chunk_pos){i % 4, i / 4};
 		for (int j = 0; j < TILE_CHUNK_SIZE * TILE_CHUNK_SIZE; j++)
 		{
-			s_chunks[i].tiles[j].transform = 4;
+			s_chunks[i].tiles[j].transform = 1;
 			s_chunks[i].tiles[j].textureIndex = i % 4 + 1;
 		}
 	}

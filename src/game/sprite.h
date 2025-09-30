@@ -3,7 +3,9 @@
 #include "gfx/color.h"
 #include "gfx/texture.h"
 
-#define MAX_SPRITES 256
+#define MAX_SPRITE_LAYERS 16
+#define MAX_SPRITES_PER_LAYER 32
+#define MAX_SPRITES_TOTAL MAX_SPRITES_PER_LAYER * MAX_SPRITE_LAYERS
 #define MAX_SPRITE_TEXTURES 16
 
 typedef struct sprite
