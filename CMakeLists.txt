@@ -67,6 +67,8 @@ target_link_libraries(${PROJECT_NAME} OpenGL::GL)
 
 include_directories(lib/GLAD/include)
 
+target_link_libraries(${PROJECT_NAME} m)
+
 if (WIN32)
 	set(CMAKE_EXE_LINKER_FLAGS "-static")
 endif()

@@ -7,6 +7,7 @@
 #include "core/vec2.h"
 #include "gfx.h"
 #include "shader.h"
+#include "core/game_time.h"
 #include "core/logging.h"
 #include "core/mat3.h"
 #include "glad/glad.h"
