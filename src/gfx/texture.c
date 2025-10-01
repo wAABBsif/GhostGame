@@ -68,7 +68,7 @@ texture_h texture_load(const char* name)
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	log_message("Loaded texture %s", name);
-	if (hash_map_add(&s_textures, &t) < 0)
+	if (hash_map_add(&s_textures, &t) == SIZE_MAX)
 		return 0;
 
 	return t.key;
@@ -77,7 +77,7 @@ texture_h texture_load(const char* name)
 void texture_unload(const hash h)
 {
 	const size_t index = hash_map_get_index(&s_textures, h);
-	if (index == -1)
+	if (index == SIZE_MAX)
 	{
 		log_warning("Texture not found, so can't unload!");
 		return;
@@ -91,9 +91,9 @@ void texture_unload(const hash h)
 texture_h texture_get(const char* name)
 {
 	const hash h = hash_string(name);
-	const ssize_t index = hash_map_get_index(&s_textures, h);
+	const size_t index = hash_map_get_index(&s_textures, h);
 
-	if (index < 0)
+	if (index == SIZE_MAX)
 	{
 		log_warning("Texture %s not found, so loading instead!", name);
 		return texture_load(name);

@@ -10,6 +10,7 @@
 #include "core/logging.h"
 #include "core/mat3.h"
 #include "glad/glad.h"
+#include "core/game_time.h"
 
 static uint32_t s_vertex_array;
 static uint32_t s_vertex_buffer;
