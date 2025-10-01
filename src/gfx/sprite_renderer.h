@@ -28,6 +28,6 @@ void sprite_renderer_terminate();
 uint8_t sprite_renderer_get_texture(texture_h h);
 
 void sprite_renderer_add_sprite(sprite s);
-void sprite_renderer_queue_drawing();
 
-void sprite_renderer_draw(shader_h shader);
+void sprite_renderer_clear_frame();
+void sprite_renderer_draw();

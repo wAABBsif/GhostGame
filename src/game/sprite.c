@@ -12,6 +12,8 @@ void sprite_draw(const sprite s)
 
 void sprite_update()
 {
+	sprite_renderer_clear_frame();
+
 	sprite s2;
 	s2.x = 120 + cosf(game_time_get_elapsed()) * 60;
 	s2.y = 24;

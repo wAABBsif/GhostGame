@@ -48,4 +48,4 @@ uint8_t tile_vertex_get_uv(tile_vertex vertex);
 void tile_renderer_clear_tiles();
 void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chunk *chunk);
 
-void tile_renderer_draw(shader_h shader);
+void tile_renderer_draw();

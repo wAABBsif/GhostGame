@@ -2,6 +2,7 @@
 #include "game.h"
 
 #include "sdl_interface.h"
+#include "sprite.h"
 #include "tile.h"
 #include "audio/audio.h"
 #include "core/game_time.h"

@@ -91,8 +91,6 @@ void gfx_draw(void)
 	camera_bind_framebuffer(&cam);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	sprite_renderer_queue_drawing();
-
 	handle_draw_commands();
 
 	camera_unbind_framebuffer();
