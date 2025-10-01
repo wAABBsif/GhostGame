@@ -23,7 +23,7 @@ typedef uint32_t shader_program;
 
 typedef struct shader
 {
-	hash key;
+	shader_h key;
 	shader_program program;
 } shader;
 
@@ -143,7 +143,7 @@ shader_h shader_load(const char* name)
 	return result.key;
 }
 
-void shader_unload(const hash h)
+void shader_unload(const shader_h h)
 {
 	const size_t index = hash_map_get_index(&s_shaders, h);
 	if (index == SIZE_MAX)

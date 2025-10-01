@@ -27,7 +27,7 @@ texture_h texture_load(const char* name);
  *
  * \param h the hash
  */
-void texture_unload(const hash h);
+void texture_unload(texture_h h);
 
 /**
  * Gets a texture using name or loads it if it doesn't exist

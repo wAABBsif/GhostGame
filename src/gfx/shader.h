@@ -26,7 +26,7 @@ shader_h shader_load(const char* name);
  *
  * \param h the hash
  */
-void shader_unload(const hash h);
+void shader_unload(const shader_h h);
 
 /**
  * Gets a shader using name or loads it if it doesn't exist

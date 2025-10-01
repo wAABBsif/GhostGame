@@ -12,7 +12,7 @@ static hash_map s_textures;
 
 typedef struct texture
 {
-	hash key;
+	texture_h key;
 	texture_id id;
 	uint32_t width;
 	uint32_t height;
@@ -74,7 +74,7 @@ texture_h texture_load(const char* name)
 	return t.key;
 }
 
-void texture_unload(const hash h)
+void texture_unload(const texture_h h)
 {
 	const size_t index = hash_map_get_index(&s_textures, h);
 	if (index == SIZE_MAX)

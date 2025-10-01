@@ -44,6 +44,7 @@ static void _game_update(void)
 	sprite_update();
 	tile_map_update();
 	gfx_draw();
+	audio_update();
 }
 
 static void _game_terminate(void)
