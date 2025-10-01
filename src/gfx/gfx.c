@@ -91,13 +91,15 @@ void gfx_draw(void)
 	camera_bind_framebuffer(&cam);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	tile_renderer_draw();
-	sprite_renderer_draw();
+	sprite_renderer_queue_drawing();
+
+	handle_draw_commands();
 
 	camera_unbind_framebuffer();
 	camera_render_to_screen(&cam);
 
 	SDL_GL_SwapWindow(window_get_sdl_handle());
+	log_message("%f", game_time_get_fps());
 }
 
 void gfx_terminate(void)

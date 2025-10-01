@@ -29,3 +29,4 @@ typedef struct sprite
 } sprite;
 
 void sprite_draw(sprite s);
+void sprite_update();

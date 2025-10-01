@@ -14,8 +14,6 @@
 #include "glad/glad.h"
 #include "SDL3/SDL_keyboard.h"
 
-#define MAX_TILES TILE_CHUNK_SIZE * TILE_CHUNK_SIZE * 4
-
 #define TILE_VERTEX_X_OFFSET  22
 #define TILE_VERTEX_Y_OFFSET  12
 #define TILE_VERTEX_Z_OFFSET  8
@@ -30,48 +28,48 @@
 #define TILE_VERTEX_V_MASK  0b1111
 #define TILE_VERTEX_UV_MASK 0b11111111
 
-static uint32_t s_vertex_array;
-static uint32_t s_vertex_buffer;
-static uint32_t s_index_buffer;
-static shader_h s_shader;
 static texture_h s_texture;
-
-static uint16_t s_tile_count;
+static draw_command *s_command;
 
 void tile_renderer_init()
 {
-	glGenVertexArrays(1, &s_vertex_array);
-	glBindVertexArray(s_vertex_array);
+	s_command = create_draw_command(0);
+	s_command->command = DRAW_COMMAND_TILE;
 
-	glGenBuffers(1, &s_vertex_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(tile_quad) * MAX_TILES, NULL, GL_DYNAMIC_DRAW);
+	glGenVertexArrays(1, &s_command->vao);
+	glBindVertexArray(s_command->vao);
+
+	glGenBuffers(1, &s_command->vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, s_command->vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(tile_quad) * MAX_TILE_COUNT, NULL, GL_DYNAMIC_DRAW);
 
 	glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(tile_vertex), 0);
 	glEnableVertexAttribArray(0);
 
 	const uint16_t quad_indices[6] = QUAD_INDICES;
-	uint16_t indices[6 * MAX_TILES];
-	for (int i = 0; i < 6 * MAX_TILES; i++)
+	uint16_t indices[6 * MAX_TILE_COUNT];
+	for (int i = 0; i < 6 * MAX_TILE_COUNT; i++)
 	{
 		const int index = i % 6;
 		const int tile = i / 6;
 		indices[i] = quad_indices[index] + 4 * tile;
 	}
-	glGenBuffers(1, &s_index_buffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_index_buffer);
+	glGenBuffers(1, &s_command->ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_command->ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glBindVertexArray(0);
+	s_command->shader = shader_get("res/shaders/tile");
 
-	s_shader = shader_get("res/shaders/tile");
+	glBindVertexArray(0);
 }
 
 void tile_renderer_terminate()
 {
-	glDeleteVertexArrays(1, &s_vertex_array);
-	glDeleteBuffers(1, &s_vertex_buffer);
-	glDeleteBuffers(1, &s_index_buffer);
+	glDeleteVertexArrays(1, &s_command->vao);
+	glDeleteBuffers(1, &s_command->vbo);
+	glDeleteBuffers(1, &s_command->ebo);
+	release_draw_command(s_command);
+	s_command = NULL;
 }
 
 void tile_renderer_set_texture(const texture_h texture)
@@ -149,21 +147,26 @@ uint8_t tile_vertex_get_uv(const tile_vertex vertex)
 	return (vertex >> TILE_VERTEX_UV_OFFSET) & TILE_VERTEX_UV_MASK;
 }
 
+void tile_renderer_clear_tiles()
+{
+	s_command->element_count = 0;
+}
+
 void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chunk *chunk)
 {
 	tile_quad quads[TILE_CHUNK_SIZE * TILE_CHUNK_SIZE];
 
+	if (s_command->element_count >= MAX_TILE_COUNT * 6)
+	{
+		log_warning("Attempting to render too many tiles!");
+		return;
+	}
+
 	for (uint16_t i = 0; i < TILE_CHUNK_SIZE * TILE_CHUNK_SIZE; i++)
 	{
-		if (s_tile_count >= MAX_TILES)
-		{
-			log_warning("Attempting to render too many tiles!");
-			return;
-		}
-
 		//textureIndex 0 is reserved for "empty" tiles
 		if (chunk->tiles[i].textureIndex == 0)
-			return;
+			continue;
 
 		const uint16_t x = chunk_pos.x * TILE_CHUNK_SIZE + i % TILE_CHUNK_SIZE;
 		const uint16_t y = chunk_pos.y * TILE_CHUNK_SIZE + i / TILE_CHUNK_SIZE;
@@ -221,27 +224,14 @@ void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chu
 		}
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
-	glBufferSubData(GL_ARRAY_BUFFER, s_tile_count * sizeof(tile_quad), sizeof(tile_quad) * TILE_CHUNK_SIZE * TILE_CHUNK_SIZE, quads);
-	s_tile_count += TILE_CHUNK_SIZE * TILE_CHUNK_SIZE;
+	glBindBuffer(GL_ARRAY_BUFFER, s_command->vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, s_command->element_count / 6 * sizeof(tile_quad), sizeof(tile_quad) * TILE_CHUNK_SIZE * TILE_CHUNK_SIZE, quads);
+	s_command->element_count += TILE_CHUNK_SIZE * TILE_CHUNK_SIZE * 6;
 }
 
-void tile_renderer_clear_tiles()
+void tile_renderer_draw(const shader_h shader)
 {
-	s_tile_count = 0;
-}
-
-void tile_renderer_draw(void)
-{
-	set_tilemap_atlas(texture_get("res/tiles/test_tile.png"));
-
-	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
-
-	shader_set(s_shader);
 	texture_set(s_texture, 0);
-	shader_set_uint32_t(s_shader, "tile_atlas", texture_get_id(s_texture));
-	shader_set_mat3(s_shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
-
-	glBindVertexArray(s_vertex_array);
-	glDrawElements(GL_TRIANGLES, 6 * s_tile_count, GL_UNSIGNED_SHORT, 0);
+	shader_set_int32_t(shader, "tile_atlas", 0);
+	shader_set_mat3(shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
 }

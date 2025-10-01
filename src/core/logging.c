@@ -17,10 +17,6 @@ void _log_raw(const char *format, ...)
 
 void log_message(const char *format, ...)
 {
-#ifndef IS_DEBUG
-	return;
-#endif
-
 	va_list list;
 	va_start(list, format);
 
@@ -31,10 +27,6 @@ void log_message(const char *format, ...)
 
 void log_warning(const char *format, ...)
 {
-#ifndef IS_DEBUG
-	return;
-#endif
-
 	va_list list;
 	va_start(list, format);
 
@@ -45,10 +37,6 @@ void log_warning(const char *format, ...)
 
 void log_error(const char *format, ...)
 {
-#ifndef IS_DEBUG
-	return;
-#endif
-
 	va_list list;
 	va_start(list, format);
 

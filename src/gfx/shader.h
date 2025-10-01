@@ -2,11 +2,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "core/hash.h"
+#include "drawing.h"
 
 typedef struct vec2 vec2;
 typedef struct mat3 mat3;
-
-typedef hash shader_h;
 
 // Initializes shader system for use
 void shader_init(void);

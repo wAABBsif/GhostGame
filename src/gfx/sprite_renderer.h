@@ -1,5 +1,7 @@
 #pragma once
 #include <stdint.h>
+
+#include "drawing.h"
 #include "game/sprite.h"
 
 typedef struct sprite_vertex
@@ -25,5 +27,7 @@ void sprite_renderer_terminate();
 
 uint8_t sprite_renderer_get_texture(texture_h h);
 
-void sprite_renderer_queue_sprite(sprite s);
-void sprite_renderer_draw();
+void sprite_renderer_add_sprite(sprite s);
+void sprite_renderer_queue_drawing();
+
+void sprite_renderer_draw(shader_h shader);

@@ -40,6 +40,7 @@ static void _game_update(void)
 {
 	game_time_update();
 	sdl_interface_update();
+	sprite_update();
 	tile_map_update();
 	gfx_draw();
 }

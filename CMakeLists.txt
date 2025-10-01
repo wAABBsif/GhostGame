@@ -46,6 +46,8 @@ add_executable(GhostGame src/main.c
 		src/core/hash.h
 		src/game/sprite.c
 		src/game/sprite.h
+		src/gfx/drawing.h
+		src/gfx/drawing.c
 )
 
 include_directories(src)

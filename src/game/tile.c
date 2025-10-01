@@ -83,6 +83,9 @@ void tile_map_update()
 	}
 
 	memcpy(s_prev_active_chunks, s_active_chunks, sizeof(s_active_chunks));
+
+	//
+	set_tilemap_atlas(texture_get("res/tiles/test_tile.png"));
 }
 
 bool tile_is_flip_x(const tile t)

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <stdint.h>
 
+#include "drawing.h"
 #include "texture.h"
 
 //LAYOUT: XXXXXXXX XXYYYYYY YYYYZZZZ VVVVUUUU
@@ -44,7 +45,7 @@ uint8_t tile_vertex_get_u(tile_vertex vertex);
 uint8_t tile_vertex_get_v(tile_vertex vertex);
 uint8_t tile_vertex_get_uv(tile_vertex vertex);
 
-void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chunk *chunk);
 void tile_renderer_clear_tiles();
+void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chunk *chunk);
 
-void tile_renderer_draw(void);
+void tile_renderer_draw(shader_h shader);
