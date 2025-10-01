@@ -9,4 +9,6 @@ uniform sampler2D tile_atlas;
 void main()
 {
     FragColor = texture(tile_atlas, tex_coords);
+    if (FragColor.a < 0.01)
+        discard;
 }

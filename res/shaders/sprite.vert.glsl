@@ -15,5 +15,5 @@ void main()
 
     tex_coords = vec2(float(data.y & uint(0xFFFF)) / 65536.0, float((data.y >> 16) & uint(0xFFFF)) / 65536.0);
     tex_index = float((data.z >> 24) & uint(0xFF));
-    color = vec4(float((data.z >> 0) & uint(0xF)) / 15.0, float((data.z >> 4) & uint(0xF)) / 15.0, float((data.z >> 8) & uint(0xF)) / 15.0, float((data.z >> 12) & uint(0xF)) / 15.0);
+    color = vec4(float((data.z >> 12) & uint(0xF)) / 15.0, float((data.z >> 8) & uint(0xF)) / 15.0, float((data.z >> 4) & uint(0xF)) / 15.0, float((data.z >> 0) & uint(0xF)) / 15.0);
 }

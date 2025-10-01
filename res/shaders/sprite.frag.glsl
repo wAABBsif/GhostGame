@@ -10,5 +10,7 @@ uniform sampler2D textures[16];
 
 void main()
 {
-    FragColor = texture(textures[int(tex_index)], tex_coords);
+    FragColor = texture(textures[int(tex_index)], tex_coords) * color;
+    if (FragColor.a < 0.01)
+        discard;
 }
