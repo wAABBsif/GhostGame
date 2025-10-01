@@ -3,9 +3,9 @@
 
 typedef struct hash_map
 {
-	size_t entry_size;
-	size_t size;
-	size_t capacity;
+	ssize_t entry_size;
+	ssize_t size;
+	ssize_t capacity;
 	void *entries;
 } hash_map;
 
@@ -24,7 +24,7 @@ hash hash_string(const char *key);
  * \param entry_size the size (in bytes) of each hash map entry, including the hash
  * \param capacity the maximum amount of entries the hash map can contain
  */
-void hash_map_create(hash_map *map, size_t entry_size, size_t capacity);
+void hash_map_create(hash_map *map, ssize_t entry_size, ssize_t capacity);
 
 /**
  * Deinitializes a hashmap
@@ -40,7 +40,7 @@ void hash_map_destroy(hash_map *map);
  * \param data a pointer to the element that should be added
  * \returns an index to the element stored in the hashmap
  */
-size_t hash_map_add(hash_map *map, const void *data);
+ssize_t hash_map_add(hash_map *map, const void *data);
 
 /**
  * Removes an element from a hash map
@@ -48,7 +48,7 @@ size_t hash_map_add(hash_map *map, const void *data);
  * \param map the hash map
  * \param index the index of the element
  */
-void hash_map_remove(hash_map *map, size_t index);
+void hash_map_remove(hash_map *map, ssize_t index);
 
 /**
  * Retrieves a handle to a hash map element by index
@@ -57,7 +57,7 @@ void hash_map_remove(hash_map *map, size_t index);
  * \param index the index of the element
  * \returns a pointer to the element
  */
-void *hash_map_index(const hash_map *map, size_t index);
+void *hash_map_index(const hash_map *map, ssize_t index);
 
 /**
  * Binary searches for the index of a hash map element between two indices
@@ -68,7 +68,7 @@ void *hash_map_index(const hash_map *map, size_t index);
  * \param end_index the last index searched through
  * \returns either the index of the element if it exists; otherwise, the element that would be below it.
  */
-size_t hash_map_get_range(const hash_map *map, hash h, size_t start_index, size_t end_index);
+ssize_t hash_map_get_range(const hash_map *map, hash h, ssize_t start_index, ssize_t end_index);
 
 /**
  * Binary searches for the index of a hash map element
@@ -77,4 +77,4 @@ size_t hash_map_get_range(const hash_map *map, hash h, size_t start_index, size_
  * \param h the hash of the element
  * \returns either the index of the element if it exists; otherwise, -1
  */
-size_t hash_map_get_index(const hash_map *map, hash h);
+ssize_t hash_map_get_index(const hash_map *map, hash h);

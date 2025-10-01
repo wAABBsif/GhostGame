@@ -135,7 +135,7 @@ shader_h shader_load(const char* name)
 	glDeleteShader(vert_shader);
 	glDeleteShader(frag_shader);
 
-	if (hash_map_add(&s_shaders, &result) == -1)
+	if (hash_map_add(&s_shaders, &result) < 0)
 		return 0;
 
 	log_message("Loaded shader %s", name);
@@ -160,9 +160,9 @@ void shader_unload(const hash h)
 shader_h shader_get(const char* name)
 {
 	const hash h = hash_string(name);
-	const size_t index = hash_map_get_index(&s_shaders, h);
+	const ssize_t index = hash_map_get_index(&s_shaders, h);
 
-	if (index == -1)
+	if (index < 0)
 	{
 		log_warning("Shader %s not found, so loading instead!", name);
 		return shader_load(name);

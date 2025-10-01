@@ -64,8 +64,8 @@ mat3 mat3_from_translation(const vec2 translation)
 
 mat3 mat3_from_rotation(const float angle)
 {
-	float s = sinf(angle);
-	float c = cosf(angle);
+	float s, c;
+	sincosf(angle, &s, &c);
 
 	return (mat3)
 	{
