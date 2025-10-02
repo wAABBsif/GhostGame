@@ -13,9 +13,6 @@
 #include "SDL3/SDL_iostream.h"
 #include "SDL3/SDL_opengl.h"
 
-const char* VERT_EXTENSION = ".vert.glsl";
-const char* FRAG_EXTENSION = ".frag.glsl";
-
 typedef uint32_t shader_program;
 
 typedef struct shader
@@ -81,62 +78,41 @@ static shader_program s_compile_shader(const char *source, const uint32_t shader
 	return id;
 }
 
+shader_program load_shader_program(const char *name, const uint32_t shader_type)
+{
+	char *glsl = s_open_shader_file(name, shader_type == GL_VERTEX_SHADER ? VERT_EXTENSION : FRAG_EXTENSION);
+	if (!glsl)
+	{
+		log_error("Could not open %s.vert.glsl!", name);
+		return 0;
+	}
+
+	const char* glsl_from_hash = glsl;
+	while (*glsl_from_hash != '#')
+	{
+		if (*glsl_from_hash == '0')
+		{
+			glsl_from_hash = glsl;
+			break;
+		}
+		glsl_from_hash++;
+	}
+
+	const shader_program shader = s_compile_shader(glsl_from_hash, shader_type);
+	free(glsl);
+	if (!shader)
+	{
+		log_error("Could not compile %s.vert.glsl!", name);
+		return 0;
+	}
+
+	return shader;
+}
+
 shader_h shader_load(const char* name)
 {
-	if (s_shaders.size >= MAX_SHADERS)
-	{
-		log_warning("Attempted to add shader when there are already too many shaders!");
-		return 0;
-	}
-
-	char *vert_glsl = s_open_shader_file(name, VERT_EXTENSION);
-	if (!vert_glsl)
-		log_error("Could not open %s.vert.glsl!", name);
-
-	char *frag_glsl = s_open_shader_file(name, FRAG_EXTENSION);
-	if (!frag_glsl)
-		log_error("Could not open %s.frag.glsl!", name);
-
-	if (!vert_glsl || !frag_glsl)
-	{
-		if (frag_glsl)
-			free(frag_glsl);
-		if (vert_glsl)
-			free(vert_glsl);
-		return 0;
-	}
-
-	const char* vert_glsl_from_hash = vert_glsl;
-	while (*vert_glsl_from_hash != '#')
-	{
-		if (*vert_glsl_from_hash == '0')
-		{
-			vert_glsl_from_hash = vert_glsl;
-			break;
-		}
-		vert_glsl_from_hash++;
-	}
-
-	const char* frag_glsl_from_hash = frag_glsl;
-	while (*frag_glsl_from_hash != '#')
-	{
-		if (*frag_glsl_from_hash == '0')
-		{
-			frag_glsl_from_hash = frag_glsl;
-			break;
-		}
-		frag_glsl_from_hash++;
-	}
-
-	const shader_program vert_shader = s_compile_shader(vert_glsl_from_hash, GL_VERTEX_SHADER);
-	free(vert_glsl);
-	if (!vert_shader)
-		log_error("Could not compile %s.vert.glsl!", name);
-
-	const shader_program frag_shader = s_compile_shader(frag_glsl_from_hash, GL_FRAGMENT_SHADER);
-	free(frag_glsl);
-	if (!frag_shader)
-		log_error("Could not compile %s.frag.glsl!", name);
+	const shader_program vert_shader = load_shader_program(name, GL_VERTEX_SHADER);
+	const shader_program frag_shader = load_shader_program(name, GL_FRAGMENT_SHADER);
 
 	if (!vert_shader || !frag_shader)
 	{
@@ -146,6 +122,7 @@ shader_h shader_load(const char* name)
 			glDeleteShader(frag_shader);
 		return 0;
 	}
+	
 	const shader result = (shader){hash_string(name), glCreateProgram()};
 
 	glAttachShader(result.program, vert_shader);

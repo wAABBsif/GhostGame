@@ -5,6 +5,8 @@
 #include "drawing.h"
 
 #define MAX_SHADERS 32
+#define VERT_EXTENSION ".vert.glsl"
+#define FRAG_EXTENSION ".frag.glsl"
 
 typedef struct vec2 vec2;
 typedef struct mat3 mat3;
