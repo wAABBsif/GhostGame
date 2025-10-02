@@ -43,4 +43,4 @@ texture_h texture_get(const char* name);
 void texture_set(texture_h t, int slot);
 
 texture_id texture_get_id(texture_h t);
-void texture_get_size(texture_h t, uint32_t *width, uint32_t *height);
+void texture_get_size(texture_h t, int32_t *width, int32_t *height);

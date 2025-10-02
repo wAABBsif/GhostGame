@@ -9,8 +9,8 @@ typedef struct texture
 {
 	texture_h key;
 	texture_id id;
-	uint32_t width;
-	uint32_t height;
+	int32_t width;
+	int32_t height;
 } texture;
 
 static hash s_active_texture;
@@ -113,7 +113,7 @@ texture_id texture_get_id(const texture_h t)
 	return tex.id;
 }
 
-void texture_get_size(const texture_h t, uint32_t *width, uint32_t *height)
+void texture_get_size(const texture_h t, int32_t *width, int32_t *height)
 {
 	const texture tex = s_texture_entries[hash_map_get_index(&s_textures, t)];
 	*width = tex.width;

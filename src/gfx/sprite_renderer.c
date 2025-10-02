@@ -119,17 +119,23 @@ sprite_quad sprite_renderer_create_quad(sprite s)
 	const mat3 matrix = mat3_from_trs(position, rotation, scale);
 
 	const uint8_t texture = sprite_renderer_get_texture(s.texture);
-	uint32_t texture_w, texture_h;
+	int32_t texture_w, texture_h;
 	texture_get_size(s.texture, &texture_w, &texture_h);
 
 	sprite_quad quad;
 	for (uint8_t i = 0; i < 4; i++)
 	{
 		const vec2 vpos = vec2_transform(vertex_coords[i], matrix);
+		const vec2 vtex_coords =
+		{
+			(float)tex_coords[i * 2] / (float)texture_w * 65535.0f,
+			(float)tex_coords[i * 2 + 1] / (float)texture_h * 65535
+		};
+
 		quad.vertices[i] = (sprite_vertex)
 		{
-			vpos.x + 0.5f, vpos.y + 0.5f,
-			tex_coords[i * 2] / (float)texture_w * 65535, tex_coords[i * 2 + 1] / (float)texture_h * 65535,
+			lroundf(vpos.x), lroundf(vpos.y),
+			(uint16_t)vtex_coords.x, (uint16_t)vtex_coords.y,
 			s.color,
 			s.z, texture
 		};
