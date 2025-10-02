@@ -25,9 +25,17 @@ typedef struct sprite_quad
 void sprite_renderer_init();
 void sprite_renderer_terminate();
 
+draw_command *create_sprite_render_command(uint16_t sprite_limit, uint16_t draw_order, command_type type);
+draw_command *destroy_sprite_render_command(draw_command *cmd);
+
 uint8_t sprite_renderer_get_texture(texture_h h);
 
-void sprite_renderer_add_sprite(sprite s);
+sprite_quad sprite_renderer_create_quad(sprite s);
+void sprite_renderer_add_quad_unsorted(sprite_quad quad);
+void sprite_renderer_add_quad_sorted(sprite_quad quad);
 
 void sprite_renderer_clear_frame();
-void sprite_renderer_draw();
+
+void sprite_renderer_draw(const draw_command *cmd, const sprite_quad *quads);
+void sprite_renderer_draw_unsorted(draw_command *cmd);
+void sprite_renderer_draw_sorted(draw_command *cmd);

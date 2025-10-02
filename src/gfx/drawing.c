@@ -10,7 +10,8 @@ const draw_func DRAW_FUNCTIONS[] =
 {
 	NULL,
 	tile_renderer_draw,
-	sprite_renderer_draw,
+	sprite_renderer_draw_unsorted,
+	sprite_renderer_draw_sorted,
 };
 
 static draw_command s_commands[DRAW_COMMAND_COUNT];
@@ -37,11 +38,11 @@ void handle_draw_commands()
 	for (int i = 0; i < DRAW_COMMAND_COUNT; i++)
 	{
 		if (s_commands[i].command == DRAW_COMMAND_NONE)
-			break;
+			continue;
 
 		shader_set(s_commands[i].shader);
 
-		DRAW_FUNCTIONS[s_commands[i].command](s_commands[i].shader);
+		DRAW_FUNCTIONS[s_commands[i].command](&s_commands[i]);
 
 		glBindVertexArray(s_commands[i].vao);
 		glDrawElements(GL_TRIANGLES, s_commands[i].element_count, GL_UNSIGNED_SHORT, 0);

@@ -167,7 +167,7 @@ shader_h shader_get(const char* name)
 		log_warning("Shader %s not found, so loading instead!", name);
 		return shader_load(name);
 	}
-	return ((shader *)hash_map_get_index(&s_shaders, h))->key;
+	return ((shader *)hash_map_index(&s_shaders, index))->key;
 }
 
 void shader_set(const shader_h s)

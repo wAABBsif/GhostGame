@@ -229,9 +229,9 @@ void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chu
 	s_command->element_count += TILE_CHUNK_SIZE * TILE_CHUNK_SIZE * 6;
 }
 
-void tile_renderer_draw()
+void tile_renderer_draw(draw_command *cmd)
 {
 	texture_set(s_texture, 0);
-	shader_set_int32_t(s_command->shader, "tile_atlas", 0);
-	shader_set_mat3(s_command->shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
+	shader_set_int32_t(cmd->shader, "tile_atlas", 0);
+	shader_set_mat3(cmd->shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
 }
