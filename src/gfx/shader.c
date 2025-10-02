@@ -72,7 +72,8 @@ static shader_program s_compile_shader(const char *source, const uint32_t shader
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 		char *message = malloc(length);
 		glGetShaderInfoLog(id, length, &length, message);
-		log_message("Shader error: %s", message);
+		message[length - 1] = 0;
+		log_error("%s shader error: %s", shader_type == GL_VERTEX_SHADER ? "Vertex" : "Fragment", message);
 		glDeleteShader(id);
 		return 0;
 	}
@@ -89,11 +90,15 @@ shader_h shader_load(const char* name)
 	}
 
 	char *vert_glsl = s_open_shader_file(name, VERT_EXTENSION);
+	if (!vert_glsl)
+		log_error("Could not open %s.vert.glsl!", name);
+
 	char *frag_glsl = s_open_shader_file(name, FRAG_EXTENSION);
+	if (!frag_glsl)
+		log_error("Could not open %s.frag.glsl!", name);
 
 	if (!vert_glsl || !frag_glsl)
 	{
-		log_error("Could not open %s shader file!", name);
 		if (frag_glsl)
 			free(frag_glsl);
 		if (vert_glsl)
@@ -102,7 +107,7 @@ shader_h shader_load(const char* name)
 	}
 
 	const char* vert_glsl_from_hash = vert_glsl;
-	while (*vert_glsl_from_hash != '#')
+	while (*vert_glsl_from_hash != '0')
 	{
 		if (*vert_glsl_from_hash == '0')
 		{
@@ -124,21 +129,23 @@ shader_h shader_load(const char* name)
 	}
 
 	const shader_program vert_shader = s_compile_shader(vert_glsl_from_hash, GL_VERTEX_SHADER);
-	const shader_program frag_shader = s_compile_shader(frag_glsl_from_hash, GL_FRAGMENT_SHADER);
-
 	free(vert_glsl);
-	free(frag_glsl);
+	if (!vert_shader)
+		log_error("Could not compile %s.vert.glsl!", name);
 
-	if (!frag_shader || !vert_shader)
+	const shader_program frag_shader = s_compile_shader(frag_glsl_from_hash, GL_FRAGMENT_SHADER);
+	free(frag_glsl);
+	if (!frag_shader)
+		log_error("Could not compile %s.frag.glsl!", name);
+
+	if (!vert_shader || !frag_shader)
 	{
-		log_error("Could not compile %s shader!", name);
 		if (vert_shader)
 			glDeleteShader(vert_shader);
 		if (frag_shader)
 			glDeleteShader(frag_shader);
 		return 0;
 	}
-
 	const shader result = (shader){hash_string(name), glCreateProgram()};
 
 	glAttachShader(result.program, vert_shader);
