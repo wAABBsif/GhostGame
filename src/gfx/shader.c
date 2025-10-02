@@ -1,15 +1,16 @@
 ﻿#include "shader.h"
 
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "core/hash_map.h"
 #include "core/logging.h"
 #include "core/mat3.h"
 #include "core/vec2.h"
 #include "glad/glad.h"
+#include "SDL3/SDL_iostream.h"
 #include "SDL3/SDL_opengl.h"
 
 const char* VERT_EXTENSION = ".vert.glsl";
@@ -49,18 +50,11 @@ static char *s_open_shader_file(const char* name, const char *extension)
 	strcpy(filename, name);
 	strcat(filename, extension);
 
-	FILE* file = fopen(filename, "rb");
-	if (file == NULL)
+	const SDL_IOStream* stream = SDL_IOFromFile(filename, "r");
+	if (stream == NULL)
 		return NULL;
 
-	fseek(file, 0, SEEK_END);
-	const int32_t size = ftell(file);
-	fseek(file, 0, SEEK_SET);
-
-	char *buffer = malloc(size + 1);
-	fread(buffer, 1, size, file);
-	buffer[size] = 0;
-
+	char* buffer = SDL_LoadFile_IO(stream, NULL, true);
 	return buffer;
 }
 
