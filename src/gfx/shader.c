@@ -107,7 +107,7 @@ shader_h shader_load(const char* name)
 	}
 
 	const char* vert_glsl_from_hash = vert_glsl;
-	while (*vert_glsl_from_hash != '0')
+	while (*vert_glsl_from_hash != '#')
 	{
 		if (*vert_glsl_from_hash == '0')
 		{
