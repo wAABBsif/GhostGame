@@ -5,6 +5,8 @@
 
 #include "logging.h"
 
+void *hash_map_index(const hash_map *map, size_t index);
+
 hash hash_string(const char *key)
 {
 	size_t hash = 5381;
@@ -16,12 +18,12 @@ hash hash_string(const char *key)
 	return hash;
 }
 
-void hash_map_create(hash_map *map, const size_t entry_size, const size_t capacity)
+void hash_map_create(hash_map *map, const size_t entry_size, const size_t capacity, void *entries)
 {
 	map->entry_size = entry_size;
 	map->size = 0;
 	map->capacity = capacity;
-	map->entries = calloc(map->capacity, entry_size);
+	map->entries = entries;
 }
 
 void hash_map_destroy(hash_map *map)
@@ -29,7 +31,7 @@ void hash_map_destroy(hash_map *map)
 	map->entry_size = 0;
 	map->size = 0;
 	map->capacity = 0;
-	free(map->entries);
+	map->entries = NULL;
 }
 
 size_t hash_map_add(hash_map *map, const void *data)

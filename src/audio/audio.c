@@ -13,6 +13,7 @@ typedef struct audio_clip
 } audio_clip;
 
 static hash_map s_clips;
+static audio_clip s_clip_entries[MAX_AUDIO_CLIPS];
 static MIX_Mixer *s_sdl_mixer;
 static MIX_Track *s_tracks[MAX_AUDIO_TRACKS];
 
@@ -23,7 +24,7 @@ void audio_init(void)
 	MIX_Init();
 	s_sdl_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
 
-	hash_map_create(&s_clips, sizeof(audio_clip), MAX_AUDIO_CLIPS);
+	hash_map_create(&s_clips, sizeof(audio_clip), MAX_AUDIO_CLIPS, s_clip_entries);
 
 	sfx_init();
 	music_init();
@@ -46,7 +47,7 @@ void audio_terminate(void)
 
 	for (int i = 0; i < s_clips.size; i++)
 	{
-		audio_clip *c = hash_map_index(&s_clips, i);
+		audio_clip *c = &s_clip_entries[i];
 		MIX_DestroyAudio(c->audio);
 		c->audio = NULL;
 	}
@@ -93,7 +94,7 @@ void audio_clip_unload(const audio_clip_h h)
 		return;
 	}
 
-	const audio_clip clip = *(audio_clip *)hash_map_index(&s_clips, h);
+	const audio_clip clip = s_clip_entries[index];
 	MIX_DestroyAudio(clip.audio);
 	hash_map_remove(&s_clips, index);
 }
@@ -109,7 +110,7 @@ audio_clip_h audio_clip_get(const char* name)
 		return 0;
 	}
 
-	return ((audio_clip *)hash_map_index(&s_clips, index))->hash;
+	return s_clip_entries[index].hash;
 }
 
 audio_track_h audio_create_track(void)
@@ -143,11 +144,8 @@ bool audio_track_is_valid(const audio_track_h track)
 
 void audio_set_track(const audio_track_h track, const audio_clip_h clip)
 {
-	const audio_clip *c = hash_map_index(&s_clips, hash_map_get_index(&s_clips, clip));
-	if (c == NULL)
-		return log_warning("Invalid audio clip cannot be used.");
-
-	MIX_SetTrackAudio(s_tracks[track], c->audio);
+	const audio_clip c = s_clip_entries[hash_map_get_index(&s_clips, clip)];
+	MIX_SetTrackAudio(s_tracks[track], c.audio);
 }
 
 void audio_play_track(const audio_track_h track, const bool loop)

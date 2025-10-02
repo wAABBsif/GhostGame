@@ -165,11 +165,10 @@ void sprite_renderer_draw(const draw_command *cmd, const sprite_quad *quads)
 	for (int i = 0; i < s_texture_count; i++)
 	{
 		texture_set(s_textures[i], i);
-		char loc[16];
+		static char s_loc[16];
 
-		const char* format = "textures[%i]";
-		sprintf(loc, format, i);
-		shader_set_int32_t(cmd->shader, loc, i);
+		sprintf(s_loc, "textures[%i]", i);
+		shader_set_int32_t(cmd->shader, s_loc, i);
 	}
 
 	shader_set_mat3(cmd->shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
@@ -182,7 +181,7 @@ void sprite_renderer_draw_unsorted(draw_command *cmd)
 
 void sprite_renderer_draw_sorted(draw_command *cmd)
 {
-	sprite_quad n_quads[MAX_SPRITES_SORTED];
+	static sprite_quad s_n_quads[MAX_SPRITES_SORTED];
 	uint16_t quad_index = 0;
 
 	for (int i = 0; i < MAX_SPRITE_LAYERS; i++)
@@ -191,11 +190,11 @@ void sprite_renderer_draw_sorted(draw_command *cmd)
 		{
 			if (s_quads_sorted[j].vertices[0].z == i)
 			{
-				n_quads[quad_index] = s_quads_sorted[j];
+				s_n_quads[quad_index] = s_quads_sorted[j];
 				quad_index++;
 			}
 		}
 	}
 
-	sprite_renderer_draw(cmd, n_quads);
+	sprite_renderer_draw(cmd, s_n_quads);
 }

@@ -4,6 +4,8 @@
 #include "core/hash.h"
 #include "drawing.h"
 
+#define MAX_SHADERS 32
+
 typedef struct vec2 vec2;
 typedef struct mat3 mat3;
 

@@ -24,7 +24,7 @@ hash hash_string(const char *key);
  * \param entry_size the size (in bytes) of each hash map entry, including the hash
  * \param capacity the maximum amount of entries the hash map can contain
  */
-void hash_map_create(hash_map *map, size_t entry_size, size_t capacity);
+void hash_map_create(hash_map *map, size_t entry_size, size_t capacity, void *entries);
 
 /**
  * Deinitializes a hashmap
@@ -49,15 +49,6 @@ size_t hash_map_add(hash_map *map, const void *data);
  * \param index the index of the element
  */
 void hash_map_remove(hash_map *map, size_t index);
-
-/**
- * Retrieves a handle to a hash map element by index
- *
- * \param map the hash map
- * \param index the index of the element
- * \returns a pointer to the element
- */
-void *hash_map_index(const hash_map *map, size_t index);
 
 /**
  * Binary searches for the index of a hash map element between two indices

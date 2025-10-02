@@ -5,11 +5,6 @@
 #include "glad/glad.h"
 #include "SDL3_image/SDL_image.h"
 
-const int MAX_TEXTURES = 64;
-
-static hash s_active_texture;
-static hash_map s_textures;
-
 typedef struct texture
 {
 	texture_h key;
@@ -18,10 +13,14 @@ typedef struct texture
 	uint32_t height;
 } texture;
 
+static hash s_active_texture;
+static hash_map s_textures;
+static texture s_texture_entries[MAX_TEXTURES];
+
 void texture_init(void)
 {
 	log_message("Initializing textures...");
-	hash_map_create(&s_textures, sizeof(texture), MAX_TEXTURES);
+	hash_map_create(&s_textures, sizeof(texture), MAX_TEXTURES, s_texture_entries);
 	s_active_texture = 0;
 }
 
@@ -30,8 +29,7 @@ void texture_clear(void)
 	log_message("Clearing textures...");
 	for (int i = 0; i < s_textures.size; i++)
 	{
-		const texture *s = (texture *)hash_map_index(&s_textures, i);
-		glDeleteTextures(1, &s->id);
+		glDeleteTextures(1, &s_texture_entries[i].id);
 	}
 
 	hash_map_destroy(&s_textures);
@@ -83,7 +81,7 @@ void texture_unload(const texture_h h)
 		return;
 	}
 
-	const texture t = *(texture*)hash_map_index(&s_textures, h);
+	const texture t = s_texture_entries[index];
 	glDeleteProgram(t.id);
 	hash_map_remove(&s_textures, index);
 }
@@ -98,7 +96,7 @@ texture_h texture_get(const char* name)
 		log_warning("Texture %s not found, so loading instead!", name);
 		return texture_load(name);
 	}
-	return ((texture *)hash_map_index(&s_textures, index))->key;
+	return s_texture_entries[index].key;
 }
 
 void texture_set(const texture_h t, const int slot)
@@ -109,13 +107,13 @@ void texture_set(const texture_h t, const int slot)
 
 texture_id texture_get_id(const texture_h t)
 {
-	const texture *tex = (texture *)hash_map_index(&s_textures, hash_map_get_index(&s_textures, t));
-	return tex->id;
+	const texture tex = s_texture_entries[hash_map_get_index(&s_textures, t)];
+	return tex.id;
 }
 
 void texture_get_size(const texture_h t, uint32_t *width, uint32_t *height)
 {
-	const texture *tex = (texture *)hash_map_index(&s_textures, hash_map_get_index(&s_textures, t));
-	*width = tex->width;
-	*height = tex->height;
+	const texture tex = s_texture_entries[hash_map_get_index(&s_textures, t)];
+	*width = tex.width;
+	*height = tex.height;
 }
