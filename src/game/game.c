@@ -43,8 +43,8 @@ static void _game_update(void)
 	sdl_interface_update();
 	sprite_update();
 	tile_map_update();
-	gfx_draw();
 	audio_update();
+	gfx_draw();
 }
 
 static void _game_terminate(void)

@@ -1,4 +1,7 @@
 ﻿#pragma once
+
+#define MAX_DELTA_TIME (1.0f / 60.0f)
+
 typedef struct game_timer
 {
 	float start;

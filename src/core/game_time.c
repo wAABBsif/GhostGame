@@ -2,6 +2,8 @@
 
 #include "game_time.h"
 
+#include <math.h>
+
 #include "logging.h"
 #include "SDL3/SDL_timer.h"
 
@@ -12,15 +14,16 @@ static float s_nanoseconds_to_seconds(const uint64_t nanoseconds)
 
 const float FPS_TIME_INTERVAL = 0.0f;
 static float s_fps_timer;
-static float s_fps_points[1024];
+static float s_fps_points[256];
 
-float s_prev_elapsed_time;
+float s_prev_time;
+float s_current_time;
 float s_elapsed_time;
 
 void game_time_init(void)
 {
-	s_prev_elapsed_time = 0;
-	s_elapsed_time = 0;
+	s_prev_time = 0;
+	s_current_time = 0;
 	s_fps_timer = 0;
 	for (int i = 0; i < sizeof(s_fps_points) / sizeof(s_fps_points[0]); i++)
 	{
@@ -30,9 +33,10 @@ void game_time_init(void)
 
 void game_time_update(void)
 {
-	s_prev_elapsed_time = s_elapsed_time;
-	s_elapsed_time = s_nanoseconds_to_seconds(SDL_GetTicksNS());
+	s_prev_time = s_current_time;
+	s_current_time = s_nanoseconds_to_seconds(SDL_GetTicksNS());
 
+	s_elapsed_time += game_time_get_delta();
 	s_fps_timer -= game_time_get_delta();
 	if (s_fps_timer <= 0)
 	{
@@ -41,7 +45,7 @@ void game_time_update(void)
 		for (int i = sizeof(s_fps_points) / sizeof(s_fps_points[0]) - 1; i >= 1; i--)
 			s_fps_points[i] = s_fps_points[i - 1];
 
-		s_fps_points[0] = game_time_get_delta();
+		s_fps_points[0] = s_current_time - s_prev_time;
 	}
 }
 
@@ -52,7 +56,7 @@ float game_time_get_elapsed(void)
 
 float game_time_get_delta(void)
 {
-	return s_elapsed_time - s_prev_elapsed_time;
+	return fmin(s_current_time - s_prev_time, MAX_DELTA_TIME);
 }
 
 float game_time_get_fps(void)
