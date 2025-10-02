@@ -50,7 +50,7 @@ static char *s_open_shader_file(const char* name, const char *extension)
 	strcpy(filename, name);
 	strcat(filename, extension);
 
-	const SDL_IOStream* stream = SDL_IOFromFile(filename, "r");
+	SDL_IOStream* stream = SDL_IOFromFile(filename, "r");
 	if (stream == NULL)
 		return NULL;
 
