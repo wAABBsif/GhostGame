@@ -182,7 +182,7 @@ void sprite_renderer_draw_unsorted(draw_command *cmd)
 
 void sprite_renderer_draw_sorted(draw_command *cmd)
 {
-	sprite_quad *n_quads = malloc(sizeof(sprite_quad) * cmd->element_count / 6);
+	sprite_quad n_quads[MAX_SPRITES_SORTED];
 	uint16_t quad_index = 0;
 
 	for (int i = 0; i < MAX_SPRITE_LAYERS; i++)
