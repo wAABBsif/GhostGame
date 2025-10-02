@@ -101,8 +101,30 @@ shader_h shader_load(const char* name)
 		return 0;
 	}
 
-	const shader_program vert_shader = s_compile_shader(vert_glsl, GL_VERTEX_SHADER);
-	const shader_program frag_shader = s_compile_shader(frag_glsl, GL_FRAGMENT_SHADER);
+	const char* vert_glsl_from_hash = vert_glsl;
+	while (*vert_glsl_from_hash != '#')
+	{
+		if (*vert_glsl_from_hash == '0')
+		{
+			vert_glsl_from_hash = vert_glsl;
+			break;
+		}
+		vert_glsl_from_hash++;
+	}
+
+	const char* frag_glsl_from_hash = frag_glsl;
+	while (*frag_glsl_from_hash != '#')
+	{
+		if (*frag_glsl_from_hash == '0')
+		{
+			frag_glsl_from_hash = frag_glsl;
+			break;
+		}
+		frag_glsl_from_hash++;
+	}
+
+	const shader_program vert_shader = s_compile_shader(vert_glsl_from_hash, GL_VERTEX_SHADER);
+	const shader_program frag_shader = s_compile_shader(frag_glsl_from_hash, GL_FRAGMENT_SHADER);
 
 	free(vert_glsl);
 	free(frag_glsl);
