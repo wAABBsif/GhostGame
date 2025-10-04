@@ -83,7 +83,7 @@ shader_program load_shader_program(const char *name, const uint32_t shader_type)
 	char *glsl = s_open_shader_file(name, shader_type == GL_VERTEX_SHADER ? VERT_EXTENSION : FRAG_EXTENSION);
 	if (!glsl)
 	{
-		log_error("Could not open %s.vert.glsl!", name);
+		log_error("Could not open %s%s", name, shader_type == GL_VERTEX_SHADER ? VERT_EXTENSION : FRAG_EXTENSION);
 		return 0;
 	}
 
