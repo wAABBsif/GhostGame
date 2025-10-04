@@ -95,7 +95,7 @@ texture_h texture_get(const char* name)
 
 	if (index == SIZE_MAX)
 	{
-		log_warning("Texture %s not found, so loading instead!", name);
+		log_message("Texture %s not found, so loading instead!", name);
 		return texture_load(name);
 	}
 	return s_texture_entries[index].key;

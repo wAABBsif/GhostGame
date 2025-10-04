@@ -162,7 +162,7 @@ shader_h shader_get(const char* name)
 
 	if (index == SIZE_MAX)
 	{
-		log_warning("Shader %s not found, so loading instead!", name);
+		log_message("Shader %s not found, so loading instead!", name);
 		return shader_load(name);
 	}
 	return s_shader_entries[index].key;
