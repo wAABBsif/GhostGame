@@ -22,8 +22,8 @@ typedef struct sprite_quad
 	sprite_vertex vertices[4];
 } sprite_quad;
 
-void sprite_renderer_init();
-void sprite_renderer_terminate();
+void sprite_renderer_init(void);
+void sprite_renderer_terminate(void);
 
 draw_command *create_sprite_render_command(uint16_t sprite_limit, uint16_t draw_order, command_type type);
 draw_command *destroy_sprite_render_command(draw_command *cmd);
@@ -34,7 +34,7 @@ sprite_quad sprite_renderer_create_quad(sprite s);
 void sprite_renderer_add_quad_unsorted(sprite_quad quad);
 void sprite_renderer_add_quad_sorted(sprite_quad quad);
 
-void sprite_renderer_clear_frame();
+void sprite_renderer_clear_frame(void);
 
 void sprite_renderer_draw(const draw_command *cmd, const sprite_quad *quads);
 void sprite_renderer_draw_unsorted(draw_command *cmd);

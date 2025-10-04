@@ -36,9 +36,9 @@ typedef struct tile_chunk_pos
 #define TILE_ROTATE_CW_MASK  0b00010000
 #define TILE_Z_MASK          0b00001111
 
-void tile_map_init();
-void tile_map_terminate();
-void tile_map_update();
+void tile_map_init(void);
+void tile_map_terminate(void);
+void tile_map_update(void);
 
 bool tile_is_flip_x(tile t);
 bool tile_is_flip_y(tile t);

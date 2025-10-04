@@ -33,4 +33,4 @@ struct draw_command
 
 draw_command *create_draw_command(uint16_t min_index);
 void release_draw_command(draw_command *command);
-void handle_draw_commands();
+void handle_draw_commands(void);

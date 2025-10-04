@@ -1,8 +1,13 @@
 ﻿#include "audio.h"
+
 #include "sfx.h"
 #include "music.h"
+#include "core/game_time.h"
 #include "core/hash_map.h"
 #include "core/logging.h"
+#include "core/mat3.h"
+#include "core/vec2.h"
+#include "gfx/camera.h"
 
 #include "SDL3_mixer/SDL_mixer.h"
 
@@ -17,6 +22,8 @@ static audio_clip s_clip_entries[MAX_AUDIO_CLIPS];
 static MIX_Mixer *s_sdl_mixer;
 static MIX_Track *s_tracks[MAX_AUDIO_TRACKS];
 
+audio_track_h t;
+
 void audio_init(void)
 {
 	log_message("Initializing audio...");
@@ -28,11 +35,6 @@ void audio_init(void)
 
 	sfx_init();
 	music_init();
-
-	const audio_clip_h clip = audio_clip_load("res/audio/test.wav", true);
-	const audio_track_h track = audio_create_track();
-	audio_set_track(track, clip);
-	audio_play_track(track, false);
 }
 
 void audio_update(void)
@@ -60,7 +62,7 @@ void audio_terminate(void)
 	MIX_Quit();
 }
 
-audio_clip_h audio_clip_load(const char* name, const bool decode)
+audio_clip_h audio_clip_load(const char* name, const bool is_sfx)
 {
 	audio_clip clip;
 
@@ -70,7 +72,7 @@ audio_clip_h audio_clip_load(const char* name, const bool decode)
 		return 0;
 	}
 
-	clip.audio = MIX_LoadAudio(s_sdl_mixer, name, decode);
+	clip.audio = MIX_LoadAudio(s_sdl_mixer, name, is_sfx);
 	if (clip.audio == NULL)
 	{
 		log_error("Failed to load audio: %s", name);
@@ -106,7 +108,7 @@ audio_clip_h audio_clip_get(const char* name)
 
 	if (index == SIZE_MAX)
 	{
-		log_warning("Audio clip %s not found!", name);
+		log_error("Audio clip %s not found!", name);
 		return 0;
 	}
 
@@ -142,7 +144,12 @@ bool audio_track_is_valid(const audio_track_h track)
 	return s_tracks[track] != NULL && track < MAX_AUDIO_TRACKS && track >= 0;
 }
 
-void audio_set_track(const audio_track_h track, const audio_clip_h clip)
+bool audio_track_is_playing(const audio_track_h track)
+{
+	return MIX_TrackPlaying(s_tracks[track]);
+}
+
+void audio_set_track_clip(const audio_track_h track, const audio_clip_h clip)
 {
 	const audio_clip c = s_clip_entries[hash_map_get_index(&s_clips, clip)];
 	MIX_SetTrackAudio(s_tracks[track], c.audio);
@@ -150,10 +157,13 @@ void audio_set_track(const audio_track_h track, const audio_clip_h clip)
 
 void audio_play_track(const audio_track_h track, const bool loop)
 {
-	SDL_PropertiesID properties = 0;
+	const SDL_PropertiesID properties = SDL_CreateProperties();
 	if (loop)
-		properties = SDL_SetNumberProperty(properties, MIX_PROP_PLAY_LOOPS_NUMBER, -1);
+		SDL_SetNumberProperty(properties, MIX_PROP_PLAY_LOOPS_NUMBER, -1);
+
 	MIX_PlayTrack(s_tracks[track], properties);
+
+	SDL_DestroyProperties(properties);
 }
 
 void audio_pause_track(const audio_track_h track)
@@ -169,4 +179,23 @@ void audio_stop_track(const audio_track_h track)
 void audio_set_track_volume(const audio_track_h track, const float volume)
 {
 	MIX_SetTrackGain(s_tracks[track], volume);
+}
+
+float audio_get_track_volume(const audio_track_h track)
+{
+	return MIX_GetTrackGain(s_tracks[track]);
+}
+
+void audio_set_track_position(const audio_track_h track, vec2 position)
+{
+	position = vec2_transform(position, world_to_camera_matrix(get_main_camera()));
+	MIX_SetTrack3DPosition(s_tracks[track], &(MIX_Point3D){position.x * AUDIO_3D_SCALE, position.y * AUDIO_3D_SCALE, 0});
+}
+
+vec2 audio_get_track_position(const audio_track_h track)
+{
+	MIX_Point3D p;
+	MIX_GetTrack3DPosition(s_tracks[track], &p);
+	const vec2 result = (vec2){p.x / AUDIO_3D_SCALE, p.y / AUDIO_3D_SCALE};
+	return vec2_transform(result, camera_to_world_matrix(get_main_camera()));
 }

@@ -48,15 +48,19 @@ size_t hash_map_add(hash_map *map, const void *data)
 	if (map->size >= 1)
 	{
 		new_index = hash_map_get_range(map, *(hash*)data, 0, map->size - 1);
-		if (*(hash*)hash_map_index(map, new_index) == *(hash*)data)
+		hash current_index_hash = *(hash*)hash_map_index(map, new_index);
+
+		if (current_index_hash == *(hash*)data)
 		{
-			log_error("Key already exists.");
+			log_warning("Key already exists.");
 			return SIZE_MAX;
 		}
+		if (*(hash*)data > current_index_hash)
+			new_index++;
 
 		loc = hash_map_index(map, new_index);
 		new_index++;
-		memmove(hash_map_index(map, new_index), loc, map->entry_size * (map->size - new_index + 1));
+		memmove(hash_map_index(map, new_index), loc, map->entry_size * (map->size - (new_index - 1)));
 	}
 
 	memcpy(loc, data, map->entry_size);
@@ -79,7 +83,10 @@ void *hash_map_index(const hash_map *map, size_t index)
 
 size_t hash_map_get_range(const hash_map *map, const hash h, const size_t start_index, const size_t end_index)
 {
-	if (start_index >= end_index)
+	if (map->size <= 1)
+		return 0;
+
+	if (start_index >= end_index || end_index == SIZE_MAX)
 		return start_index;
 
 	const size_t mid = (start_index + end_index) / 2;
@@ -88,7 +95,7 @@ size_t hash_map_get_range(const hash_map *map, const hash h, const size_t start_
 	if (mid_hash < h)
 		return hash_map_get_range(map, h, mid + 1, end_index);
 	if (mid_hash > h)
-		return hash_map_get_range(map, start_index, start_index, mid);
+		return hash_map_get_range(map, start_index, start_index, mid - 1);
 	return mid;
 }
 

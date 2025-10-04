@@ -30,4 +30,4 @@ typedef struct sprite
 } sprite;
 
 void sprite_draw(sprite s, bool is_translucent);
-void sprite_update();
+void sprite_update(void);

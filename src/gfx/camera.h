@@ -16,11 +16,11 @@ typedef struct camera
 	texture_id texture;
 } camera;
 
-void camera_init();
-void camera_terminate();
+void camera_init(void);
+void camera_terminate(void);
 
 void set_main_camera(camera *cam);
-camera *get_main_camera();
+camera *get_main_camera(void);
 
 void camera_create(camera *cam);
 void camera_create_framebuffer(camera *cam);

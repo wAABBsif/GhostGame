@@ -16,8 +16,8 @@ typedef struct tile tile;
 typedef struct tile_chunk tile_chunk;
 typedef struct tile_chunk_pos tile_chunk_pos;
 
-void tile_renderer_init();
-void tile_renderer_terminate();
+void tile_renderer_init(void);
+void tile_renderer_terminate(void);
 
 void tile_renderer_set_texture(texture_h texture);
 
@@ -45,7 +45,7 @@ uint8_t tile_vertex_get_u(tile_vertex vertex);
 uint8_t tile_vertex_get_v(tile_vertex vertex);
 uint8_t tile_vertex_get_uv(tile_vertex vertex);
 
-void tile_renderer_clear_tiles();
+void tile_renderer_clear_tiles(void);
 void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chunk *chunk);
 
 void tile_renderer_draw(draw_command *cmd);

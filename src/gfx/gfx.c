@@ -97,7 +97,6 @@ void gfx_draw(void)
 	camera_render_to_screen(&cam);
 
 	SDL_GL_SwapWindow(window_get_sdl_handle());
-	log_message("%f", game_time_get_fps());
 }
 
 void gfx_terminate(void)
