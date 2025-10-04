@@ -99,7 +99,7 @@ shader_program load_shader_program(const char *name, const uint32_t shader_type)
 	}
 
 	const shader_program shader = s_compile_shader(glsl_from_hash, shader_type);
-	free(glsl);
+	SDL_free(glsl);
 	if (!shader)
 	{
 		log_error("Could not compile %s.vert.glsl!", name);

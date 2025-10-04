@@ -46,11 +46,13 @@ vec4 get_tex_color(int index)
         case 15:
             return texture(textures[15], tex_coords);
     }
+
+    return vec4(0, 0, 0, 0);
 }
 
 void main()
 {
     FragColor = get_tex_color(int(tex_index)) * color;
-    if (FragColor.a < 0.01)
+    if (FragColor.a < 0.05)
         discard;
 }
