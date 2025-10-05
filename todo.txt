@@ -1,9 +1,5 @@
-implement audio
-implement sound
-implement music
-
-create sprite
-
-create file format
-load file format
-level editor
+input system
+try to get ui to work
+object system
+level file format
+come up with a vague structure idk
