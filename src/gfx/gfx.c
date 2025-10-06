@@ -15,6 +15,7 @@
 #include "sprite_renderer.h"
 #include "tile_renderer.h"
 #include "game/tile.h"
+#include "input/input.h"
 #include "SDL3/SDL_video.h"
 
 static SDL_GLContext s_context = NULL;
@@ -31,10 +32,7 @@ void test_camera_init(void)
 void test_camera_update(void)
 {
 	const bool *keys = SDL_GetKeyboardState(NULL);
-	cam.position.x += keys[SDL_SCANCODE_D] * game_time_get_delta() * 400;
-	cam.position.x -= keys[SDL_SCANCODE_A] * game_time_get_delta() * 400;
-	cam.position.y += keys[SDL_SCANCODE_W] * game_time_get_delta() * 400;
-	cam.position.y -= keys[SDL_SCANCODE_S] * game_time_get_delta() * 400;
+	cam.position = vec2_add(cam.position, vec2_mul(input_get_vector(INPUT_VECTOR_MOVEMENT), 400 * game_time_get_delta()));
 
 	cam.rotation -= keys[SDL_SCANCODE_Q] * game_time_get_delta() * 4;
 	cam.rotation += keys[SDL_SCANCODE_E] * game_time_get_delta() * 4;

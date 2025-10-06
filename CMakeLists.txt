@@ -48,6 +48,11 @@ add_executable(GhostGame src/main.c
 		src/game/sprite.h
 		src/gfx/drawing.h
 		src/gfx/drawing.c
+		src/input/input.c
+		src/input/input.h
+		src/input/input_device.h
+		src/input/device_kbm.c
+		src/input/device_kbm.h
 )
 
 include_directories(src)

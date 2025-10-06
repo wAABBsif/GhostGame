@@ -69,6 +69,8 @@ vec2 vec2_clamp_mag(const vec2 v, const float max_magnitude)
 
 vec2 vec2_normalize(const vec2 v)
 {
+	if (vec2_sqr_mag(v) == 0)
+		return v;
 	return vec2_div(v, vec2_mag(v));
 }
 
