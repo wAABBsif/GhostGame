@@ -2,70 +2,95 @@
 
 #include <stdlib.h>
 
+#include "core/logging.h"
 #include "core/vec2.h"
 #include "SDL3/SDL_events.h"
 #include "SDL3/SDL_keyboard.h"
 
-static bool s_is_action_primary(void *generic_device)
+static bool s_is_action_shoot(const void *generic_device)
 {
-	input_device_kbm device = *(input_device_kbm*)generic_device;
+	const input_device_kbm *device = generic_device;
+	return device->mouse_state & SDL_BUTTON_LMASK;
 }
 
-static bool s_is_action_secondary(void *generic_device)
+static bool s_is_action_switch(const void *generic_device)
 {
-	input_device_kbm device = *(input_device_kbm*)generic_device;
-	return false;
+	const input_device_kbm *device = generic_device;
+	return device->mouse_state & SDL_BUTTON_RMASK;
 }
 
-static vec2 s_get_vector_movement(void *generic_device)
+static bool s_is_action_aux(const void *generic_device)
 {
-	const input_device_kbm device = *(input_device_kbm*)generic_device;
+	const input_device_kbm *device = generic_device;
+	return device->key_state[SDL_SCANCODE_SPACE] || device->key_state[SDL_SCANCODE_E];
+}
+
+static vec2 s_get_vector_movement(const void *generic_device)
+{
+	const input_device_kbm *device = generic_device;
 	vec2 result = VEC2_ZERO;
 
-	if (device.keys[SDL_SCANCODE_LEFT] || device.keys[SDL_SCANCODE_A])
+	if (device->key_state[SDL_SCANCODE_LEFT] || device->key_state[SDL_SCANCODE_A])
 		result.x -= 1;
 
-	if (device.keys[SDL_SCANCODE_RIGHT] || device.keys[SDL_SCANCODE_D])
+	if (device->key_state[SDL_SCANCODE_RIGHT] || device->key_state[SDL_SCANCODE_D])
 		result.x += 1;
 
-	if (device.keys[SDL_SCANCODE_DOWN] || device.keys[SDL_SCANCODE_S])
+	if (device->key_state[SDL_SCANCODE_DOWN] || device->key_state[SDL_SCANCODE_S])
 		result.y -= 1;
 
-	if (device.keys[SDL_SCANCODE_UP] || device.keys[SDL_SCANCODE_W])
+	if (device->key_state[SDL_SCANCODE_UP] || device->key_state[SDL_SCANCODE_W])
 		result.y += 1;
 
 	return result;
 }
 
-static vec2 s_get_vector_look(void *generic_device)
+static vec2 s_get_vector_look(const void *generic_device)
 {
-	input_device_kbm device = *(input_device_kbm*)generic_device;
-	return VEC2_ZERO;
+	const input_device_kbm *device = generic_device;
+	return vec2_normalize(device->mouse_offset);
 }
 
 static void s_update(void *generic_device)
 {
-	input_device_kbm device = *(input_device_kbm*)generic_device;
+	input_device_kbm *device = generic_device;
+	float x, y;
+	device->mouse_state = SDL_GetMouseState(&x, &y);
+	device->mouse_offset.x = x;
+	device->mouse_offset.y = y;
 }
 
 static void s_terminate(void *generic_device)
 {
-	input_device_kbm device = *(input_device_kbm*)generic_device;
+	input_device_kbm *device = generic_device;
+	device->key_state = NULL;
+
+	free(device);
 }
 
-input_device_kbm *device_kbm_init()
+input_device_kbm *device_kbm_init(void)
 {
 	input_device_kbm *result = malloc(sizeof(input_device_kbm));
+	result->type = INPUT_DEVICE_KBM;
 
-	result->base.actions[INPUT_ACTION_PRIMARY] = s_is_action_primary;
-	result->base.actions[INPUT_ACTION_SECONDARY] = s_is_action_secondary;
+	result->key_state = SDL_GetKeyboardState(NULL);
+	result->mouse_state = SDL_GetMouseState(NULL, NULL);
 
-	result->base.vectors[INPUT_VECTOR_MOVEMENT] = s_get_vector_movement;
-	result->base.vectors[INPUT_VECTOR_LOOK] = s_get_vector_look;
-
-	result->base.update = s_update;
-	result->base.terminate = s_terminate;
-	result->keys = SDL_GetKeyboardState(NULL);
+	log_message("Keyboard (+ Mouse) initialized");
 
 	return result;
+}
+
+input_device_funcs device_kbm_get_funcs()
+{
+	return (input_device_funcs)
+	{
+		s_is_action_shoot,
+		s_is_action_switch,
+		s_is_action_aux,
+		s_get_vector_movement,
+		s_get_vector_look,
+		s_update,
+		s_terminate,
+	};
 }

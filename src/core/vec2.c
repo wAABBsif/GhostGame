@@ -64,7 +64,7 @@ vec2 vec2_set_mag(const vec2 v, const float magnitude)
 
 vec2 vec2_clamp_mag(const vec2 v, const float max_magnitude)
 {
-	return vec2_mul(vec2_normalize(v), fmaxf(max_magnitude, vec2_mag(v)));
+	return vec2_mul(vec2_normalize(v), fminf(max_magnitude, vec2_mag(v)));
 }
 
 vec2 vec2_normalize(const vec2 v)

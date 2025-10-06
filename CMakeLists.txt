@@ -53,6 +53,8 @@ add_executable(GhostGame src/main.c
 		src/input/input_device.h
 		src/input/device_kbm.c
 		src/input/device_kbm.h
+		src/input/device_gamepad.c
+		src/input/device_gamepad.h
 )
 
 include_directories(src)

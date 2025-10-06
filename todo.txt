@@ -1,5 +1,8 @@
 input system
+restructure camera + framebuffer system
+rumble
 try to get ui to work
 object system
 level file format
+create lighting
 come up with a vague structure idk
