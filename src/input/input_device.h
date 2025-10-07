@@ -1,20 +1,23 @@
 #pragma once
 #include "input.h"
+#include "input_binding.h"
 
-typedef uint8_t input_device_type;
-#define INPUT_DEVICE_KBM 0
-#define INPUT_DEVICE_GAMEPAD 1
-#define INPUT_DEVICE_COUNT 2
+typedef enum input_device_type
+{
+	INPUT_DEVICE_KBM,
+	INPUT_DEVICE_GAMEPAD,
+	INPUT_DEVICE_COUNT
+} input_device_type;
 
-typedef bool (*input_action_func)(const void *generic_device);
-typedef vec2 (*input_vector_func)(const void *generic_device);
+typedef float (*input_action_func)(const void *generic_device, input_action_id id);
 typedef void (*input_update_func)(void *generic_device);
 typedef void (*input_terminate_func)(void *generic_device);
 
-typedef struct input_device_funcs
+typedef struct input_device
 {
-	input_action_func actions[INPUT_ACTION_COUNT];
-	input_vector_func vectors[INPUT_VECTOR_COUNT];
+	input_device_type type;
+	input_action_func action;
 	input_update_func update;
 	input_terminate_func terminate;
-} input_device_funcs;
+	input_binding_list binding_lists[INPUT_ACTION_COUNT];
+} input_device;

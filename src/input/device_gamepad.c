@@ -6,77 +6,40 @@
 #include "core/logging.h"
 #include "core/vec2.h"
 
-static bool s_is_action_shoot(const void *generic_device)
+static float s_action(const void *generic_device, const input_action_id action)
 {
 	const input_device_gamepad *device = generic_device;
 
-	return SDL_GetGamepadButton(device->gamepad, SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER)
-	|| (SDL_GetGamepadAxis(device->gamepad, SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) > TRIGGER_THRESHOLD);
-}
+	float result = 0;
+	for (uint8_t b = 0; b < INPUT_BINDINGS_PER_LIST; b++)
+	{
+		float value = 0;
+		input_gamepad_binding_type type;
+		uint16_t binding_value;
 
-static bool s_is_action_switch(const void *generic_device)
-{
-	const input_device_gamepad *device = generic_device;
+		gamepad_from_binding(device->base.binding_lists[action].bindings[b], &type, &binding_value);
+		switch (type)
+		{
+			case GAMEPAD_BINDING_BUTTON:
+				value = SDL_GetGamepadButton(device->gamepad, binding_value);
+				break;
+			case GAMEPAD_BINDING_TRIGGER:
+				value = SDL_GetGamepadAxis(device->gamepad, binding_value) / 32767.0f;
+				break;
+			case GAMEPAD_BINDING_AXIS_POSITIVE:
+				value = fmaxf(0, SDL_GetGamepadAxis(device->gamepad, binding_value) / 32767.0f);
+				break;
+			case GAMEPAD_BINDING_AXIS_NEGATIVE:
+				value = fmaxf(0, SDL_GetGamepadAxis(device->gamepad, binding_value) / -32768.0f);
+				break;
+			default:
+				value = 0;
+				break;
+		}
 
-	return SDL_GetGamepadButton(device->gamepad, SDL_GAMEPAD_BUTTON_LEFT_SHOULDER)
-	|| (SDL_GetGamepadAxis(device->gamepad, SDL_GAMEPAD_AXIS_LEFT_TRIGGER) > TRIGGER_THRESHOLD);
-}
-
-static bool s_is_action_aux(const void *generic_device)
-{
-	const input_device_gamepad *device = generic_device;
-
-	return SDL_GetGamepadButton(device->gamepad, SDL_GAMEPAD_BUTTON_SOUTH)
-	|| SDL_GetGamepadButton(device->gamepad, SDL_GAMEPAD_BUTTON_EAST)
-	|| SDL_GetGamepadButton(device->gamepad, SDL_GAMEPAD_BUTTON_WEST)
-	|| SDL_GetGamepadButton(device->gamepad, SDL_GAMEPAD_BUTTON_NORTH);
-}
-
-static vec2 s_get_vector_movement(const void *generic_device)
-{
-	const input_device_gamepad *device = generic_device;
-
-	vec2 result;
-
-	result.x = SDL_GetGamepadAxis(device->gamepad, SDL_GAMEPAD_AXIS_LEFTX) / (float)INT16_MAX * LEFT_STICK_SENSITIVITY;
-	if (fabsf(result.x) < LEFT_STICK_DEADZONE)
-		result.x = 0;
-
-	result.y = SDL_GetGamepadAxis(device->gamepad, SDL_GAMEPAD_AXIS_LEFTY) / (float)INT16_MAX * LEFT_STICK_SENSITIVITY;
-	if (fabsf(result.y) < LEFT_STICK_DEADZONE)
-		result.y = 0;
-
-	if (SDL_GetGamepadButton(device->gamepad, SDL_GAMEPAD_BUTTON_DPAD_RIGHT))
-		result.x += 1;
-
-	if (SDL_GetGamepadButton(device->gamepad, SDL_GAMEPAD_BUTTON_DPAD_LEFT))
-		result.x -= 1;
-
-	if (SDL_GetGamepadButton(device->gamepad, SDL_GAMEPAD_BUTTON_DPAD_UP))
-		result.y += 1;
-
-	if (SDL_GetGamepadButton(device->gamepad, SDL_GAMEPAD_BUTTON_DPAD_DOWN))
-		result.y -= 1;
-
-	result.y *= -1;
-	return result;
-}
-
-static vec2 s_get_vector_look(const void *generic_device)
-{
-	const input_device_gamepad *device = generic_device;
-
-	vec2 result;
-
-	result.x = SDL_GetGamepadAxis(device->gamepad, SDL_GAMEPAD_AXIS_RIGHTX) / (float)INT16_MAX * RIGHT_STICK_SENSITIVITY;
-	if (fabsf(result.x) < RIGHT_STICK_DEADZONE)
-		result.x = 0;
-
-	result.y = SDL_GetGamepadAxis(device->gamepad, SDL_GAMEPAD_AXIS_RIGHTY) / (float)INT16_MAX * RIGHT_STICK_SENSITIVITY;
-	if (fabsf(result.y) < RIGHT_STICK_DEADZONE)
-		result.y = 0;
-
-	result.y *= -1;
+		if (value > result)
+			result = value;
+	}
 	return result;
 }
 
@@ -99,8 +62,26 @@ static void s_terminate(void *generic_device)
 input_device_gamepad *device_gamepad_init(const SDL_JoystickID id)
 {
 	input_device_gamepad *result = malloc(sizeof(input_device_gamepad));
-	result->type = INPUT_DEVICE_GAMEPAD;
+	result->base.type = INPUT_DEVICE_GAMEPAD;
 
+	result->base.action = s_action;
+	result->base.update = s_update;
+	result->base.terminate = s_terminate;
+
+	result->base.binding_lists[INPUT_ACTION_CONFIRM] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_SOUTH), 0, 0, 0};
+	result->base.binding_lists[INPUT_ACTION_CANCEL] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_EAST), 0, 0, 0};
+	result->base.binding_lists[INPUT_ACTION_SHOOT] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER), BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_TRIGGER, SDL_GAMEPAD_AXIS_RIGHT_TRIGGER), 0, 0};
+	result->base.binding_lists[INPUT_ACTION_SWITCH] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_LEFT_SHOULDER), BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_TRIGGER, SDL_GAMEPAD_AXIS_LEFT_TRIGGER), 0, 0};
+	result->base.binding_lists[INPUT_ACTION_AUX] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_SOUTH), BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_EAST), BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_NORTH), BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_WEST)};
+	result->base.binding_lists[INPUT_ACTION_MOVE_L] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_DPAD_LEFT), BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_AXIS_NEGATIVE, SDL_GAMEPAD_AXIS_LEFTX), 0, 0};
+	result->base.binding_lists[INPUT_ACTION_MOVE_R] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_DPAD_RIGHT), BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_AXIS_POSITIVE, SDL_GAMEPAD_AXIS_LEFTX), 0, 0};
+	result->base.binding_lists[INPUT_ACTION_MOVE_D] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_DPAD_DOWN), BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_AXIS_POSITIVE, SDL_GAMEPAD_AXIS_LEFTY), 0, 0};
+	result->base.binding_lists[INPUT_ACTION_MOVE_U] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_DPAD_UP), BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_AXIS_NEGATIVE, SDL_GAMEPAD_AXIS_LEFTY), 0, 0};
+	result->base.binding_lists[INPUT_ACTION_AIM_L] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_AXIS_NEGATIVE, SDL_GAMEPAD_AXIS_RIGHTX), 0, 0, 0};
+	result->base.binding_lists[INPUT_ACTION_AIM_R] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_AXIS_POSITIVE, SDL_GAMEPAD_AXIS_RIGHTX), 0, 0, 0};
+	result->base.binding_lists[INPUT_ACTION_AIM_D] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_AXIS_POSITIVE, SDL_GAMEPAD_AXIS_RIGHTY), 0, 0, 0};
+	result->base.binding_lists[INPUT_ACTION_AIM_U] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_AXIS_NEGATIVE, SDL_GAMEPAD_AXIS_RIGHTY), 0, 0, 0};
+	result->base.binding_lists[INPUT_ACTION_PAUSE] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_START), 0, 0, 0};
 
 	SDL_OpenJoystick(id);
 	result->gamepad = SDL_OpenGamepad(id);
@@ -112,16 +93,8 @@ input_device_gamepad *device_gamepad_init(const SDL_JoystickID id)
 	return result;
 }
 
-input_device_funcs device_gamepad_get_funcs(void)
+void gamepad_from_binding(const input_binding binding, input_gamepad_binding_type *type, uint16_t *value)
 {
-	return (input_device_funcs)
-	{
-		s_is_action_shoot,
-		s_is_action_switch,
-		s_is_action_aux,
-		s_get_vector_movement,
-		s_get_vector_look,
-		s_update,
-		s_terminate,
-	};
+	*type = binding & 0b1111;
+	*value = binding >> 4;
 }
