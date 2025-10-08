@@ -1,12 +1,3 @@
-﻿#version 330 core
-#extension GL_ARB_shading_language_include : require
-
-in vec2 tex_coords;
-
-out vec4 FragColor;
-
-uniform sampler2D tile_atlas;
-
 /*** MIT LICENSE
 Copyright (c) 2022 torcado
 
@@ -293,12 +284,16 @@ vec4 sliceDist(vec2 point, vec2 mainDir, vec2 pointDir, vec4 ub, vec4 u, vec4 uf
 
 vec4 cleanEdge(in vec2 fragCoord, in vec2 texture_size, in sampler2D tex)
 {
-    vec2 size = texture_size.xy+0.0001; //fix for some sort of rounding error
-    vec2 px = fragCoord.xy/texture_size.xy*size;
+    vec2 size = texture_size+0.0001; //fix for some sort of rounding error
+    vec2 px = fragCoord.xy/texture_size*size;
     vec2 local = fract(px);
     px = ceil(px);
 
     vec2 pointDir = round(local)*2.0-1.0;
+
+    //neighbor pixels
+    //Up, Down, Forward, and Back
+    //relative to quadrant of current location within pixel
 
     vec4 uub = texture(tex, (px+vec2(-1.0,-2.0)*pointDir)/size);
     vec4 uu  = texture(tex, (px+vec2( 0.0,-2.0)*pointDir)/size);
@@ -345,11 +340,4 @@ vec4 cleanEdge(in vec2 fragCoord, in vec2 texture_size, in sampler2D tex)
     }
 
     return col;
-}
-
-void main()
-{
-    FragColor = cleanEdge(tex_coords, vec2(320, 168), tile_atlas);
-    if (FragColor.a < 0.01)
-        discard;
 }

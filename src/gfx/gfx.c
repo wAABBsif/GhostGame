@@ -32,10 +32,14 @@ void test_camera_init(void)
 void test_camera_update(void)
 {
 	const bool *keys = SDL_GetKeyboardState(NULL);
-	//cam.position = vec2_add(cam.position, vec2_mul(input_get_vector(INPUT_VECTOR_MOVEMENT), 400 * game_time_get_delta()));
+	const vec2 move_input = input_get_vector(INPUT_ACTION_MOVE_L, INPUT_ACTION_MOVE_R, INPUT_ACTION_MOVE_D, INPUT_ACTION_MOVE_U);
+	cam.position = vec2_add(cam.position, vec2_mul(move_input, 400 * game_time_get_delta()));
 
-	cam.rotation -= keys[SDL_SCANCODE_Q] * game_time_get_delta() * 4;
-	cam.rotation += keys[SDL_SCANCODE_E] * game_time_get_delta() * 4;
+	if (input_is_action_down(INPUT_ACTION_SHOOT))
+		cam.rotation -= game_time_get_delta() * 4;
+
+	if (input_is_action_down(INPUT_ACTION_SWITCH))
+		cam.rotation += game_time_get_delta() * 4;
 
 	cam.size -= keys[SDL_SCANCODE_Z] * game_time_get_delta() * 400;
 	cam.size += keys[SDL_SCANCODE_X] * game_time_get_delta() * 400;
