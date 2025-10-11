@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "core/game_time.h"
 #include "core/hash_map.h"
 #include "core/logging.h"
 #include "core/mat3.h"
@@ -41,6 +42,8 @@ void shader_clear(void)
 	hash_map_destroy(&s_shaders);
 }
 
+static char *s_shader_preprocessor(char *buffer);
+
 static char *s_open_shader_file(const char* name, const char *extension)
 {
 	char filename[FILENAME_MAX];
@@ -52,7 +55,103 @@ static char *s_open_shader_file(const char* name, const char *extension)
 		return NULL;
 
 	char* buffer = SDL_LoadFile_IO(stream, NULL, true);
-	return buffer;
+	if (buffer == NULL)
+		return NULL;
+
+	char *result = s_shader_preprocessor(buffer);
+	SDL_free(buffer);
+	return result;
+}
+
+static char *s_shader_preprocessor(char *buffer)
+{
+	while (*buffer < 0x20 && *buffer <= 0x7a)
+	{
+		if (*buffer == 0)
+			return "";
+
+		buffer++;
+	}
+
+	const size_t init_len = strlen(buffer);
+	size_t len = init_len;
+
+	const char *included_buffers[16];
+	size_t num_include_buffers = 0;
+
+	char *it_buffer = buffer - 1;
+
+	while (*it_buffer != 0)
+	{
+	IT_BUFFER_LOOP_START:
+		it_buffer++;
+		if (*it_buffer == '#')
+		{
+			const char include_str[] = "#include";
+
+			if (it_buffer + sizeof(include_str) > buffer + init_len)
+				continue;
+
+			for (size_t i = 0; i < sizeof(include_str) - 1; i++)
+			{
+				if (it_buffer[i] != include_str[i])
+					goto IT_BUFFER_LOOP_START;
+			}
+
+			*it_buffer = 0;
+
+			for (size_t i = 1; i < sizeof(include_str); i++)
+			{
+				it_buffer[i] = ' ';
+			}
+
+			it_buffer += sizeof(include_str);
+
+			size_t i = 0;
+			char file_name[256];
+
+			for (i = 0; i < sizeof(file_name); i++)
+			{
+				if (it_buffer[i] == '\n' || it_buffer[i] == '\r')
+					break;
+
+				file_name[i] = it_buffer[i];
+				it_buffer[i] = ' ';
+			}
+			file_name[i] = 0;
+
+			included_buffers[num_include_buffers] = s_open_shader_file(file_name, "");
+			len += strlen(included_buffers[num_include_buffers]);
+			num_include_buffers++;
+		}
+	}
+
+	size_t current_buffer_count = 0;
+	char *result = malloc(len + 1);
+	buffer--;
+
+	for (int i = 0; i < len; i++)
+	{
+		buffer++;
+
+		if (*buffer == 0)
+		{
+			if (current_buffer_count >= num_include_buffers)
+				break;
+
+			strcpy(&result[i], included_buffers[current_buffer_count]);
+			i += strlen(included_buffers[current_buffer_count]);
+			current_buffer_count++;
+			result[i] = ' ';
+			continue;
+		}
+
+		result[i] = *buffer;
+	}
+
+	result[len] = 0;
+	return result;
+
 }
 
 static shader_program s_compile_shader(const char *source, const uint32_t shader_type)
@@ -80,29 +179,17 @@ static shader_program s_compile_shader(const char *source, const uint32_t shader
 
 shader_program load_shader_program(const char *name, const uint32_t shader_type)
 {
-	char *glsl = s_open_shader_file(name, shader_type == GL_VERTEX_SHADER ? VERT_EXTENSION : FRAG_EXTENSION);
+	char *glsl = s_open_shader_file(name, APPROPRIATE_EXTENSION(shader_type));
 	if (!glsl)
 	{
-		log_error("Could not open %s%s", name, shader_type == GL_VERTEX_SHADER ? VERT_EXTENSION : FRAG_EXTENSION);
+		log_error("Could not open %s%s", name, APPROPRIATE_EXTENSION(shader_type));
 		return 0;
 	}
 
-	const char* glsl_from_hash = glsl;
-	while (*glsl_from_hash != '#')
-	{
-		if (*glsl_from_hash == '0')
-		{
-			glsl_from_hash = glsl;
-			break;
-		}
-		glsl_from_hash++;
-	}
-
-	const shader_program shader = s_compile_shader(glsl_from_hash, shader_type);
-	SDL_free(glsl);
+	const shader_program shader = s_compile_shader(glsl, shader_type);
 	if (!shader)
 	{
-		log_error("Could not compile %s.vert.glsl!", name);
+		log_error("Could not compile %s.%s!", name, APPROPRIATE_EXTENSION(shader_type));
 		return 0;
 	}
 

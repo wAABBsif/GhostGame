@@ -32,12 +32,12 @@ void input_update(void)
 		for (uint8_t a = 0; a < INPUT_ACTION_COUNT; a++)
 			s_curr_actions[a] = s_device->action(s_device, a) > 0.5;
 	}
-
-	log_message("[%f, %f", input_get_action(INPUT_ACTION_CONFIRM), input_get_action(INPUT_ACTION_CANCEL));
-	log_message("%f, %f, %f", input_get_action(INPUT_ACTION_SHOOT), input_get_action(INPUT_ACTION_SWITCH), input_get_action(INPUT_ACTION_AUX));
-	log_message("%f, %f", input_get_action(INPUT_ACTION_MOVE_R) - input_get_action(INPUT_ACTION_MOVE_L), input_get_action(INPUT_ACTION_MOVE_U) - input_get_action(INPUT_ACTION_MOVE_D));
-	log_message("%f, %f]", input_get_action(INPUT_ACTION_AIM_R) - input_get_action(INPUT_ACTION_AIM_L), input_get_action(INPUT_ACTION_AIM_U) - input_get_action(INPUT_ACTION_AIM_D));
-	log_message("");
+	//
+	// log_message("[%f, %f", input_get_action(INPUT_ACTION_CONFIRM), input_get_action(INPUT_ACTION_CANCEL));
+	// log_message("%f, %f, %f", input_get_action(INPUT_ACTION_SHOOT), input_get_action(INPUT_ACTION_SWITCH), input_get_action(INPUT_ACTION_AUX));
+	// log_message("%f, %f", input_get_action(INPUT_ACTION_MOVE_R) - input_get_action(INPUT_ACTION_MOVE_L), input_get_action(INPUT_ACTION_MOVE_U) - input_get_action(INPUT_ACTION_MOVE_D));
+	// log_message("%f, %f]", input_get_action(INPUT_ACTION_AIM_R) - input_get_action(INPUT_ACTION_AIM_L), input_get_action(INPUT_ACTION_AIM_U) - input_get_action(INPUT_ACTION_AIM_D));
+	// log_message("");
 }
 
 void input_terminate(void)
