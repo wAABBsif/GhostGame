@@ -1,8 +1,4 @@
-vec4 clean_edge(sampler2D tex, vec2 uv)
-{
-    return texture(tex, uv);
-}
-
+﻿#include "clean_edge.glsl"
 
 in vec2 tex_coords;
 

@@ -1,4 +1,4 @@
-layout(location = 0) in uint data;
+﻿layout(location = 0) in uint data;
 
 out vec2 tex_coords;
 

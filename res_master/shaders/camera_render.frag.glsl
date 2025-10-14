@@ -1,4 +1,4 @@
-in vec2 frag_tex_coords;
+﻿in vec2 frag_tex_coords;
 
 out vec4 FragColor;
 
