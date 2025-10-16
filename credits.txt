@@ -1,3 +1,4 @@
-this file just reminds me to credit everything i use
+this file just reminds me of everything i used
 
-cleanedge
+SDL
+GLAD

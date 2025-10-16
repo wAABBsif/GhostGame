@@ -63,6 +63,7 @@ input_device_kbm *device_kbm_init(void)
 	result->base.action = s_action;
 	result->base.update = s_update;
 	result->base.terminate = s_terminate;
+	result->base.rumble = NULL;
 
 	result->base.binding_lists[INPUT_ACTION_CONFIRM] = (input_binding_list){BINDING_FROM_KBM(KBM_BINDING_KEY, SDL_SCANCODE_RETURN), BINDING_FROM_KBM(KBM_BINDING_KEY, SDL_SCANCODE_RETURN2), 0, 0};
 	result->base.binding_lists[INPUT_ACTION_CANCEL] = (input_binding_list){BINDING_FROM_KBM(KBM_BINDING_KEY, SDL_SCANCODE_ESCAPE), 0, 0, 0};

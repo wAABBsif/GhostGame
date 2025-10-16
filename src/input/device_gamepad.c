@@ -6,6 +6,16 @@
 #include "core/logging.h"
 #include "core/vec2.h"
 
+const float GAMEPAD_DEADZONES[SDL_GAMEPAD_AXIS_COUNT] =
+{
+	0.15,
+	0.15,
+	0.15,
+	0.15,
+	0.15,
+	0.15
+};
+
 static float s_action(const void *generic_device, const input_action_id action)
 {
 	const input_device_gamepad *device = generic_device;
@@ -37,6 +47,12 @@ static float s_action(const void *generic_device, const input_action_id action)
 				break;
 		}
 
+		if (type == GAMEPAD_BINDING_AXIS_POSITIVE || type == GAMEPAD_BINDING_AXIS_NEGATIVE || type == GAMEPAD_BINDING_TRIGGER)
+		{
+			if (value < GAMEPAD_DEADZONES[binding_value])
+				value = 0;
+		}
+
 		if (value > result)
 			result = value;
 	}
@@ -59,6 +75,19 @@ static void s_terminate(void *generic_device)
 	free(device);
 }
 
+static void s_rumble(const void *generic_device, float heavy, float light)
+{
+	const input_device_gamepad *device = generic_device;
+
+	if (heavy > 1)
+		heavy = 1;
+
+	if (light > 1)
+		light = 1;
+
+	SDL_RumbleGamepad(device->gamepad, heavy * 0xFFFF, light * 0xFFFF, 200);
+}
+
 input_device_gamepad *device_gamepad_init(const SDL_JoystickID id)
 {
 	input_device_gamepad *result = malloc(sizeof(input_device_gamepad));
@@ -67,6 +96,7 @@ input_device_gamepad *device_gamepad_init(const SDL_JoystickID id)
 	result->base.action = s_action;
 	result->base.update = s_update;
 	result->base.terminate = s_terminate;
+	result->base.rumble = s_rumble;
 
 	result->base.binding_lists[INPUT_ACTION_CONFIRM] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_SOUTH), 0, 0, 0};
 	result->base.binding_lists[INPUT_ACTION_CANCEL] = (input_binding_list){BINDING_FROM_GAMEPAD(GAMEPAD_BINDING_BUTTON, SDL_GAMEPAD_BUTTON_EAST), 0, 0, 0};

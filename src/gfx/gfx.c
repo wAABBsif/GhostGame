@@ -19,6 +19,7 @@
 #include "SDL3/SDL_video.h"
 
 static SDL_GLContext s_context = NULL;
+static rumble_id s_rumble_id;
 
 camera cam;
 
@@ -36,7 +37,12 @@ void test_camera_update(void)
 	cam.position = vec2_add(cam.position, vec2_mul(move_input, 400 * game_time_get_delta()));
 
 	if (input_is_action_down(INPUT_ACTION_SHOOT))
+	{
 		cam.rotation -= game_time_get_delta() * 4;
+
+		if (!input_is_rumble_active(s_rumble_id))
+			s_rumble_id = input_rumble_heavy(0, 0.8);
+	}
 
 	if (input_is_action_down(INPUT_ACTION_SWITCH))
 		cam.rotation += game_time_get_delta() * 4;

@@ -12,6 +12,7 @@ typedef enum input_device_type
 typedef float (*input_action_func)(const void *generic_device, input_action_id id);
 typedef void (*input_update_func)(void *generic_device);
 typedef void (*input_terminate_func)(void *generic_device);
+typedef void (*input_rumble_func)(const void *generic_device, float heavy, float light);
 
 typedef struct input_device
 {
@@ -19,5 +20,6 @@ typedef struct input_device
 	input_action_func action;
 	input_update_func update;
 	input_terminate_func terminate;
+	input_rumble_func rumble;
 	input_binding_list binding_lists[INPUT_ACTION_COUNT];
 } input_device;

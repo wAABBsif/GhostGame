@@ -1,7 +1,6 @@
-input system
-restructure camera + framebuffer system
 rumble
 try to get ui to work
+camera brain system
 object system
 level file format
 create lighting
