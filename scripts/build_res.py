@@ -1,14 +1,13 @@
 import os.path
 import shutil
+import sys
 from pathlib import Path
 import shaders
 
 print()
+if len(sys.argv) < 2:
+    print("Not enough arguments!")
+    exit()
 
-original_path = str(Path(__file__).parent.parent) + "\\res_master"
-path = str(Path(__file__).parent.parent) + "\\res"
-if os.path.isdir(path):
-    shutil.rmtree(path)
-shutil.copytree(original_path, path)
-
-shaders.process_shaders()
+path = sys.argv[1]
+shaders.process_shaders(path)

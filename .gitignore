@@ -1,5 +1,6 @@
 bin
 .idea
+res_build
 
 # Prerequisites
 *.d

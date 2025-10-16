@@ -83,5 +83,5 @@ if (WIN32)
 	set(CMAKE_EXE_LINKER_FLAGS "-static")
 endif()
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/res
-		${CMAKE_BINARY_DIR}/res)
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/res_master ${CMAKE_BINARY_DIR}/res)
+execute_process(COMMAND python ${CMAKE_SOURCE_DIR}/scripts/build_res.py ${CMAKE_BINARY_DIR}/res)

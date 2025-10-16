@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
-def process_shaders():
-    path = str(Path(__file__).parent.parent) + "\\res\\shaders\\"
+def process_shaders(res_path):
+    path = res_path + "/shaders"
     os.chdir(path)
 
     for filename in os.listdir(path):
@@ -17,6 +17,7 @@ def process_shaders():
             shader = _process_includes(shader[start_index : ])
         with open(filename, "w") as file:
             file.write(shader)
+            print("Processed " + filename)
 
     for filename in os.listdir(path):
         if not filename.endswith(".frag.glsl") and not filename.endswith(".vert.glsl"):
