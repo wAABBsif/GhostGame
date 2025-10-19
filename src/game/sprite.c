@@ -56,7 +56,7 @@ void sprite_update()
 	s.scale_x = 0x10;
 	s.scale_y = 0x10;
 	s.color = WHITE;
-	s.z = 2;
+	s.z = 2 + 128;
 	s.texture = texture_get("res/sprites/test.png");
 	s.texture_w = 16;
 	s.texture_h = 16;

@@ -5,11 +5,14 @@ out vec2 tex_coords;
 out vec4 color;
 
 uniform mat3 world_to_screen_matrix;
+uniform mat3 camera_to_screen_matrix;
 
 void main()
 {
-    vec3 pos = world_to_screen_matrix * vec3(data.x & uint(0xFFFF), (data.x >> 16) & uint(0xFFFF), 1);
-    gl_Position = vec4(pos.xy, 0 - float((data.z >> 16) & uint(0xFF)) / 256.0, 1);
+    mat3 m = (((data.z >> 23) & uint(0x1)) == uint(1)) ? camera_to_screen_matrix : world_to_screen_matrix;
+
+    vec3 pos = m * vec3(data.x & uint(0xFFFF), (data.x >> 16) & uint(0xFFFF), 1);
+    gl_Position = vec4(pos.xy, 0 - float((data.z >> 16) & uint(0x7F)) / 256.0, 1);
 
     tex_coords = vec2(float(data.y & uint(0xFFFF)) / 65536.0, float((data.y >> 16) & uint(0xFFFF)) / 65536.0);
     tex_index = float((data.z >> 24) & uint(0xFF));

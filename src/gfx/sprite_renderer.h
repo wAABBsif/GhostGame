@@ -13,6 +13,7 @@ typedef struct sprite_vertex
 	uint16_t texture_y;
 
 	color    color;
+	//8th bit set means a vertex uses Camera to Screen Matrix
 	uint8_t  z;
 	uint8_t  texture_index;
 } sprite_vertex;

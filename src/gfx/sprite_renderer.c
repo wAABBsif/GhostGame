@@ -178,6 +178,7 @@ void sprite_renderer_draw(const draw_command *cmd, const sprite_quad *quads)
 	}
 
 	shader_set_mat3(cmd->shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
+	shader_set_mat3(cmd->shader, "camera_to_screen_matrix", camera_to_screen_matrix(get_main_camera()));
 }
 
 void sprite_renderer_draw_unsorted(draw_command *cmd)

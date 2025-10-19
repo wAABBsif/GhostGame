@@ -26,6 +26,7 @@ typedef struct sprite
 	uint16_t texture_h;
 
 	color    color;
+	//8th bit set means a sprite uses Camera to Screen Matrix
 	uint8_t  z;
 } sprite;
 
