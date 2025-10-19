@@ -16,8 +16,7 @@ static bool s_curr_actions[INPUT_ACTION_COUNT];
 static bool s_prev_actions[INPUT_ACTION_COUNT];
 static input_device *s_device;
 
-static rumble_entry s_rumble_heavy[INPUT_MAX_RUMBLE_ENTRIES];
-static rumble_entry s_rumble_light[INPUT_MAX_RUMBLE_ENTRIES];
+static rumble_entry s_rumble[INPUT_MAX_RUMBLE_ENTRIES];
 
 static rumble_id s_rumble_current_id;
 
@@ -25,21 +24,6 @@ void input_init(void)
 {
 	log_message("Initializing input...");
 	s_device = (input_device *)device_kbm_init();
-}
-
-static float s_rumble_get_total_and_update(rumble_entry *entries, const int count, const float delta)
-{
-	float total = 0;
-	for (int i = 0; i < count; i++)
-	{
-		if (entries[i].time > 0)
-			total += entries[i].strength;
-		entries[i].time -= delta;
-		if (entries[i].time <= 0)
-			entries[i].time = 0;
-	}
-
-	return total;
 }
 
 void input_update(void)
@@ -53,8 +37,21 @@ void input_update(void)
 		for (uint8_t a = 0; a < INPUT_ACTION_COUNT; a++)
 			s_curr_actions[a] = s_device->action(s_device, a) > 0.5;
 
-		const float heavy = s_rumble_get_total_and_update(s_rumble_heavy, INPUT_MAX_RUMBLE_ENTRIES, game_time_get_delta());
-		const float light = s_rumble_get_total_and_update(s_rumble_light, INPUT_MAX_RUMBLE_ENTRIES, game_time_get_delta());
+		float heavy = 0;
+		float light = 0;
+
+		for (int i = 0; i < INPUT_MAX_RUMBLE_ENTRIES; i++)
+		{
+			if (s_rumble[i].time > 0)
+			{
+				heavy += s_rumble[i].heavy;
+				light += s_rumble[i].light;
+			}
+
+			s_rumble[i].time -= game_time_get_delta();
+			if (s_rumble[i].time <= 0)
+				s_rumble[i].time = 0;
+		}
 
 		if (s_device->rumble != NULL)
 			s_device->rumble(s_device, heavy, light);
@@ -150,22 +147,18 @@ bool input_was_action_released(const input_action_id id)
 	return !s_curr_actions[id] && s_prev_actions[id];
 }
 
-rumble_id s_input_rumble(const bool is_heavy, float time, const float strength)
+rumble_id input_rumble(float time, const float heavy, const float light)
 {
 	s_rumble_current_id++;
-
-	rumble_entry *entries = s_rumble_light;
-	if (is_heavy)
-		entries = s_rumble_heavy;
 
 	if (time < MAX_DELTA_TIME)
 		time = MAX_DELTA_TIME;
 
-	for (size_t i = 0; i < INPUT_ACTION_COUNT; i++)
+	for (size_t i = 0; i < INPUT_MAX_RUMBLE_ENTRIES; i++)
 	{
-		if (entries[i].time <= 0)
+		if (s_rumble[i].time <= 0)
 		{
-			entries[i] = (rumble_entry){time, strength, s_rumble_current_id};
+			s_rumble[i] = (rumble_entry){time, heavy, light, s_rumble_current_id};
 			return s_rumble_current_id;
 		}
 	}
@@ -173,24 +166,12 @@ rumble_id s_input_rumble(const bool is_heavy, float time, const float strength)
 	return -1;
 }
 
-rumble_id input_rumble_heavy(const float time, const float strength)
-{
-	return s_input_rumble(true, time, strength);
-}
-
-rumble_id input_rumble_light(const float time, const float strength)
-{
-	return s_input_rumble(false, time, strength);
-}
-
 bool input_is_rumble_active(const rumble_id id)
 {
-	for (size_t i = 0; i < INPUT_ACTION_COUNT; i++)
+	for (size_t i = 0; i < INPUT_MAX_RUMBLE_ENTRIES; i++)
 	{
-		if (s_rumble_light[i].id == id)
-			return s_rumble_light[i].time > 0;
-		if (s_rumble_heavy[i].id == id)
-			return s_rumble_heavy[i].time > 0;
+		if (s_rumble[i].id == id)
+			return s_rumble[i].time > 0;
 	}
 
 	return false;
