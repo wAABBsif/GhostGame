@@ -1,6 +1,5 @@
-try to get ui to work
-camera brain system
 object system
+camera brain system
 level file format
 create lighting
 come up with a vague structure idk
