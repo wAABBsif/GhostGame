@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "audio.h"
 
-#define MAX_SFX_TRACKS 12
+#define MAX_SFX_TRACKS	12
 
 void sfx_init(void);
 void sfx_update(void);

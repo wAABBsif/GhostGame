@@ -85,7 +85,7 @@ static void s_rumble(const void *generic_device, float heavy, float light)
 	if (light > 1)
 		light = 1;
 
-	SDL_RumbleGamepad(device->gamepad, heavy * 0xFFFF, light * 0xFFFF, 200);
+	SDL_RumbleGamepad(device->gamepad, heavy * UINT16_MAX, light * UINT16_MAX, 1000);
 }
 
 input_device_gamepad *device_gamepad_init(const SDL_JoystickID id)

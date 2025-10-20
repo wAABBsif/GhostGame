@@ -97,7 +97,7 @@ draw_command *destroy_sprite_render_command(draw_command *cmd)
 sprite_quad sprite_renderer_create_quad(sprite s)
 {
 	const vec2 position = {s.x, s.y};
-	const float rotation = {s.rotation / 65536.0f * M_PI * 2};
+	const float rotation = {s.rotation / (float)(UINT16_MAX + 1) * M_PI * 2};
 	const vec2 scale = {s.scale_x, s.scale_y};
 
 	const vec2 vertex_coords[4] =

@@ -4,7 +4,7 @@
 #include "core/hash.h"
 #include "drawing.h"
 
-#define MAX_SHADERS 32
+#define MAX_SHADERS	32
 #define VERT_EXTENSION ".vert.glsl"
 #define FRAG_EXTENSION ".frag.glsl"
 #define APPROPRIATE_EXTENSION(ext) (ext == GL_VERTEX_SHADER ? VERT_EXTENSION : FRAG_EXTENSION)

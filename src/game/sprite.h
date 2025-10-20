@@ -4,10 +4,10 @@
 #include "gfx/color.h"
 #include "gfx/texture.h"
 
-#define MAX_SPRITES_UNSORTED 256
-#define MAX_SPRITES_SORTED 128
-#define MAX_SPRITE_TEXTURES 16
-#define MAX_SPRITE_LAYERS 16
+#define MAX_SPRITES_UNSORTED	256
+#define MAX_SPRITES_SORTED		128
+#define MAX_SPRITE_TEXTURES		16
+#define MAX_SPRITE_LAYERS		16
 
 typedef struct sprite
 {
@@ -32,3 +32,7 @@ typedef struct sprite
 
 void sprite_draw(sprite s, bool is_translucent);
 void sprite_update(void);
+
+uint16_t sprite_position_from_float(float value);
+uint16_t sprite_rotation_from_float(float value);
+uint8_t sprite_scale_from_float(float value);

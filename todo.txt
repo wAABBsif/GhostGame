@@ -1,5 +1,7 @@
 object system
 camera brain system
+program player and basic enemies
+mouse-based aim
 level file format
 create lighting
 come up with a vague structure idk

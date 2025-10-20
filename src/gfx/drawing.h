@@ -14,10 +14,10 @@ typedef uint32_t element_buffer_object;
 typedef hash shader_h;
 typedef void (*draw_func)(draw_command *cmd);
 
-#define DRAW_COMMAND_NONE   0
-#define DRAW_COMMAND_TILE   1
-#define DRAW_COMMAND_SPRITE_UNSORTED 2
-#define DRAW_COMMAND_SPRITE_SORTED 3
+#define DRAW_COMMAND_NONE				0
+#define DRAW_COMMAND_TILE				1
+#define DRAW_COMMAND_SPRITE_UNSORTED	2
+#define DRAW_COMMAND_SPRITE_SORTED		3
 
 #define DRAW_COMMAND_COUNT  16
 

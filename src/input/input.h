@@ -4,7 +4,7 @@
 
 #include "SDL3/SDL_events.h"
 
-#define INPUT_MAX_RUMBLE_ENTRIES 8
+#define INPUT_MAX_RUMBLE_ENTRIES	8
 
 typedef uint16_t rumble_id;
 typedef struct vec2 vec2;

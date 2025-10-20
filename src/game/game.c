@@ -1,6 +1,7 @@
 ﻿#include <stdbool.h>
 #include "game.h"
 
+#include "object.h"
 #include "sdl_interface.h"
 #include "sprite.h"
 #include "tile.h"
@@ -37,6 +38,7 @@ static void _game_init(void)
 	gfx_init();
 	audio_init();
 	tile_map_init();
+	object_init();
 }
 
 static void _game_update(void)
@@ -46,12 +48,14 @@ static void _game_update(void)
 	input_update();
 	sprite_update();
 	tile_map_update();
+	object_update();
 	audio_update();
 	gfx_draw();
 }
 
 static void _game_terminate(void)
 {
+	object_terminate();
 	input_terminate();
 	audio_terminate();
 	gfx_terminate();

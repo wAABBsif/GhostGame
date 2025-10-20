@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "core/hash.h"
 
-#define MAX_TEXTURES 256
+#define MAX_TEXTURES	256
 
 typedef struct vec2 vec2;
 typedef struct mat3 mat3;
