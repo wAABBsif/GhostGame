@@ -4,13 +4,13 @@
 
 typedef uint16_t object_id;
 
-#define MAX_OBJECT_COUNT	1024
+#define MAX_OBJECT_COUNT			2048
 
 typedef uint16_t object_type;
 
-#define OBJECT_TYPE_NONE	0	//Used for deletion
-#define OBJECT_TYPE_TEST	1
-#define OBJECT_TYPE_COUNT	2
+#define OBJECT_TYPE_NONE			0	//Used for deletion
+#define OBJECT_TYPE_CAMERA_BRAIN	1
+#define OBJECT_TYPE_COUNT			2
 
 #define OBJECT_TYPE_DELETION_MASK	INT16_MAX
 #define OBJECT_TYPE_DELETION_BIT	(INT16_MAX + 1)

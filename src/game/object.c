@@ -5,12 +5,12 @@
 
 #include "core/logging.h"
 
-#include "objects/object_test.h"
+#include "objects/object_camera_brain.h"
 
 const object_func_entry OBJECT_FUNCS[] =
 {
-	{NULL, NULL, NULL},						//OBJECT_TYPE_NONE
-	FUNC_ENTRY_FROM_NAME(object_test)		//OBJECT_TYPE_TEST
+	{NULL, NULL, NULL},								//OBJECT_TYPE_NONE
+	FUNC_ENTRY_FROM_NAME(object_camera_brain)		//OBJECT_TYPE_TEST
 };
 
 static uint16_t s_object_count = 0;
@@ -19,7 +19,7 @@ static object_id s_object_current_id;
 
 void object_init(void)
 {
-	object_add(sizeof(object_test), OBJECT_TYPE_TEST);
+	object_add(sizeof(object_camera_brain), OBJECT_TYPE_CAMERA_BRAIN);
 }
 
 void object_update(void)
