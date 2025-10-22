@@ -1,5 +1,6 @@
 ﻿#include "shader.h"
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -148,8 +149,7 @@ shader_h shader_load(const char* name)
 	glDeleteShader(vert_shader);
 	glDeleteShader(frag_shader);
 
-	if (hash_map_add(&s_shaders, &result) == SIZE_MAX)
-		return 0;
+	assert(hash_map_add(&s_shaders, &result) != SIZE_MAX);
 
 	log_message("Loaded shader %s", name);
 

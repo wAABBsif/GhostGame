@@ -1,5 +1,6 @@
 ﻿#include "gfx.h"
 
+#include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 
@@ -59,17 +60,12 @@ void gfx_init(void)
 	log_message("Initializing graphics...");
 
 	SDL_Window *window = window_create();
-	if (window == NULL)
-		return;
+	assert(window != NULL);
 
 	s_context = SDL_GL_CreateContext(window);
 	SDL_GL_MakeCurrent(window, s_context);
-
-	if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
-	{
-		log_message("Failed to initialize GLAD");
-		return;
-	}
+	const int glad_status = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
+	assert(glad_status);
 
 	shader_init();
 	texture_init();

@@ -1,5 +1,7 @@
 ﻿#include "texture.h"
 
+#include <assert.h>
+
 #include "core/hash_map.h"
 #include "core/logging.h"
 #include "glad/glad.h"
@@ -58,6 +60,12 @@ texture_h texture_load(const char* name)
 	t.width = img->w;
 	t.height = img->h;
 
+	if (t.width == 0 || t.height == 0)
+	{
+		log_error("0 is not a valid width or height!");
+		return 0;
+	}
+
 	glGenTextures(1, &t.id);
 	glBindTexture(GL_TEXTURE_2D, t.id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, t.width, t.height, 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, img->pixels);
@@ -68,8 +76,7 @@ texture_h texture_load(const char* name)
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	log_message("Loaded texture %s", name);
-	if (hash_map_add(&s_textures, &t) == SIZE_MAX)
-		return 0;
+	assert(hash_map_add(&s_textures, &t) != SIZE_MAX);
 
 	return t.key;
 }

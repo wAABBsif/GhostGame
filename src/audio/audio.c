@@ -1,5 +1,7 @@
 ﻿#include "audio.h"
 
+#include <assert.h>
+
 #include "sfx.h"
 #include "music.h"
 #include "core/game_time.h"
@@ -65,12 +67,7 @@ void audio_terminate(void)
 audio_clip_h audio_clip_load(const char* name, const bool is_sfx)
 {
 	audio_clip clip;
-
-	if (s_clips.size >= MAX_AUDIO_CLIPS)
-	{
-		log_warning("Attempted to add sound clip when there are already too many sound clips!");
-		return 0;
-	}
+	assert(s_clips.size < MAX_AUDIO_CLIPS);
 
 	clip.audio = MIX_LoadAudio(s_sdl_mixer, name, is_sfx);
 	if (clip.audio == NULL)
@@ -81,8 +78,7 @@ audio_clip_h audio_clip_load(const char* name, const bool is_sfx)
 
 	clip.hash = hash_string(name);
 	log_message("Loaded audio clip: %s", name);
-	if (hash_map_add(&s_clips, &clip) == SIZE_MAX)
-		return 0;
+	assert(hash_map_add(&s_clips, &clip) != SIZE_MAX);
 
 	return clip.hash;
 }
@@ -90,11 +86,7 @@ audio_clip_h audio_clip_load(const char* name, const bool is_sfx)
 void audio_clip_unload(const audio_clip_h h)
 {
 	const size_t index = hash_map_get_index(&s_clips, h);
-	if (index == SIZE_MAX)
-	{
-		log_warning("Audio clip not found, so can't unload!");
-		return;
-	}
+	assert(index != SIZE_MAX);
 
 	const audio_clip clip = s_clip_entries[index];
 	MIX_DestroyAudio(clip.audio);
@@ -105,12 +97,7 @@ audio_clip_h audio_clip_get(const char* name)
 {
 	const hash h = hash_string(name);
 	const size_t index = hash_map_get_index(&s_clips, h);
-
-	if (index == SIZE_MAX)
-	{
-		log_error("Audio clip %s not found!", name);
-		return 0;
-	}
+	assert(index != SIZE_MAX);
 
 	return s_clip_entries[index].hash;
 }
@@ -126,8 +113,7 @@ audio_track_h audio_create_track(void)
 		return i;
 	}
 
-	log_error("Failed to create audio track");
-	return -1;
+	assert(false);
 }
 
 void audio_destroy_track(const audio_track_h track)

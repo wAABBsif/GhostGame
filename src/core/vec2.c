@@ -1,4 +1,6 @@
 ﻿#include "vec2.h"
+
+#include <assert.h>
 #include <math.h>
 
 #include "mat3.h"
@@ -30,6 +32,7 @@ vec2 vec2_mul(const vec2 v, const float scalar)
 
 vec2 vec2_div(const vec2 v, const float scalar)
 {
+	assert(scalar != 0);
 	return (vec2){v.x / scalar, v.y / scalar};
 }
 

@@ -54,12 +54,14 @@ void music_stop()
 	audio_stop_track(s_track);
 }
 
-void music_set_volume(const float volume)
+void music_set_volume(float volume)
 {
 	audio_set_track_volume(s_track, volume * s_global_volume);
 }
 
 float music_get_volume(void)
 {
+	if (s_global_volume == 0)
+		return 0;
 	return audio_get_track_volume(s_track) / s_global_volume;
 }

@@ -1,5 +1,7 @@
 ﻿#include "drawing.h"
 
+#include <assert.h>
+
 #include "shader.h"
 #include "sprite_renderer.h"
 #include "tile_renderer.h"
@@ -24,8 +26,7 @@ draw_command *create_draw_command(const uint16_t min_index)
 			return &s_commands[i];
 	}
 
-	log_error("Could not create draw command!");
-	return NULL;
+	assert(0);
 }
 
 void release_draw_command(draw_command *command)

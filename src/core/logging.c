@@ -73,4 +73,8 @@ void log_error(const char *format, ...)
 	_log_vraw(format, list);
 	_log_raw("\n");
 	SET_CONSOLE_TEXT_COLOR_WHITE();
+
+#if !defined(IS_DEBUG)
+	exit(-1);
+#endif
 }

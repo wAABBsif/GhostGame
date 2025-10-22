@@ -1,5 +1,6 @@
 ﻿#include "hash_map.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -36,11 +37,7 @@ void hash_map_destroy(hash_map *map)
 
 size_t hash_map_add(hash_map *map, const void *data)
 {
-	if (map->size >= map->capacity)
-	{
-		log_error("Attempted to add new elements to hash_map at full capacity.");
-		return SIZE_MAX;
-	}
+	assert(map->size < map->capacity);
 
 	size_t new_index = 0;
 	hash *loc = hash_map_index(map, new_index);
@@ -48,13 +45,9 @@ size_t hash_map_add(hash_map *map, const void *data)
 	if (map->size >= 1)
 	{
 		new_index = hash_map_get_range(map, *(hash*)data, 0, map->size - 1);
-		hash current_index_hash = *(hash*)hash_map_index(map, new_index);
+		const hash current_index_hash = *(hash*)hash_map_index(map, new_index);
+		assert(current_index_hash != *(hash*)data);
 
-		if (current_index_hash == *(hash*)data)
-		{
-			log_warning("Key already exists.");
-			return SIZE_MAX;
-		}
 		if (*(hash*)data > current_index_hash)
 			new_index++;
 

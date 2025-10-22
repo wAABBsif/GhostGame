@@ -1,4 +1,7 @@
 ﻿#include "sdl_interface.h"
+
+#include <assert.h>
+
 #include "core/logging.h"
 #include "gfx/window.h"
 #include "input/input.h"
@@ -21,11 +24,8 @@ bool sdl_interface_init(void)
 {
 	log_message("Initializing SDL...");
 
-	if (!SDL_Init(INIT_FLAGS))
-	{
-		log_error("SDL failed to initialize (SDL Error: %s)\n", SDL_GetError());
-		return false;
-	}
+	const bool successfully_init = SDL_Init(INIT_FLAGS);
+	assert(successfully_init);
 
 	return true;
 }

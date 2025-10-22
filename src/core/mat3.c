@@ -1,4 +1,7 @@
 ﻿#include "mat3.h"
+
+#include <assert.h>
+
 #include "vec2.h"
 
 #include <math.h>
@@ -39,6 +42,9 @@ float mat3_determinant(const mat3 m)
 
 mat3 mat3_inverse(const mat3 m)
 {
+	const float determinant = mat3_determinant(m);
+	assert(determinant != 0);
+
 	return mat3_multiplyf((mat3)
 	{
 		//first row
@@ -50,7 +56,7 @@ mat3 mat3_inverse(const mat3 m)
 		m.m[1][2] * M_20 - m.m[0][1] * M_22,
 		m.m[0][2] * M_20 - m.m[0][0] * M_22,
 		m.m[0][2] * m.m[0][1] - m.m[0][0] * m.m[1][2]
-	}, 1 / mat3_determinant(m));
+	}, 1 / determinant);
 }
 
 mat3 mat3_from_translation(const vec2 translation)
@@ -105,6 +111,9 @@ mat3 mat3_scale(const mat3 m, const vec2 scale)
 
 mat3 mat3_from_ortho(const float right, const float left, const float top, const float bottom)
 {
+	assert(right != left);
+	assert(top != bottom);
+
 	return (mat3)
 	{
 		2.0f / (right - left), 0, (right + left) / (left - right),

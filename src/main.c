@@ -1,4 +1,6 @@
-﻿#include "game/game.h"
+﻿#include <assert.h>
+
+#include "game/game.h"
 
 int main(int argc, char *argv[])
 {

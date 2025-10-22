@@ -1,5 +1,6 @@
 #include "object.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -72,8 +73,7 @@ object_id object_get_index(const void *ptr)
 			return s_objects[i]->id;
 	}
 
-	log_error("ptr is not managed by object system");
-	return -1;
+	assert(false);
 }
 
 object_id object_add(const size_t size, const object_type type)

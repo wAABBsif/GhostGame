@@ -1,5 +1,6 @@
 #include "sprite_renderer.h"
 
+#include <assert.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -126,6 +127,10 @@ sprite_quad sprite_renderer_create_quad(sprite s)
 	for (uint8_t i = 0; i < 4; i++)
 	{
 		const vec2 vpos = vec2_transform(vertex_coords[i], matrix);
+
+		assert(texture_w > 0);
+		assert(texture_h > 0);
+
 		const vec2 vtex_coords =
 		{
 			(float)tex_coords[i * 2] / (float)texture_w * 65535.0f,

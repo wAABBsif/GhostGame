@@ -1,5 +1,6 @@
 ﻿#include "window.h"
 
+#include <assert.h>
 #include <stddef.h>
 
 #include "core/logging.h"
@@ -27,10 +28,7 @@ SDL_Window *window_create(void)
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 	s_window = SDL_CreateWindow(WINDOW_TITLE, s_window_width, s_window_height, WINDOW_FLAGS);
-	if (s_window == NULL)
-	{
-		log_error("Failed to create window (SDL Error: %s)\n", SDL_GetError());
-	}
+	assert(s_window != NULL);
 
 	return s_window;
 }
@@ -69,5 +67,6 @@ void window_get_size(int *width, int *height)
 
 float window_get_aspect_ratio(void)
 {
+	assert(s_window_height != 0);
 	return (float)s_window_width / (float)s_window_height;
 }

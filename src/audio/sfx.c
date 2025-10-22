@@ -51,13 +51,9 @@ audio_track_h sfx_set(const audio_clip_h clip)
 	}
 
 	if (track >= 0)
-	{
 		audio_set_track_clip(track, clip);
-	}
 	else
-	{
 		log_warning("Failed to set SFX! Too many SFX playing!");
-	}
 
 	return track;
 }
@@ -89,6 +85,8 @@ void sfx_set_volume(const audio_track_h track, const float volume)
 
 float sfx_get_volume(const audio_track_h track)
 {
+	if (s_global_volume == 0)
+		return 0;
 	return audio_get_track_volume(track) / s_global_volume;
 }
 

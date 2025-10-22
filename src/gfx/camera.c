@@ -1,6 +1,8 @@
 #include <math.h>
 #include "camera.h"
 
+#include <assert.h>
+
 #include "gfx/window.h"
 #include "core/vec2.h"
 #include "core/mat3.h"
@@ -63,12 +65,15 @@ void camera_terminate()
 static vec2 get_matrix_scale(const float scale)
 {
 	const float aspect = window_get_aspect_ratio();
+	assert(scale != 0);
 	return (vec2){2 / scale, 2 / scale * aspect};
 }
 
 static vec2 get_matrix_scale_inverted(const float scale)
 {
 	const float aspect = window_get_aspect_ratio();
+	assert(scale != 0);
+	assert(aspect != 0);
 	return (vec2){scale / 2, scale / 2 / aspect};
 }
 
@@ -178,6 +183,7 @@ void camera_free_texture(const camera *cam)
 vec2 camera_get_render_size(const camera *cam)
 {
 	const float aspect = window_get_aspect_ratio();
+	assert(aspect != 0);
 	return (vec2){cam->render_size, cam->render_size / aspect};
 }
 
