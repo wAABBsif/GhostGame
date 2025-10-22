@@ -75,6 +75,6 @@ void log_error(const char *format, ...)
 	SET_CONSOLE_TEXT_COLOR_WHITE();
 
 #if !defined(IS_DEBUG)
-	exit(-1);
+	abort();
 #endif
 }
