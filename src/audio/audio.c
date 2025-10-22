@@ -78,7 +78,8 @@ audio_clip_h audio_clip_load(const char* name, const bool is_sfx)
 
 	clip.hash = hash_string(name);
 	log_message("Loaded audio clip: %s", name);
-	assert(hash_map_add(&s_clips, &clip) != SIZE_MAX);
+	const size_t add_result = hash_map_add(&s_clips, &clip);
+	assert(add_result != SIZE_MAX);
 
 	return clip.hash;
 }

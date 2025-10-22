@@ -149,7 +149,8 @@ shader_h shader_load(const char* name)
 	glDeleteShader(vert_shader);
 	glDeleteShader(frag_shader);
 
-	assert(hash_map_add(&s_shaders, &result) != SIZE_MAX);
+	const size_t add_result = hash_map_add(&s_shaders, &result);
+	assert(add_result != SIZE_MAX);
 
 	log_message("Loaded shader %s", name);
 
