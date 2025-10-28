@@ -10,15 +10,17 @@ typedef uint16_t object_type;
 
 #define OBJECT_TYPE_NONE			0	//Used for deletion
 #define OBJECT_TYPE_CAMERA_BRAIN	1
-#define OBJECT_TYPE_COUNT			2
+#define OBJECT_TYPE_ENEMY_BASE		2
+#define OBJECT_TYPE_ENEMY_STANDARD	3
+#define OBJECT_TYPE_COUNT			4
 
 #define OBJECT_TYPE_DELETION_MASK	INT16_MAX
 #define OBJECT_TYPE_DELETION_BIT	(INT16_MAX + 1)
 
 typedef struct object_base
 {
-	object_id	id;
-	object_type type;
+	object_id	_id;
+	object_type _type;
 } object_base;
 
 typedef void (*object_start_func)(void *generic_object);
@@ -41,8 +43,10 @@ void object_terminate(void);
 
 //do not store this pointer for more than a single frame
 void *object_get_ptr(object_id object);
-object_id object_get_id(const void *ptr);
 
 object_id object_add(const size_t size, const object_type type);
 //object is queued for destruction and is not destroyed immediately
 bool object_destroy(object_id object);
+
+object_id object_get_id(const object_base *obj);
+object_type object_get_type(const object_base *obj);

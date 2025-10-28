@@ -60,6 +60,10 @@ add_executable(GhostGame src/main.c
 		src/game/object.h
 		src/game/objects/object_camera_brain.c
 		src/game/objects/object_camera_brain.h
+		src/game/objects/object_enemy_base.c
+		src/game/objects/object_enemy_base.h
+		src/game/objects/enemies/object_enemy_standard.c
+		src/game/objects/enemies/object_enemy_standard.h
 )
 
 include_directories(src)

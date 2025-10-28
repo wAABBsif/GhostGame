@@ -1,4 +1,3 @@
-object system
 camera brain system
 program player and basic enemies
 mouse-based aim

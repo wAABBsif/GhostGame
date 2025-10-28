@@ -26,33 +26,14 @@ camera cam;
 
 void test_camera_init(void)
 {
-	cam = (camera){0, 0, 0, 320, 320};
+	cam = (camera){256, 256, 0, 320, 320};
 	camera_create(&cam);
 	set_main_camera(&cam);
 }
 
 void test_camera_update(void)
 {
-	const bool *keys = SDL_GetKeyboardState(NULL);
-	const vec2 move_input = input_get_vector(INPUT_ACTION_MOVE_L, INPUT_ACTION_MOVE_R, INPUT_ACTION_MOVE_D, INPUT_ACTION_MOVE_U);
-	cam.position = vec2_add(cam.position, vec2_mul(move_input, 400 * game_time_get_delta()));
 
-	if (input_is_action_down(INPUT_ACTION_SHOOT))
-	{
-		cam.rotation -= game_time_get_delta() * 4;
-
-		if (!input_is_rumble_active(s_rumble_id))
-			s_rumble_id = input_rumble(0, 0.8, 0);
-	}
-
-	if (input_is_action_down(INPUT_ACTION_SWITCH))
-		cam.rotation += game_time_get_delta() * 4;
-
-	cam.size -= keys[SDL_SCANCODE_Z] * game_time_get_delta() * 400;
-	cam.size += keys[SDL_SCANCODE_X] * game_time_get_delta() * 400;
-
-	vec2 min, max;
-	camera_get_bounds(&cam, &min, &max);
 }
 
 void gfx_init(void)

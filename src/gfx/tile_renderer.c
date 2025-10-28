@@ -166,7 +166,13 @@ void tile_renderer_add_tile_chunk(const tile_chunk_pos chunk_pos, const tile_chu
 	{
 		//textureIndex 0 is reserved for "empty" tiles
 		if (chunk->tiles[i].textureIndex == 0)
+		{
+			quads[i].vertices[0] = 0;
+			quads[i].vertices[1] = 0;
+			quads[i].vertices[2] = 0;
+			quads[i].vertices[3] = 0;
 			continue;
+		}
 
 		const uint16_t x = chunk_pos.x * TILE_CHUNK_SIZE + i % TILE_CHUNK_SIZE;
 		const uint16_t y = chunk_pos.y * TILE_CHUNK_SIZE + i / TILE_CHUNK_SIZE;
