@@ -76,7 +76,8 @@ texture_h texture_load(const char* name)
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	log_message("Loaded texture %s", name);
-	assert(hash_map_add(&s_textures, &t) != SIZE_MAX);
+	const size_t add_result = hash_map_add(&s_textures, &t);
+	assert(add_result != SIZE_MAX);
 
 	return t.key;
 }
