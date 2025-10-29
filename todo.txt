@@ -1,6 +1,6 @@
 entity component system
-camera brain system
 program player and basic enemies
+camera brain system
 mouse-based aim
 level file format
 create lighting
