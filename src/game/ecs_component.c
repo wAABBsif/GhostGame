@@ -5,12 +5,19 @@
 #include <string.h>
 
 #include "ecs_entity.h"
+
 #include "components/component_position.h"
+#include "components/component_rotation.h"
+#include "components/component_size.h"
+#include "components/component_velocity.h"
 
 const register_component_entry COMPONENT_ENTRIES[] =
 {
 	(register_component_entry){0, 0},												//COMPONENT_TYPE_DELETION_FLAG
-	(register_component_entry){sizeof(component_position), ECS_MAX_ENTITIES}		//COMPONENT_TYPE_POSITION
+	(register_component_entry){sizeof(component_position), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_POSITION
+	(register_component_entry){sizeof(component_rotation), ECS_MAX_ENTITIES / 2},	//COMPONENT_TYPE_ROTATION
+	(register_component_entry){sizeof(component_size), ECS_MAX_ENTITIES},			//COMPONENT_TYPE_SCALE
+	(register_component_entry){sizeof(component_velocity), ECS_MAX_ENTITIES / 2},	//COMPONENT_TYPE_VELOCITY
 };
 
 static void *s_components[COMPONENT_TYPE_COUNT];
@@ -18,10 +25,19 @@ static component_index s_component_count[COMPONENT_TYPE_COUNT];
 
 void components_init(void)
 {
+	size_t total_size = 0;
+
 	for (int i = 0; i < COMPONENT_TYPE_COUNT; i++)
 	{
 		s_component_count[i] = 0;
-		s_components[i] = malloc(COMPONENT_ENTRIES[i].size * COMPONENT_ENTRIES[i].count);
+		s_components[i] = (void*)total_size;
+		total_size += COMPONENT_ENTRIES[i].size * COMPONENT_ENTRIES[i].count;
+	}
+
+	void *component_data = malloc(total_size);
+	for (int i = 0; i < COMPONENT_TYPE_COUNT; i++)
+	{
+		s_components[i] += (size_t)component_data;
 	}
 }
 

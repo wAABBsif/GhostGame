@@ -3,8 +3,11 @@
 
 #define COMPONENT_TYPE_DELETION_FLAG		0
 #define COMPONENT_TYPE_POSITION				1
+#define COMPONENT_TYPE_ROTATION				2
+#define COMPONENT_TYPE_SCALE				3
+#define COMPONENT_TYPE_VELOCITY				4
 
-#define COMPONENT_TYPE_COUNT				2
+#define COMPONENT_TYPE_COUNT				5
 #define COMPONENT_GET_MASK(component)		(1 << (component))
 
 typedef uint16_t component_type;

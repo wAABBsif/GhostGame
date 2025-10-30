@@ -12,7 +12,6 @@ void system_deletion_init(void)
 
 void system_deletion_update(void)
 {
-	const ecs_entity *entities = entities_get();
 	entity_index i = 0;
 	component_index component_indices[COMPONENT_TYPE_COUNT];
 	for (component_type j = 0; j < COMPONENT_TYPE_COUNT; j++)

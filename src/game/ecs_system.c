@@ -13,11 +13,11 @@ void systems_init(void)
 {
 	entities_add();
 	entity_queue_remove(0);
-	component_position *p =  entity_add_component(0, COMPONENT_TYPE_POSITION);
+	component_position *p =  entity_add_component(COMPONENT_TYPE_POSITION);
 	p->value = (vec2){3.0, 4.0};
 
 	entities_add();
-	p =  entity_add_component(1, COMPONENT_TYPE_POSITION);
+	p =  entity_add_component(COMPONENT_TYPE_POSITION);
 	p->value = (vec2){5.0, 6.0};
 
 	for (int i = 0; i < sizeof(SYSTEMS) / sizeof(ecs_system); i++)
