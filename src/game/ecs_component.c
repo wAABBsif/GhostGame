@@ -1,0 +1,74 @@
+﻿#include "ecs_component.h"
+
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "ecs_entity.h"
+#include "components/component_position.h"
+
+const register_component_entry COMPONENT_ENTRIES[] =
+{
+	(register_component_entry){0, 0},												//COMPONENT_TYPE_DELETION_FLAG
+	(register_component_entry){sizeof(component_position), ECS_MAX_ENTITIES}		//COMPONENT_TYPE_POSITION
+};
+
+static void *s_components[COMPONENT_TYPE_COUNT];
+static component_index s_component_count[COMPONENT_TYPE_COUNT];
+
+void components_init(void)
+{
+	for (int i = 0; i < COMPONENT_TYPE_COUNT; i++)
+	{
+		s_component_count[i] = 0;
+		s_components[i] = malloc(COMPONENT_ENTRIES[i].size * COMPONENT_ENTRIES[i].count);
+	}
+}
+
+void components_terminate(void)
+{
+	for (int i = 0; i < COMPONENT_TYPE_COUNT; i++)
+	{
+		s_component_count[i] = 0;
+		free(s_components[i]);
+		s_components[i] = NULL;
+	}
+}
+
+component_index components_add(const component_type type)
+{
+	assert(type != COMPONENT_TYPE_DELETION_FLAG);
+
+	uint16_t *count = &s_component_count[type];
+
+	const component_index result = *count;
+	(*count)++;
+	assert(s_component_count[type] < COMPONENT_ENTRIES[type].count);
+	return result;
+}
+
+void components_remove(const component_type type, const component_index index)
+{
+	assert(type != COMPONENT_TYPE_DELETION_FLAG);
+
+	void *array = s_components[type];
+	const uint16_t size = COMPONENT_ENTRIES[type].size;
+
+	s_component_count[type]--;
+	memmove(&array[index * size], &array[(index + 1) * size], size * (s_component_count[type] - index));
+}
+
+void *components_get(const component_type type)
+{
+	return s_components[type];
+}
+
+uint16_t components_get_size(const component_type type)
+{
+	return COMPONENT_ENTRIES[type].size;
+}
+
+component_index components_get_count(const component_type type)
+{
+	return s_component_count[type];
+}

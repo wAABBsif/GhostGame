@@ -1,10 +1,10 @@
 ﻿#include <stdbool.h>
 #include "game.h"
 
-#include "object.h"
+#include "ecs_component.h"
+#include "ecs_entity.h"
 #include "sdl_interface.h"
-#include "sprite.h"
-#include "tile.h"
+#include "ecs_system.h"
 #include "audio/audio.h"
 #include "core/game_time.h"
 #include "core/logging.h"
@@ -37,8 +37,8 @@ static void _game_init(void)
 	input_init();
 	gfx_init();
 	audio_init();
-	tile_map_init();
-	object_init();
+	components_init();
+	systems_init();
 }
 
 static void _game_update(void)
@@ -46,16 +46,14 @@ static void _game_update(void)
 	game_time_update();
 	sdl_interface_update();
 	input_update();
-	sprite_update();
-	tile_map_update();
-	object_update();
+	systems_update();
 	audio_update();
 	gfx_draw();
 }
 
 static void _game_terminate(void)
 {
-	object_terminate();
+	components_terminate();
 	input_terminate();
 	audio_terminate();
 	gfx_terminate();

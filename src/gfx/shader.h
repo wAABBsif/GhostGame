@@ -2,7 +2,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "core/hash.h"
-#include "drawing.h"
+
+typedef hash shader_h;
 
 #define MAX_SHADERS	32
 #define VERT_EXTENSION ".vert.glsl"

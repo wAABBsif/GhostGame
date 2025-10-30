@@ -28,26 +28,12 @@ add_executable(GhostGame src/main.c
 		src/core/mat3.h
 		src/gfx/camera.c
 		src/gfx/camera.h
-		src/gfx/tile_renderer.c
-		src/gfx/tile_renderer.h
 		src/gfx/texture.c
 		src/gfx/texture.h
-		src/game/tile.c
-		src/game/tile.h
-		src/gfx/sprite_renderer.c
-		src/gfx/sprite_renderer.h
 		src/gfx/color.h
 		src/audio/audio.c
 		src/audio/audio.h
-		src/audio/music.c
-		src/audio/music.h
-		src/audio/sfx.c
-		src/audio/sfx.h
 		src/core/hash.h
-		src/game/sprite.c
-		src/game/sprite.h
-		src/gfx/drawing.h
-		src/gfx/drawing.c
 		src/input/input.c
 		src/input/input.h
 		src/input/input_device.h
@@ -56,14 +42,15 @@ add_executable(GhostGame src/main.c
 		src/input/device_gamepad.c
 		src/input/device_gamepad.h
 		src/input/input_binding.h
-		src/game/object.c
-		src/game/object.h
-		src/game/objects/object_camera_brain.c
-		src/game/objects/object_camera_brain.h
-		src/game/objects/object_enemy_base.c
-		src/game/objects/object_enemy_base.h
-		src/game/objects/enemies/object_enemy_standard.c
-		src/game/objects/enemies/object_enemy_standard.h
+		src/game/ecs_entity.c
+		src/game/ecs_entity.h
+		src/game/ecs_component.c
+		src/game/ecs_component.h
+		src/game/ecs_system.c
+		src/game/ecs_system.h
+		src/game/systems/system_deletion.c
+		src/game/systems/system_deletion.h
+		src/game/components/component_position.h
 )
 
 include_directories(src)

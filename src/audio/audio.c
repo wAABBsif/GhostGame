@@ -2,8 +2,6 @@
 
 #include <assert.h>
 
-#include "sfx.h"
-#include "music.h"
 #include "core/game_time.h"
 #include "core/hash_map.h"
 #include "core/logging.h"
@@ -34,15 +32,11 @@ void audio_init(void)
 	s_sdl_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
 
 	hash_map_create(&s_clips, sizeof(audio_clip), MAX_AUDIO_CLIPS, s_clip_entries);
-
-	sfx_init();
-	music_init();
 }
 
 void audio_update(void)
 {
-	sfx_update();
-	music_update();
+
 }
 
 void audio_terminate(void)
@@ -57,9 +51,6 @@ void audio_terminate(void)
 	}
 
 	hash_map_destroy(&s_clips);
-
-	sfx_terminate();
-	music_terminate();
 
 	MIX_Quit();
 }

@@ -13,14 +13,10 @@
 #include "core/game_time.h"
 #include "core/mat3.h"
 #include "camera.h"
-#include "sprite_renderer.h"
-#include "tile_renderer.h"
-#include "game/tile.h"
 #include "input/input.h"
 #include "SDL3/SDL_video.h"
 
 static SDL_GLContext s_context = NULL;
-static rumble_id s_rumble_id;
 
 camera cam;
 
@@ -51,8 +47,6 @@ void gfx_init(void)
 	shader_init();
 	texture_init();
 	camera_init();
-	sprite_renderer_init();
-	tile_renderer_init();
 
 	int width, height;
 	window_get_size(&width, &height);
@@ -76,8 +70,6 @@ void gfx_draw(void)
 	camera_bind_framebuffer(&cam);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	handle_draw_commands();
-
 	camera_unbind_framebuffer();
 	camera_render_to_screen(&cam);
 
@@ -92,6 +84,4 @@ void gfx_terminate(void)
 	texture_clear();
 	camera_terminate();
 	window_destroy();
-	sprite_renderer_terminate();
-	tile_renderer_terminate();
 }
