@@ -43,10 +43,11 @@ void components_init(void)
 
 void components_terminate(void)
 {
+	free(s_components[0]);
+
 	for (int i = 0; i < COMPONENT_TYPE_COUNT; i++)
 	{
 		s_component_count[i] = 0;
-		free(s_components[i]);
 		s_components[i] = NULL;
 	}
 }
@@ -77,6 +78,11 @@ void components_remove(const component_type type, const component_index index)
 void *components_get(const component_type type)
 {
 	return s_components[type];
+}
+
+void *components_get_index(const component_type type, const component_index index)
+{
+	return &components_get(type)[COMPONENT_ENTRIES[type].size * index];
 }
 
 uint16_t components_get_size(const component_type type)

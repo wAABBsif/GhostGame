@@ -54,6 +54,6 @@ void entity_enable_component(entity_index index, const component_type type)
 void *entity_add_component(const component_type type)
 {
 	entity_enable_component(s_entity_count - 1, type);
-	component_index c_index = components_add(type);
-	return &components_get(type)[c_index * components_get_size(type)];
+	const component_index c_index = components_add(type);
+	return components_get_index(type, c_index);
 }
