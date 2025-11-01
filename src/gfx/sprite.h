@@ -31,5 +31,5 @@ void sprite_init(void);
 void sprite_terminate(void);
 
 uint8_t sprite_get_texture_num(texture_h h);
-void add_sprite_quad(const sprite_quad *sprite_quad, bool is_sorted);
+void add_sprite_quad(const sprite_quad *quad, bool is_sorted);
 void draw_sprites(void);

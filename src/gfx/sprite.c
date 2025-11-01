@@ -89,24 +89,48 @@ void sprite_terminate(void)
 	s_unsorted_count = 0;
 }
 
-void add_sprite_quad(const sprite_quad *sprite_quad, const bool is_sorted)
+static uint16_t s_get_ordered_index(const int8_t z, const uint16_t start, const uint16_t end)
 {
-	if (!is_sorted)
+	if (start >= end)
+		return start;
+
+	const uint16_t mid = (start + end) / 2;
+	const int8_t mid_z = s_quads[mid].vertices->z;
+
+	if (mid_z < z)
+		return s_get_ordered_index(z, mid + 1, end);
+	if (mid_z > z)
+		return s_get_ordered_index(z, start, mid);
+	return mid;
+}
+
+void add_sprite_quad(const sprite_quad *quad, const bool is_sorted)
+{
+	assert(s_unsorted_count + s_sorted_count < MAX_SPRITES);
+
+	if (is_sorted)
 	{
-		s_quads[s_unsorted_count] = *sprite_quad;
+		const uint16_t index = s_get_ordered_index(quad->vertices->z, MAX_SPRITES - s_sorted_count - 1, MAX_SPRITES - 1);
+		memmove(s_quads + MAX_SPRITES - s_sorted_count - 1, s_quads + MAX_SPRITES - s_sorted_count, sizeof(sprite_quad) * (MAX_SPRITES - index));
+		s_quads[index] = *quad;
+		s_sorted_count++;
+	}
+	else
+	{
+		s_quads[s_unsorted_count] = *quad;
 		s_unsorted_count++;
 	}
 }
 
 uint8_t sprite_get_texture_num(const texture_h h)
 {
+	assert(s_texture_count < MAX_SPRITE_TEXTURES);
+
 	for (uint8_t i = 0; i < s_texture_count; i++)
 	{
 		if (s_textures[i] == h)
 			return i;
 	}
-
-	assert(s_texture_count < MAX_SPRITE_TEXTURES);
 
 	s_textures[s_texture_count] = h;
 	s_texture_count++;
@@ -115,7 +139,7 @@ uint8_t sprite_get_texture_num(const texture_h h)
 
 void draw_sprites(void)
 {
-	memmove(&s_quads[s_unsorted_count], &s_quads[MAX_SPRITES - s_sorted_count], sizeof(sprite_quad) * s_sorted_count);
+	memmove(s_quads + s_unsorted_count, s_quads + MAX_SPRITES - s_sorted_count, sizeof(sprite_quad) * s_sorted_count);
 
 	shader_set(s_shader);
 

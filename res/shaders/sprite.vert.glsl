@@ -17,7 +17,7 @@ void main()
     mat3 m = in_use_camera_to_screen_matrix != 0 ? camera_to_screen_matrix : world_to_screen_matrix;
 
     vec3 pos = m * vec3(in_position.xy, 1);
-    gl_Position = vec4(pos.xy, in_z, 1);
+    gl_Position = vec4(pos.xy, -in_z, 1);
 
     tex_index = in_texture_index;
     tex_coords = in_tex_coords;

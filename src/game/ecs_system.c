@@ -33,11 +33,11 @@ void *system_retrieve_component(const entity_index entity, const component_type 
 
 void systems_init(void)
 {
-	for (int i = -320; i < 320; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		entities_add();
 		component_position *pos =  entity_add_component(COMPONENT_TYPE_POSITION);
-		pos->value = (vec2){i % 64, i / 64 * 32};
+		pos->value = (vec2){i * 32 + 32, 0};
 
 		component_rotation *rot =  entity_add_component(COMPONENT_TYPE_ROTATION);
 		rot->value = 0;
@@ -51,18 +51,18 @@ void systems_init(void)
 		spr->texture_y = 0;
 		spr->texture_w = 16;
 		spr->texture_h = 16;
-		spr->color = COLOR_WHITE;
-		spr->z = 0;
+		spr->color = (color){i == 0 ? 0xFF : 0x00, i == 1 ? 0xFF : 0x00, i == 2 ? 0xFF : 0x00, i == 1 ? 0x80 : 0xFF};
+		spr->z = i;
 		spr->use_camera_to_screen_matrix = false;
-		spr->draw_sorted = false;
+		spr->draw_sorted = true;
 
 		component_velocity *vel =  entity_add_component(COMPONENT_TYPE_VELOCITY);
-		vel->value = (vec2){32.0, 32.0};
+		vel->value = (vec2){48 - i * 32, 0};
+	}
 
-		for (int i = 0; i < sizeof(SYSTEMS) / sizeof(ecs_system); i++)
-		{
-			SYSTEMS[i].init();
-		}
+	for (int i = 0; i < sizeof(SYSTEMS) / sizeof(ecs_system); i++)
+	{
+		SYSTEMS[i].init();
 	}
 }
 
