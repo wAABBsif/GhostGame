@@ -10,14 +10,16 @@
 #include "components/component_rotation.h"
 #include "components/component_size.h"
 #include "components/component_velocity.h"
+#include "components/component_sprite.h"
 
 const register_component_entry COMPONENT_ENTRIES[] =
 {
 	(register_component_entry){0, 0},												//COMPONENT_TYPE_DELETION_FLAG
 	(register_component_entry){sizeof(component_position), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_POSITION
 	(register_component_entry){sizeof(component_rotation), ECS_MAX_ENTITIES / 2},	//COMPONENT_TYPE_ROTATION
-	(register_component_entry){sizeof(component_size), ECS_MAX_ENTITIES},			//COMPONENT_TYPE_SCALE
+	(register_component_entry){sizeof(component_size), ECS_MAX_ENTITIES},			//COMPONENT_TYPE_SIZE
 	(register_component_entry){sizeof(component_velocity), ECS_MAX_ENTITIES / 2},	//COMPONENT_TYPE_VELOCITY
+	(register_component_entry){sizeof(component_sprite), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_SPRITE
 };
 
 static void *s_components[COMPONENT_TYPE_COUNT];
@@ -72,7 +74,7 @@ void components_remove(const component_type type, const component_index index)
 	const uint16_t size = COMPONENT_ENTRIES[type].size;
 
 	s_component_count[type]--;
-	memmove(&array[index * size], &array[(index + 1) * size], size * (s_component_count[type] - index));
+	memmove(array + index * size, array + (index + 1) * size, size * (s_component_count[type] - index));
 }
 
 void *components_get(const component_type type)
@@ -82,7 +84,7 @@ void *components_get(const component_type type)
 
 void *components_get_index(const component_type type, const component_index index)
 {
-	return &components_get(type)[COMPONENT_ENTRIES[type].size * index];
+	return components_get(type) + COMPONENT_ENTRIES[type].size * index;
 }
 
 uint16_t components_get_size(const component_type type)

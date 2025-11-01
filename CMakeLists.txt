@@ -54,8 +54,13 @@ add_executable(GhostGame src/main.c
 		src/game/components/component_rotation.h
 		src/game/components/component_size.h
 		src/game/components/component_velocity.h
+		src/game/components/component_sprite.h
 		src/game/systems/system_kinematics.c
 		src/game/systems/system_kinematics.h
+		src/game/systems/system_draw_sprites.c
+		src/game/systems/system_draw_sprites.h
+		src/gfx/sprite.c
+		src/gfx/sprite.h
 )
 
 include_directories(src)

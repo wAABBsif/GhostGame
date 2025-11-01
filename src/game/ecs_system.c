@@ -1,16 +1,24 @@
 ﻿#include "ecs_system.h"
 
+#include <tgmath.h>
+
 #include "ecs_entity.h"
 #include "components/component_position.h"
+#include "components/component_rotation.h"
+#include "components/component_size.h"
+#include "components/component_sprite.h"
+#include "components/component_velocity.h"
 #include "core/game_time.h"
 #include "core/logging.h"
 #include "systems/system_deletion.h"
+#include "systems/system_draw_sprites.h"
 #include "systems/system_kinematics.h"
 
 const ecs_system SYSTEMS[] =
 {
 	(ecs_system){system_deletion_init, system_deletion_update},
-	(ecs_system){system_kinematics_init, system_kinematics_update}
+	(ecs_system){system_kinematics_init, system_kinematics_update},
+	(ecs_system){system_draw_sprites_init, system_draw_sprites_update},
 };
 
 void *system_retrieve_component(const entity_index entity, const component_type type, component_index *index)
@@ -25,27 +33,36 @@ void *system_retrieve_component(const entity_index entity, const component_type 
 
 void systems_init(void)
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = -320; i < 320; i++)
 	{
 		entities_add();
-		component_position *p =  entity_add_component(COMPONENT_TYPE_POSITION);
-		p->value = (vec2){3.0, 4.0};
+		component_position *pos =  entity_add_component(COMPONENT_TYPE_POSITION);
+		pos->value = (vec2){i % 64, i / 64 * 32};
 
-		if (i != 2)
+		component_rotation *rot =  entity_add_component(COMPONENT_TYPE_ROTATION);
+		rot->value = 0;
+
+		component_size *size =  entity_add_component(COMPONENT_TYPE_SIZE);
+		size->value = (vec2){16.0, 16.0};
+
+		component_sprite *spr =  entity_add_component(COMPONENT_TYPE_SPRITE);
+		spr->texture = texture_get("res/sprites/test.png");
+		spr->texture_x = 0;
+		spr->texture_y = 0;
+		spr->texture_w = 16;
+		spr->texture_h = 16;
+		spr->color = COLOR_WHITE;
+		spr->z = 0;
+		spr->use_camera_to_screen_matrix = false;
+		spr->draw_sorted = false;
+
+		component_velocity *vel =  entity_add_component(COMPONENT_TYPE_VELOCITY);
+		vel->value = (vec2){32.0, 32.0};
+
+		for (int i = 0; i < sizeof(SYSTEMS) / sizeof(ecs_system); i++)
 		{
-			component_position *v =  entity_add_component(COMPONENT_TYPE_VELOCITY);
-			v->value = (vec2){100 - i, 0};
+			SYSTEMS[i].init();
 		}
-
-		if (i == 3)
-		{
-			entity_queue_remove(1);
-		}
-	}
-
-	for (int i = 0; i < sizeof(SYSTEMS) / sizeof(ecs_system); i++)
-	{
-		SYSTEMS[i].init();
 	}
 }
 

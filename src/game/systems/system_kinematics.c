@@ -19,13 +19,12 @@ void system_kinematics_update(void)
 
 	for (entity_index i = 0; i < entities_get_count(); i++)
 	{
-		component_position *position = system_retrieve_component(i, COMPONENT_TYPE_POSITION, &position_index);
-		component_velocity *velocity = system_retrieve_component(i, COMPONENT_TYPE_VELOCITY, &velocity_index);
+		component_position *c_position = system_retrieve_component(i, COMPONENT_TYPE_POSITION, &position_index);
+		component_velocity *c_velocity = system_retrieve_component(i, COMPONENT_TYPE_VELOCITY, &velocity_index);
 
-		if (!position || !velocity)
+		if (!c_position || !c_velocity)
 			continue;
 
-		position->value = vec2_add(position->value, vec2_mul(velocity->value, 1));
-		position_index = position_index;
+		c_position->value = vec2_add(c_position->value, vec2_mul(c_velocity->value, game_time_get_delta()));
 	}
 }

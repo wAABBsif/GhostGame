@@ -1,11 +1,17 @@
 #pragma once
 #include <stdint.h>
 
-#define TRANSPARENT (color)0xFFF0
-#define BLACK (color)0x000F
-#define WHITE (color)0xFFFF
-#define RED (color)0xF00F
-#define GREEN (color)0x0F0F
-#define BLUE (color)0x00FF
+#define COLOR_TRANSPARENT	(color){0x00, 0x00, 0x00, 0x00}
+#define COLOR_BLACK			(color){0x00, 0x00, 0x00, 0xFF}
+#define COLOR_WHITE			(color){0xFF, 0xFF, 0xFF, 0xFF}
+#define COLOR_RED			(color){0xFF, 0x00, 0x00, 0xFF}
+#define COLOR_GREEN			(color){0x00, 0xFF, 0x00, 0xFF}
+#define COLOR_BLUE			(color){0x00, 0x00, 0xFF, 0xFF}
 
-typedef uint16_t color;
+typedef struct color
+{
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t a;
+} color;

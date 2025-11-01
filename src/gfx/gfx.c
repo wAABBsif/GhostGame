@@ -6,14 +6,11 @@
 
 #include "core/logging.h"
 #include "glad/glad.h"
-#include <SDL3/SDL_opengl.h>
 
 #include "shader.h"
 #include "window.h"
-#include "core/game_time.h"
-#include "core/mat3.h"
 #include "camera.h"
-#include "input/input.h"
+#include "sprite.h"
 #include "SDL3/SDL_video.h"
 
 static SDL_GLContext s_context = NULL;
@@ -22,14 +19,9 @@ camera cam;
 
 void test_camera_init(void)
 {
-	cam = (camera){256, 256, 0, 320, 320};
+	cam = (camera){0, 0, 0, 320, 320};
 	camera_create(&cam);
 	set_main_camera(&cam);
-}
-
-void test_camera_update(void)
-{
-
 }
 
 void gfx_init(void)
@@ -61,14 +53,15 @@ void gfx_init(void)
 	SDL_GL_SetSwapInterval(0);
 
 	test_camera_init();
+	sprite_init();
 }
 
 void gfx_draw(void)
 {
-	test_camera_update();
-
 	camera_bind_framebuffer(&cam);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	draw_sprites();
 
 	camera_unbind_framebuffer();
 	camera_render_to_screen(&cam);
@@ -80,6 +73,7 @@ void gfx_terminate(void)
 {
 	log_message("Terminating graphics...");
 
+	sprite_terminate();
 	shader_clear();
 	texture_clear();
 	camera_terminate();

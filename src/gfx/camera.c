@@ -24,10 +24,10 @@ typedef struct camera_quad_vertex
 
 const camera_quad_vertex vertices[] =
 {
-	{-1, +1, +0, +1},
 	{-1, -1, +0, +0},
 	{+1, -1, +1, +0},
-	{+1, +1, +1, +1}
+	{+1, +1, +1, +1},
+	{-1, +1, +0, +1},
 };
 
 void camera_init()
@@ -139,7 +139,7 @@ void camera_create_texture(camera *cam)
 	glGenTextures(1, &cam->texture);
 
 	glBindTexture(GL_TEXTURE_2D, cam->texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glBindTexture(GL_TEXTURE_2D, 0);

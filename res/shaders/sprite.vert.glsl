@@ -1,4 +1,9 @@
-layout(location = 0) in uvec3 data;
+layout(location = 0) in vec2 in_position;
+layout(location = 1) in vec2 in_tex_coords;
+layout(location = 2) in vec4 in_color;
+layout(location = 3) in float in_z;
+layout(location = 4) in int in_use_camera_to_screen_matrix;
+layout(location = 5) in float in_texture_index;
 
 out float tex_index;
 out vec2 tex_coords;
@@ -9,12 +14,12 @@ uniform mat3 camera_to_screen_matrix;
 
 void main()
 {
-    mat3 m = (((data.z >> 23) & uint(0x1)) == uint(1)) ? camera_to_screen_matrix : world_to_screen_matrix;
+    mat3 m = in_use_camera_to_screen_matrix != 0 ? camera_to_screen_matrix : world_to_screen_matrix;
 
-    vec3 pos = m * vec3(data.x & uint(0xFFFF), (data.x >> 16) & uint(0xFFFF), 1);
-    gl_Position = vec4(pos.xy, 0 - float((data.z >> 16) & uint(0x7F)) / 256.0, 1);
+    vec3 pos = m * vec3(in_position.xy, 1);
+    gl_Position = vec4(pos.xy, in_z, 1);
 
-    tex_coords = vec2(float(data.y & uint(0xFFFF)) / 65536.0, float((data.y >> 16) & uint(0xFFFF)) / 65536.0);
-    tex_index = float((data.z >> 24) & uint(0xFF));
-    color = vec4(float((data.z >> 12) & uint(0xF)) / 15.0, float((data.z >> 8) & uint(0xF)) / 15.0, float((data.z >> 4) & uint(0xF)) / 15.0, float((data.z >> 0) & uint(0xF)) / 15.0);
+    tex_index = in_texture_index;
+    tex_coords = in_tex_coords;
+    color = in_color;
 }
