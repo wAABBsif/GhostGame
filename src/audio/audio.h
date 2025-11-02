@@ -4,8 +4,8 @@
 #include "core/hash.h"
 
 #define AUDIO_3D_SCALE		0.005f
-#define MAX_AUDIO_CLIPS		64
-#define MAX_AUDIO_TRACKS	16
+#define MAX_AUDIO_CLIPS		256
+#define MAX_AUDIO_TRACKS	32
 
 typedef hash audio_clip_h;
 typedef int16_t audio_track_h;
