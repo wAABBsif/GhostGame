@@ -45,9 +45,13 @@ void system_draw_sprites_update(void)
 			continue;
 
 		assert(c_position);
+		assert(c_size);
+
+		if (!sprite_simple_cull(c_position->value, c_size->value))
+			continue;
 
 		sprite_quad quad;
-		const mat3 matrix = mat3_from_trs(c_position->value, c_rotation ? c_rotation->value : 0, c_size ? c_size->value : (vec2){16, 16});
+		const mat3 matrix = mat3_from_trs(c_position->value, c_rotation ? c_rotation->value : 0, c_size->value);
 
 		const uint16_t tex_coords[8] =
 		{

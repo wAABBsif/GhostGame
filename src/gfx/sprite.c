@@ -89,6 +89,30 @@ void sprite_terminate(void)
 	s_unsorted_count = 0;
 }
 
+bool sprite_simple_cull(const vec2 position, vec2 size)
+{
+	size = vec2_mul(size, 1.41421356237f);
+	const vec2 positive = vec2_add(position, size);
+	const vec2 negative = vec2_sub(position, size);
+
+	vec2 max, min;
+	camera_get_bounds(get_main_camera(), &min, &max);
+
+	if (positive.x < min.x)
+		return false;
+
+	if (positive.y < min.y)
+		return false;
+
+	if (negative.x > max.x)
+		return false;
+
+	if (negative.y > max.y)
+		return false;
+
+	return true;
+}
+
 static uint16_t s_get_ordered_index(const int8_t z, const uint16_t start, const uint16_t end)
 {
 	if (start >= end)
@@ -139,6 +163,7 @@ uint8_t sprite_get_texture_num(const texture_h h)
 
 void draw_sprites(void)
 {
+	log_message("%i", s_sorted_count + s_unsorted_count);
 	memmove(s_quads + s_unsorted_count, s_quads + MAX_SPRITES - s_sorted_count, sizeof(sprite_quad) * s_sorted_count);
 
 	shader_set(s_shader);

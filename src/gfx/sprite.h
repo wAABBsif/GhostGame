@@ -30,6 +30,7 @@ typedef struct sprite_quad
 void sprite_init(void);
 void sprite_terminate(void);
 
+bool sprite_simple_cull(vec2 position, vec2 size);
 uint8_t sprite_get_texture_num(texture_h h);
 void add_sprite_quad(const sprite_quad *quad, bool is_sorted);
 void draw_sprites(void);
