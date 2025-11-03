@@ -1,6 +1,6 @@
 in vec2 tex_coords;
 in vec4 color;
-in int light_type;
+in float light_type;
 
 out vec4 FragColor;
 
@@ -21,5 +21,5 @@ vec4 get_color(int type)
 
 void main()
 {
-    FragColor = get_color(light_type);
+    FragColor = get_color(int(light_type));
 }

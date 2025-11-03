@@ -16,7 +16,6 @@ def process_shaders(res_path):
                     break
             shader = _process_includes(shader[start_index : ])
         with open(filename, "w") as file:
-            shader = "#version 330 core\n" + shader
             file.write(shader)
             print("Processed " + filename)
 

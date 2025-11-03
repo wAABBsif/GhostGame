@@ -53,11 +53,13 @@ void window_handle_sdl_event(const SDL_Event *event)
 
 	const vec2 size = camera_get_render_size(get_main_camera());
 
-	camera_texture_create_texture(&get_main_camera()->main_texture, size);
 	camera_texture_create_renderbuffer(&get_main_camera()->main_texture, size);
+	camera_texture_create_color_texture(&get_main_camera()->main_texture, size);
+	camera_texture_create_depth_texture(&get_main_camera()->main_texture, size);
 
-	camera_texture_create_texture(&get_main_camera()->lighting_texture, size);
 	camera_texture_create_renderbuffer(&get_main_camera()->lighting_texture, size);
+	camera_texture_create_color_texture(&get_main_camera()->lighting_texture, size);
+	camera_texture_create_depth_texture(&get_main_camera()->lighting_texture, size);
 
 	log_message("Resizing window (%i, %i)", s_window_width, s_window_height);
 }

@@ -6,7 +6,7 @@ layout(location = 4) in int in_light_type;
 
 out vec2 tex_coords;
 out vec4 color;
-out int light_type;
+out float light_type;
 
 uniform mat3 world_to_screen_matrix;
 
@@ -17,5 +17,5 @@ void main()
 
     tex_coords = in_tex_coords;
     color = in_color;
-    light_type = in_light_type;
+    light_type = float(in_light_type);
 }

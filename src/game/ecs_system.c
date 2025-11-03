@@ -71,7 +71,7 @@ void systems_init(void)
 	pos->value = (vec2){0, 0};
 
 	component_size *size =  entity_add_component(COMPONENT_TYPE_SIZE);
-	size->value = (vec2){64.0, 64.0};
+	size->value = (vec2){1000.0, 1000.0};
 
 	component_light *light =  entity_add_component(COMPONENT_TYPE_LIGHT);
 	light->color = COLOR_WHITE;

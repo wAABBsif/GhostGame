@@ -9,7 +9,8 @@ typedef struct camera_texture
 {
 	uint32_t framebuffer;
 	uint32_t renderbuffer;
-	texture_id texture;
+	texture_id color_texture;
+	texture_id depth_texture;
 } camera_texture;
 
 typedef struct camera
@@ -34,12 +35,14 @@ void camera_destroy(const camera *cam);
 void camera_texture_create(camera_texture *cam_texture, vec2 render_size);
 void camera_texture_create_framebuffer(camera_texture *cam_texture);
 void camera_texture_create_renderbuffer(camera_texture *cam_texture, vec2 render_size);
-void camera_texture_create_texture(camera_texture *cam_texture, vec2 render_size);
+void camera_texture_create_color_texture(camera_texture *cam_texture, vec2 render_size);
+void camera_texture_create_depth_texture(camera_texture *cam_texture, vec2 render_size);
 
 void camera_texture_free(const camera_texture *cam_texture);
 void camera_texture_free_framebuffer(const camera_texture *cam_texture);
 void camera_texture_free_renderbuffer(const camera_texture *cam_texture);
-void camera_texture_free_texture(const camera_texture *cam_texture);
+void camera_texture_free_color_texture(const camera_texture *cam_texture);
+void camera_texture_free_depth_texture(const camera_texture *cam_texture);
 
 vec2 camera_get_render_size(const camera *cam);
 
