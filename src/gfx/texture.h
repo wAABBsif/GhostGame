@@ -40,7 +40,7 @@ void texture_unload(texture_h h);
 texture_h texture_get(const char* name);
 
 // Loads a texture for use in rendering operations
-void texture_set(texture_h t, int slot);
+void texture_set(const texture_id id, const int slot);
 
 texture_id texture_get_id(texture_h t);
 void texture_get_size(texture_h t, int32_t *width, int32_t *height);

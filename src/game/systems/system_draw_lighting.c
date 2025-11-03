@@ -1,4 +1,4 @@
-﻿#include "system_draw_sprites.h"
+#include "system_draw_lighting.h"
 
 #include <assert.h>
 #include <math.h>
@@ -8,10 +8,11 @@
 #include "game/ecs_component.h"
 #include "game/ecs_entity.h"
 #include "game/ecs_system.h"
+#include "game/components/component_light.h"
 #include "game/components/component_position.h"
 #include "game/components/component_rotation.h"
 #include "game/components/component_size.h"
-#include "game/components/component_sprite.h"
+#include "gfx/lighting.h"
 #include "gfx/sprite.h"
 
 const static vec2 S_VERTEX_QUADS[4] =
@@ -22,26 +23,34 @@ const static vec2 S_VERTEX_QUADS[4] =
 	{-0.5f, +0.5f}
 };
 
-void system_draw_sprites_init(void)
+const static uint16_t S_TEX_COORDS[8] =
+{
+	0, 1,
+	1, 1,
+	1, 0,
+	0, 0
+};
+
+void system_draw_lighting_init(void)
 {
 
 }
 
-void system_draw_sprites_update(void)
+void system_draw_lighting_update(void)
 {
 	component_index position_index = 0;
 	component_index rotation_index = 0;
 	component_index size_index = 0;
-	component_index sprite_index = 0;
+	component_index light_index = 0;
 
 	for (entity_index i = 0; i < entities_get_count(); i++)
 	{
 		const component_position *c_position = system_retrieve_component(i, COMPONENT_TYPE_POSITION, &position_index);
 		const component_rotation *c_rotation = system_retrieve_component(i, COMPONENT_TYPE_ROTATION, &rotation_index);
 		const component_size *c_size = system_retrieve_component(i, COMPONENT_TYPE_SIZE, &size_index);
-		const component_sprite *c_sprite = system_retrieve_component(i, COMPONENT_TYPE_SPRITE, &sprite_index);
+		const component_light *c_light = system_retrieve_component(i, COMPONENT_TYPE_LIGHT, &light_index);
 
-		if (!c_sprite)
+		if (!c_light)
 			continue;
 
 		assert(c_position);
@@ -50,35 +59,23 @@ void system_draw_sprites_update(void)
 		if (!sprite_simple_cull(c_position->value, c_size->value))
 			continue;
 
-		sprite_quad quad;
+		light_quad quad;
 		const mat3 matrix = mat3_from_trs(c_position->value, c_rotation ? c_rotation->value : 0, c_size->value);
 
-		const uint16_t tex_coords[8] =
-		{
-			c_sprite->texture_x, c_sprite->texture_y + c_sprite->texture_h,
-			c_sprite->texture_x + c_sprite->texture_w, c_sprite->texture_y + c_sprite->texture_h,
-			c_sprite->texture_x + c_sprite->texture_w, c_sprite->texture_y,
-			c_sprite->texture_x, c_sprite->texture_y,
-		};
-		
 		for (uint8_t v = 0; v < 4; v++)
 		{
 			const vec2 vec = vec2_transform(S_VERTEX_QUADS[v], matrix);
 			quad.vertices[v].x = lroundf(vec.x);
 			quad.vertices[v].y = lroundf(vec.y);
 
-			int32_t w, h;
-			texture_get_size(c_sprite->texture, &w, &h);
+			quad.vertices[v].texture_x = S_TEX_COORDS[v * 2];
+			quad.vertices[v].texture_y = S_TEX_COORDS[v * 2 + 1];
 
-			quad.vertices[v].texture_x = lroundf((float)tex_coords[v * 2] / (float)w * 65535.0f);
-			quad.vertices[v].texture_y = lroundf((float)tex_coords[v * 2 + 1] / (float)h * 65535.0f);
-
-			quad.vertices[v].color = c_sprite->color;
-			quad.vertices[v].z = c_sprite->z;
-			quad.vertices[v].use_camera_to_screen_matrix = c_sprite->use_camera_to_screen_matrix;
-			quad.vertices[v].texture_index = sprite_get_texture_num(c_sprite->texture);
+			quad.vertices[v].color = c_light->color;
+			quad.vertices[v].z = c_light->z;
+			quad.vertices[v].type = c_light->type;
 		}
 
-		add_sprite_quad(&quad, c_sprite->draw_sorted);
+		add_light_quad(&quad);
 	}
 }

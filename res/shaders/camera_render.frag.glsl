@@ -7,5 +7,5 @@ uniform sampler2D lighting_texture;
 
 void main()
 {
-    FragColor = texture(main_texture, frag_tex_coords) * texture(lighting_texture, frag_tex_coords);
+    FragColor = vec4(texture(main_texture, frag_tex_coords).xyz * texture(lighting_texture, frag_tex_coords).xyz, 1);
 }

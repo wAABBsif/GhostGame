@@ -48,7 +48,7 @@ size_t hash_map_add(hash_map *map, const void *data)
 	if (map->size >= 1)
 	{
 		new_index = hash_map_get_range(map, *(hash*)data, 0, map->size - 1);
-		hash current_index_hash = *(hash*)hash_map_index(map, new_index);
+		const hash current_index_hash = *(hash*)hash_map_index(map, new_index);
 
 		if (current_index_hash == *(hash*)data)
 		{

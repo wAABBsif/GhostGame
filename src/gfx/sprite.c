@@ -175,7 +175,7 @@ void draw_sprites(void)
 		static char s_loc[16];
 		sprintf(s_loc, "textures[%i]", i);
 
-		texture_set(s_textures[i], i);
+		texture_set(texture_get_id(s_textures[i]), i);
 		shader_set_int32_t(s_shader, s_loc, i);
 	}
 

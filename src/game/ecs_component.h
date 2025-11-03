@@ -7,8 +7,9 @@
 #define COMPONENT_TYPE_SIZE					3
 #define COMPONENT_TYPE_VELOCITY				4
 #define COMPONENT_TYPE_SPRITE				5
+#define COMPONENT_TYPE_LIGHT				6
 
-#define COMPONENT_TYPE_COUNT				6
+#define COMPONENT_TYPE_COUNT				7
 #define COMPONENT_GET_MASK(component)		(1 << (component))
 
 typedef uint16_t component_type;

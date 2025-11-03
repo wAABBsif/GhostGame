@@ -109,10 +109,10 @@ texture_h texture_get(const char* name)
 	return s_texture_entries[index].key;
 }
 
-void texture_set(const texture_h t, const int slot)
+void texture_set(const texture_id id, const int slot)
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, texture_get_id(t));
+	glBindTexture(GL_TEXTURE_2D, id);
 }
 
 texture_id texture_get_id(const texture_h t)

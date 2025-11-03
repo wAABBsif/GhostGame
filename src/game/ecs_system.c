@@ -3,6 +3,7 @@
 #include <tgmath.h>
 
 #include "ecs_entity.h"
+#include "components/component_light.h"
 #include "components/component_position.h"
 #include "components/component_rotation.h"
 #include "components/component_size.h"
@@ -11,6 +12,7 @@
 #include "core/game_time.h"
 #include "core/logging.h"
 #include "systems/system_deletion.h"
+#include "systems/system_draw_lighting.h"
 #include "systems/system_draw_sprites.h"
 #include "systems/system_kinematics.h"
 
@@ -19,6 +21,7 @@ const ecs_system SYSTEMS[] =
 	(ecs_system){system_deletion_init, system_deletion_update},
 	(ecs_system){system_kinematics_init, system_kinematics_update},
 	(ecs_system){system_draw_sprites_init, system_draw_sprites_update},
+	(ecs_system){system_draw_lighting_init, system_draw_lighting_update}
 };
 
 void *system_retrieve_component(const entity_index entity, const component_type type, component_index *index)
@@ -33,7 +36,7 @@ void *system_retrieve_component(const entity_index entity, const component_type 
 
 void systems_init(void)
 {
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i <= 2; i++)
 	{
 		entities_add();
 		component_position *pos =  entity_add_component(COMPONENT_TYPE_POSITION);
@@ -62,6 +65,18 @@ void systems_init(void)
 		component_velocity *vel =  entity_add_component(COMPONENT_TYPE_VELOCITY);
 		vel->value = (vec2){48 - i * 32, 0};
 	}
+
+	entities_add();
+	component_position *pos =  entity_add_component(COMPONENT_TYPE_POSITION);
+	pos->value = (vec2){0, 0};
+
+	component_size *size =  entity_add_component(COMPONENT_TYPE_SIZE);
+	size->value = (vec2){64.0, 64.0};
+
+	component_light *light =  entity_add_component(COMPONENT_TYPE_LIGHT);
+	light->color = COLOR_WHITE;
+	light->z = 0;
+	light->type = LIGHT_TYPE_AREA;
 
 	for (int i = 0; i < sizeof(SYSTEMS) / sizeof(ecs_system); i++)
 	{

@@ -258,12 +258,10 @@ void camera_render_to_screen(const camera *cam)
 {
 	shader_set(s_shader);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, cam->main_texture.texture);
+	texture_set(cam->main_texture.texture, 0);
 	shader_set_int32_t(s_shader, "main_texture", 0);
 
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, cam->lighting_texture.texture);
+	texture_set(cam->lighting_texture.texture, 1);
 	shader_set_int32_t(s_shader, "lighting_texture", 1);
 
 	glBindVertexArray(s_vertex_array);

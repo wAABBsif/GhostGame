@@ -61,6 +61,10 @@ add_executable(GhostGame src/main.c
 		src/game/systems/system_draw_sprites.h
 		src/gfx/sprite.c
 		src/gfx/sprite.h
+		src/gfx/lighting.c
+		src/gfx/lighting.h
+		src/game/systems/system_draw_lighting.c
+		src/game/systems/system_draw_lighting.h
 )
 
 include_directories(src)

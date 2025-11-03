@@ -10,6 +10,7 @@
 #include "shader.h"
 #include "window.h"
 #include "camera.h"
+#include "lighting.h"
 #include "sprite.h"
 #include "SDL3/SDL_video.h"
 
@@ -54,6 +55,7 @@ void gfx_init(void)
 
 	test_camera_init();
 	sprite_init();
+	lighting_init();
 }
 
 void gfx_draw(void)
@@ -65,8 +67,10 @@ void gfx_draw(void)
 	draw_sprites();
 
 	camera_bind_lighting_framebuffer(&cam);
-	glClearColor(1, 1, 1, 1);
+	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	draw_lighting();
 
 	camera_unbind_framebuffer();
 	glClearColor(1, 1, 1, 1);
@@ -81,6 +85,7 @@ void gfx_terminate(void)
 {
 	log_message("Terminating graphics...");
 
+	lighting_terminate();
 	sprite_terminate();
 	shader_clear();
 	texture_clear();
