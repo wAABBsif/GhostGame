@@ -46,7 +46,10 @@ void systems_init(void)
 		size->value = (vec2){16.0, 16.0};
 
 		component_sprite *spr =  entity_add_component(COMPONENT_TYPE_SPRITE);
-		spr->texture = texture_get("res/sprites/test.png");
+		if (i == 0)
+			spr->texture = texture_get("res/sprites/test.png");
+		else
+			spr->texture = texture_get("res/sprites/test2.png");
 		spr->texture_x = 0;
 		spr->texture_y = 0;
 		spr->texture_w = 16;

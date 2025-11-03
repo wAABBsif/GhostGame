@@ -89,95 +89,104 @@ camera *get_main_camera()
 
 void camera_create(camera *cam)
 {
-	camera_create_framebuffer(cam);
-	camera_create_texture(cam);
-	camera_create_renderbuffer(cam);
+	camera_texture_create(&cam->main_texture, camera_get_render_size(cam));
+	camera_texture_create(&cam->lighting_texture, camera_get_render_size(cam));
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void camera_create_framebuffer(camera *cam)
+void camera_texture_create(camera_texture *cam_texture, const vec2 render_size)
 {
-	if (glIsFramebuffer(cam->framebuffer))
-		return;
-
-	glGenFramebuffers(1, &cam->framebuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, cam->framebuffer);
-
-	if (glIsTexture(cam->texture))
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cam->texture, 0);
-
-	if (glIsRenderbuffer(cam->renderbuffer))
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, cam->renderbuffer);
+	camera_texture_create_framebuffer(cam_texture);
+	camera_texture_create_texture(cam_texture, render_size);
+	camera_texture_create_renderbuffer(cam_texture, render_size);
 }
 
-void camera_create_renderbuffer(camera *cam)
+void camera_texture_create_framebuffer(camera_texture *cam_texture)
 {
-	if (glIsRenderbuffer(cam->texture))
-		glDeleteRenderbuffers(1, &cam->texture);
+	if (glIsFramebuffer(cam_texture->framebuffer))
+		return;
 
-	const vec2 size = camera_get_render_size(cam);
+	glGenFramebuffers(1, &cam_texture->framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, cam_texture->framebuffer);
 
-	glGenRenderbuffers(1, &cam->renderbuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, cam->renderbuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, size.x, size.y);
+	if (glIsTexture(cam_texture->texture))
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cam_texture->texture, 0);
+
+	if (glIsRenderbuffer(cam_texture->renderbuffer))
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, cam_texture->renderbuffer);
+}
+
+void camera_texture_create_renderbuffer(camera_texture *cam_texture, const vec2 render_size)
+{
+	if (glIsRenderbuffer(cam_texture->texture))
+		glDeleteRenderbuffers(1, &cam_texture->texture);
+
+	glGenRenderbuffers(1, &cam_texture->renderbuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, cam_texture->renderbuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, render_size.x, render_size.y);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-	if (glIsFramebuffer(cam->framebuffer))
+	if (glIsFramebuffer(cam_texture->framebuffer))
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, cam->framebuffer);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, cam->renderbuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, cam_texture->framebuffer);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, cam_texture->renderbuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }
 
-void camera_create_texture(camera *cam)
+void camera_texture_create_texture(camera_texture *cam_texture, const vec2 render_size)
 {
-	if (glIsTexture(cam->texture))
-		glDeleteTextures(1, &cam->texture);
+	if (glIsTexture(cam_texture->texture))
+		glDeleteTextures(1, &cam_texture->texture);
 
-	const vec2 size = camera_get_render_size(cam);
-	glGenTextures(1, &cam->texture);
+	glGenTextures(1, &cam_texture->texture);
 
-	glBindTexture(GL_TEXTURE_2D, cam->texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glBindTexture(GL_TEXTURE_2D, cam_texture->texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, render_size.x, render_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	if (glIsFramebuffer(cam->framebuffer))
+	if (glIsFramebuffer(cam_texture->framebuffer))
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, cam->framebuffer);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cam->texture, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, cam_texture->framebuffer);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cam_texture->texture, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }
 
 void camera_destroy(const camera *cam)
 {
-	camera_free_renderbuffer(cam);
-	camera_free_texture(cam);
-	camera_free_framebuffer(cam);
+	camera_texture_free(&cam->main_texture);
+	camera_texture_free(&cam->lighting_texture);
 }
 
-void camera_free_framebuffer(const camera *cam)
+void camera_texture_free(const camera_texture *cam_texture)
 {
-	if (!glIsFramebuffer(cam->texture))
-		return;
-	glDeleteFramebuffers(1, &cam->framebuffer);
+	camera_texture_free_renderbuffer(cam_texture);
+	camera_texture_free_texture(cam_texture);
+	camera_texture_free_framebuffer(cam_texture);
 }
 
-void camera_free_renderbuffer(const camera *cam)
+void camera_texture_free_framebuffer(const camera_texture *cam_texture)
 {
-	if (!glIsRenderbuffer(cam->renderbuffer))
+	if (!glIsFramebuffer(cam_texture->framebuffer))
 		return;
-	glDeleteRenderbuffers(1, &cam->renderbuffer);
+	glDeleteFramebuffers(1, &cam_texture->framebuffer);
 }
 
-void camera_free_texture(const camera *cam)
+void camera_texture_free_renderbuffer(const camera_texture *cam_texture)
 {
-	if (!glIsTexture(cam->texture))
+	if (!glIsRenderbuffer(cam_texture->renderbuffer))
 		return;
-	glDeleteTextures(1, &cam->texture);
+	glDeleteRenderbuffers(1, &cam_texture->renderbuffer);
+}
+
+void camera_texture_free_texture(const camera_texture *cam_texture)
+{
+	if (!glIsTexture(cam_texture->texture))
+		return;
+	glDeleteTextures(1, &cam_texture->texture);
 }
 
 vec2 camera_get_render_size(const camera *cam)
@@ -217,13 +226,21 @@ mat3 screen_to_world_matrix(const camera *cam)
 	return mat3_multiply(camera_to_world_matrix(cam), screen_to_camera_matrix(cam));
 }
 
-void camera_bind_framebuffer(const camera* cam)
+void camera_bind_main_framebuffer(const camera* cam)
 {
 	const vec2 size = camera_get_render_size(cam);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, cam->framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, cam->main_texture.framebuffer);
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.4, 0.4, 0.2, 1.0f);
+	glViewport(0, 0, size.x, size.y);
+}
+
+void camera_bind_lighting_framebuffer(const camera* cam)
+{
+	const vec2 size = camera_get_render_size(cam);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, cam->lighting_texture.framebuffer);
+	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, size.x, size.y);
 }
 
@@ -234,20 +251,22 @@ void camera_unbind_framebuffer(void)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
-	glClearColor(0.2, 0.4, 0.4, 1.0f);
 	glViewport(0, 0, width, height);
 }
 
 void camera_render_to_screen(const camera *cam)
 {
 	shader_set(s_shader);
-	shader_set_uint32_t(s_shader, "camera_texture", cam->texture);
 
-	glClear(GL_COLOR_BUFFER_BIT);
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, cam->main_texture.texture);
+	shader_set_int32_t(s_shader, "main_texture", 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, cam->lighting_texture.texture);
+	shader_set_int32_t(s_shader, "lighting_texture", 1);
 
 	glBindVertexArray(s_vertex_array);
-	glBindTexture(GL_TEXTURE_2D, cam->texture);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 

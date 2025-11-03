@@ -58,12 +58,20 @@ void gfx_init(void)
 
 void gfx_draw(void)
 {
-	camera_bind_framebuffer(&cam);
+	camera_bind_main_framebuffer(&cam);
+	glClearColor(0.2, 0.3, 0.5, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	draw_sprites();
 
+	camera_bind_lighting_framebuffer(&cam);
+	glClearColor(1, 1, 1, 1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	camera_unbind_framebuffer();
+	glClearColor(1, 1, 1, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+
 	camera_render_to_screen(&cam);
 
 	SDL_GL_SwapWindow(window_get_sdl_handle());
