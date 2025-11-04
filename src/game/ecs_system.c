@@ -71,10 +71,24 @@ void systems_init(void)
 		size->value = (vec2){1000.0, 1000.0};
 
 		component_light *light =  entity_add_component(COMPONENT_TYPE_LIGHT);
-		light->color = (color){0xFF, 0xC0, 0xCF, 0xFF};
+		light->color = (color){0xFF, 0xFF, 0xFF, 0xFF};
 		light->priority = -64;
-		light->max_z = 2;
+		light->z = 2;
 		light->type = LIGHT_TYPE_AREA;
+	}
+	{
+		entities_add();
+		component_position *pos =  entity_add_component(COMPONENT_TYPE_POSITION);
+		pos->value = (vec2){0, 0};
+
+		component_size *size =  entity_add_component(COMPONENT_TYPE_SIZE);
+		size->value = (vec2){100.0, 100.0};
+
+		component_light *light =  entity_add_component(COMPONENT_TYPE_LIGHT);
+		light->color = (color){0x40, 0x40, 0x40, 0xFF};
+		light->priority = 0;
+		light->z = 0;
+		light->type = LIGHT_TYPE_RADIAL;
 	}
 
 	for (int i = 0; i < sizeof(SYSTEMS) / sizeof(ecs_system); i++)

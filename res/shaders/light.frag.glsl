@@ -1,7 +1,7 @@
 in vec2 tex_coords;
 in vec4 color;
 in float light_type;
-in float max_z;
+in float z;
 
 out vec4 FragColor;
 
@@ -26,7 +26,7 @@ void main()
 {
     float depth = texture(depth_texture, gl_FragCoord.xy / render_size).r;
     depth = (depth - 0.5) * 2;
-    if (max_z > depth)
+    if (z > depth)
         discard;
     FragColor = get_color(int(light_type));
 }

@@ -23,7 +23,7 @@ typedef struct light_vertex
 
 	light_type	type;
 	int8_t priority;
-	int8_t max_z;
+	int8_t z;
 } light_vertex;
 
 typedef struct light_quad

@@ -53,8 +53,8 @@ void lighting_init(void)
 	glVertexAttribPointer(4, 1, GL_BYTE, true, sizeof(light_vertex), (void *)offsetof(light_vertex, priority));
 	glEnableVertexAttribArray(4);
 
-	//max_z
-	glVertexAttribPointer(5, 1, GL_BYTE, true, sizeof(light_vertex), (void *)offsetof(light_vertex, max_z));
+	//z
+	glVertexAttribPointer(5, 1, GL_BYTE, true, sizeof(light_vertex), (void *)offsetof(light_vertex, z));
 	glEnableVertexAttribArray(5);
 
 	const uint16_t quad_indices[6] = QUAD_INDICES;
