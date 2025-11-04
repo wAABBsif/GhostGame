@@ -71,8 +71,7 @@ size_t hash_map_add(hash_map *map, const void *data)
 void hash_map_remove(hash_map *map, const size_t index)
 {
 	map->size--;
-	hash *loc = hash_map_index(map, index);
-	memmove(loc, hash_map_index(map, index + 1), sizeof(map->entry_size) * (map->size - index));
+	memmove(hash_map_index(map, index), hash_map_index(map, index + 1), sizeof(map->entry_size) * (map->size - index));
 }
 
 void *hash_map_index(const hash_map *map, size_t index)

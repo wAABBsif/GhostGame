@@ -1,10 +1,10 @@
 ﻿#include <stdbool.h>
 #include "game.h"
 
-#include "ecs_component.h"
-#include "ecs_entity.h"
+#include "ecs/ecs_component.h"
+#include "ecs/ecs_entity.h"
 #include "sdl_interface.h"
-#include "ecs_system.h"
+#include "ecs/ecs_system.h"
 #include "audio/audio.h"
 #include "core/game_time.h"
 #include "core/logging.h"
@@ -43,7 +43,6 @@ static void _game_init(void)
 
 static void _game_update(void)
 {
-	log_message("%f", game_time_get_fps());
 	game_time_update();
 	sdl_interface_update();
 	input_update();

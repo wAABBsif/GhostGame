@@ -43,7 +43,7 @@ bool entity_has_component(const entity_index index, const component_type compone
 	return e->components & COMPONENT_GET_MASK(component);
 }
 
-void entity_enable_component(entity_index index, const component_type type)
+void entity_enable_component(const entity_index index, const component_type type)
 {
 	ecs_entity *e = &s_entities[index];
 

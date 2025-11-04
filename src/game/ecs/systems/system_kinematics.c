@@ -1,11 +1,11 @@
 ﻿#include "system_kinematics.h"
 
 #include "core/game_time.h"
-#include "game/ecs_component.h"
-#include "game/ecs_entity.h"
-#include "game/ecs_system.h"
-#include "game/components/component_position.h"
-#include "game/components/component_velocity.h"
+#include "../ecs_component.h"
+#include "../ecs_entity.h"
+#include "../ecs_system.h"
+#include "../components/component_position.h"
+#include "../components/component_velocity.h"
 
 void system_kinematics_init(void)
 {

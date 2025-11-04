@@ -88,10 +88,8 @@ void audio_clip_unload(const audio_clip_h h)
 audio_clip_h audio_clip_get(const char* name)
 {
 	const hash h = hash_string(name);
-	const size_t index = hash_map_get_index(&s_clips, h);
-	assert(index != SIZE_MAX);
-
-	return s_clip_entries[index].hash;
+	assert(hash_map_get_index(&s_clips, h) != SIZE_MAX);
+	return h;
 }
 
 audio_track_h audio_create_track(void)

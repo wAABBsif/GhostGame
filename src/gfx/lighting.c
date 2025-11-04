@@ -71,8 +71,8 @@ void lighting_init(void)
 
 	glBindVertexArray(0);
 
-	s_texture = texture_get("res/radial_light.png");
-	s_shader = shader_get("res/shaders/light");
+	s_texture = texture_load("res/radial_light.png");
+	s_shader = shader_load("res/shaders/light");
 }
 
 void lighting_terminate(void)

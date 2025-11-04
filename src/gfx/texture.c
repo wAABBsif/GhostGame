@@ -15,7 +15,6 @@ typedef struct texture
 	int32_t height;
 } texture;
 
-static hash s_active_texture;
 static hash_map s_textures;
 static texture s_texture_entries[MAX_TEXTURES];
 
@@ -23,7 +22,6 @@ void texture_init(void)
 {
 	log_message("Initializing textures...");
 	hash_map_create(&s_textures, sizeof(texture), MAX_TEXTURES, s_texture_entries);
-	s_active_texture = 0;
 }
 
 void texture_clear(void)
@@ -85,12 +83,7 @@ texture_h texture_load(const char* name)
 void texture_unload(const texture_h h)
 {
 	const size_t index = hash_map_get_index(&s_textures, h);
-	if (index == SIZE_MAX)
-	{
-		log_warning("Texture not found, so can't unload!");
-		return;
-	}
-
+	assert(index != SIZE_MAX);
 	const texture t = s_texture_entries[index];
 	glDeleteProgram(t.id);
 	hash_map_remove(&s_textures, index);
@@ -99,14 +92,8 @@ void texture_unload(const texture_h h)
 texture_h texture_get(const char* name)
 {
 	const hash h = hash_string(name);
-	const size_t index = hash_map_get_index(&s_textures, h);
-
-	if (index == SIZE_MAX)
-	{
-		log_message("Texture %s not found, so loading instead!", name);
-		return texture_load(name);
-	}
-	return s_texture_entries[index].key;
+	assert(hash_map_get_index(&s_textures, h) != SIZE_MAX);
+	return h;
 }
 
 void texture_set(const texture_id id, const int slot)

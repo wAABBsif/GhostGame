@@ -5,12 +5,12 @@
 
 #include "core/game_time.h"
 #include "core/mat3.h"
-#include "game/ecs_component.h"
-#include "game/ecs_entity.h"
-#include "game/ecs_system.h"
-#include "game/components/component_position.h"
-#include "game/components/component_rotation.h"
-#include "game/components/component_sprite.h"
+#include "../ecs_component.h"
+#include "../ecs_entity.h"
+#include "../ecs_system.h"
+#include "../components/component_position.h"
+#include "../components/component_rotation.h"
+#include "../components/component_sprite.h"
 #include "gfx/sprite.h"
 
 const static vec2 S_VERTEX_QUADS[4] =

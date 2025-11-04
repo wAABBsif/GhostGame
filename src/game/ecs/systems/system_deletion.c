@@ -2,8 +2,8 @@
 
 #include <string.h>
 
-#include "game/ecs_component.h"
-#include "game/ecs_entity.h"
+#include "../ecs_component.h"
+#include "../ecs_entity.h"
 
 void system_deletion_init(void)
 {

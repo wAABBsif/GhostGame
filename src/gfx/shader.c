@@ -43,7 +43,24 @@ void shader_clear(void)
 	hash_map_destroy(&s_shaders);
 }
 
-static char *s_shader_preprocessor(const char *buffer);
+static char *s_shader_preprocessor(const char *buffer)
+{
+	const char *version_string = "#version 330 core\n";
+
+	while (*buffer < 0x20 && *buffer <= 0x7a)
+	{
+		if (*buffer == 0)
+			return "";
+
+		buffer++;
+	}
+
+	char *result = malloc(strlen(buffer) + 1 + strlen(version_string));
+	strcpy(result, version_string);
+	strcat(result, buffer);
+
+	return result;
+}
 
 static char *s_open_shader_file(const char* name, const char *extension)
 {
@@ -61,25 +78,6 @@ static char *s_open_shader_file(const char* name, const char *extension)
 
 	char *result = s_shader_preprocessor(buffer);
 	SDL_free(buffer);
-	return result;
-}
-
-static char *s_shader_preprocessor(const char *buffer)
-{
-	const char *version_string = "#version 330 core\n";
-
-	while (*buffer < 0x20 && *buffer <= 0x7a)
-	{
-		if (*buffer == 0)
-			return "";
-
-		buffer++;
-	}
-
-	char *result = malloc(strlen(buffer) + 1 + strlen(version_string));
-	strcpy(result, version_string);
-	strcat(result, buffer);
-
 	return result;
 }
 
@@ -160,12 +158,7 @@ shader_h shader_load(const char* name)
 void shader_unload(const shader_h h)
 {
 	const size_t index = hash_map_get_index(&s_shaders, h);
-	if (index == SIZE_MAX)
-	{
-		log_warning("Shader not found, so can't unload!");
-		return;
-	}
-
+	assert(index != SIZE_MAX);
 	const shader s = s_shader_entries[index];
 	glDeleteProgram(s.program);
 	hash_map_remove(&s_shaders, index);
@@ -174,14 +167,8 @@ void shader_unload(const shader_h h)
 shader_h shader_get(const char* name)
 {
 	const hash h = hash_string(name);
-	const size_t index = hash_map_get_index(&s_shaders, h);
-
-	if (index == SIZE_MAX)
-	{
-		log_message("Shader %s not found, so loading instead!", name);
-		return shader_load(name);
-	}
-	return s_shader_entries[index].key;
+	assert(hash_map_get_index(&s_shaders, h) != SIZE_MAX);
+	return h;
 }
 
 void shader_set(const shader_h s)

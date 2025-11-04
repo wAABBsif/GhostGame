@@ -52,7 +52,7 @@ void camera_init()
 
 	glBindVertexArray(0);
 
-	s_shader = shader_get("res/shaders/camera_render");
+	s_shader = shader_load("res/shaders/camera_render");
 }
 
 void camera_terminate()

@@ -73,7 +73,7 @@ void sprite_init(void)
 
 	glBindVertexArray(0);
 
-	s_shader = shader_get("res/shaders/sprite");
+	s_shader = shader_load("res/shaders/sprite");
 }
 
 void sprite_terminate(void)

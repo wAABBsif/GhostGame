@@ -42,28 +42,32 @@ add_executable(GhostGame src/main.c
 		src/input/device_gamepad.c
 		src/input/device_gamepad.h
 		src/input/input_binding.h
-		src/game/ecs_entity.c
-		src/game/ecs_entity.h
-		src/game/ecs_component.c
-		src/game/ecs_component.h
-		src/game/ecs_system.c
-		src/game/ecs_system.h
-		src/game/systems/system_deletion.c
-		src/game/systems/system_deletion.h
-		src/game/components/component_position.h
-		src/game/components/component_rotation.h
-		src/game/components/component_velocity.h
-		src/game/components/component_sprite.h
-		src/game/systems/system_kinematics.c
-		src/game/systems/system_kinematics.h
-		src/game/systems/system_draw_sprites.c
-		src/game/systems/system_draw_sprites.h
+		src/game/ecs/ecs_entity.c
+		src/game/ecs/ecs_entity.h
+		src/game/ecs/ecs_component.c
+		src/game/ecs/ecs_component.h
+		src/game/ecs/ecs_system.c
+		src/game/ecs/ecs_system.h
+		src/game/ecs/systems/system_deletion.c
+		src/game/ecs/systems/system_deletion.h
+		src/game/ecs/components/component_position.h
+		src/game/ecs/components/component_rotation.h
+		src/game/ecs/components/component_velocity.h
+		src/game/ecs/components/component_sprite.h
+		src/game/ecs/systems/system_kinematics.c
+		src/game/ecs/systems/system_kinematics.h
+		src/game/ecs/systems/system_draw_sprites.c
+		src/game/ecs/systems/system_draw_sprites.h
 		src/gfx/sprite.c
 		src/gfx/sprite.h
 		src/gfx/lighting.c
 		src/gfx/lighting.h
-		src/game/systems/system_draw_lighting.c
-		src/game/systems/system_draw_lighting.h
+		src/game/ecs/systems/system_draw_lighting.c
+		src/game/ecs/systems/system_draw_lighting.h
+		src/game/ecs/entities/entity_tile.c
+		src/game/ecs/entities/entity_tile.h
+		src/game/tiles/tile_atlas.c
+		src/game/tiles/tile_atlas.h
 )
 
 include_directories(src)
