@@ -5,6 +5,8 @@
 
 typedef struct component_sprite
 {
+	vec2 size;
+
 	texture_h texture;
 
 	uint16_t texture_x;

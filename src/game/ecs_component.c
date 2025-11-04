@@ -8,7 +8,6 @@
 
 #include "components/component_position.h"
 #include "components/component_rotation.h"
-#include "components/component_size.h"
 #include "components/component_velocity.h"
 #include "components/component_sprite.h"
 #include "components/component_light.h"
@@ -18,7 +17,6 @@ const register_component_entry COMPONENT_ENTRIES[] =
 	(register_component_entry){0, 0},												//COMPONENT_TYPE_DELETION_FLAG
 	(register_component_entry){sizeof(component_position), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_POSITION
 	(register_component_entry){sizeof(component_rotation), ECS_MAX_ENTITIES / 2},	//COMPONENT_TYPE_ROTATION
-	(register_component_entry){sizeof(component_size), ECS_MAX_ENTITIES},			//COMPONENT_TYPE_SIZE
 	(register_component_entry){sizeof(component_velocity), ECS_MAX_ENTITIES / 2},	//COMPONENT_TYPE_VELOCITY
 	(register_component_entry){sizeof(component_sprite), ECS_MAX_ENTITIES},			//COMPONENT_TYPE_SPRITE
 	(register_component_entry){sizeof(component_light), ECS_MAX_ENTITIES / 4},		//COMPONENT_TYPE_LIGHT

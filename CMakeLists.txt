@@ -52,7 +52,6 @@ add_executable(GhostGame src/main.c
 		src/game/systems/system_deletion.h
 		src/game/components/component_position.h
 		src/game/components/component_rotation.h
-		src/game/components/component_size.h
 		src/game/components/component_velocity.h
 		src/game/components/component_sprite.h
 		src/game/systems/system_kinematics.c

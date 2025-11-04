@@ -6,7 +6,6 @@
 #include "components/component_light.h"
 #include "components/component_position.h"
 #include "components/component_rotation.h"
-#include "components/component_size.h"
 #include "components/component_sprite.h"
 #include "components/component_velocity.h"
 #include "core/game_time.h"
@@ -45,10 +44,8 @@ void systems_init(void)
 		component_rotation *rot =  entity_add_component(COMPONENT_TYPE_ROTATION);
 		rot->value = 0;
 
-		component_size *size =  entity_add_component(COMPONENT_TYPE_SIZE);
-		size->value = (vec2){16.0, 16.0};
-
 		component_sprite *spr =  entity_add_component(COMPONENT_TYPE_SPRITE);
+		spr->size = (vec2){16.0, 16.0};
 		spr->texture = texture_get("res/sprites/test.png");
 		spr->texture_x = 0;
 		spr->texture_y = 0;
@@ -67,10 +64,8 @@ void systems_init(void)
 		component_position *pos =  entity_add_component(COMPONENT_TYPE_POSITION);
 		pos->value = (vec2){0, 0};
 
-		component_size *size =  entity_add_component(COMPONENT_TYPE_SIZE);
-		size->value = (vec2){1000.0, 1000.0};
-
 		component_light *light =  entity_add_component(COMPONENT_TYPE_LIGHT);
+		light->size = (vec2){1000, 1000};
 		light->color = (color){0xFF, 0xFF, 0xFF, 0xFF};
 		light->priority = -64;
 		light->z = 2;
@@ -81,10 +76,8 @@ void systems_init(void)
 		component_position *pos =  entity_add_component(COMPONENT_TYPE_POSITION);
 		pos->value = (vec2){0, 0};
 
-		component_size *size =  entity_add_component(COMPONENT_TYPE_SIZE);
-		size->value = (vec2){100.0, 100.0};
-
 		component_light *light =  entity_add_component(COMPONENT_TYPE_LIGHT);
+		light->size = (vec2){100.0, 100.0};
 		light->color = (color){0x40, 0x40, 0x40, 0xFF};
 		light->priority = 0;
 		light->z = 0;

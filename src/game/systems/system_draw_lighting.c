@@ -11,7 +11,6 @@
 #include "game/components/component_light.h"
 #include "game/components/component_position.h"
 #include "game/components/component_rotation.h"
-#include "game/components/component_size.h"
 #include "gfx/lighting.h"
 #include "gfx/sprite.h"
 
@@ -40,27 +39,24 @@ void system_draw_lighting_update(void)
 {
 	component_index position_index = 0;
 	component_index rotation_index = 0;
-	component_index size_index = 0;
 	component_index light_index = 0;
 
 	for (entity_index i = 0; i < entities_get_count(); i++)
 	{
 		const component_position *c_position = system_retrieve_component(i, COMPONENT_TYPE_POSITION, &position_index);
 		const component_rotation *c_rotation = system_retrieve_component(i, COMPONENT_TYPE_ROTATION, &rotation_index);
-		const component_size *c_size = system_retrieve_component(i, COMPONENT_TYPE_SIZE, &size_index);
 		const component_light *c_light = system_retrieve_component(i, COMPONENT_TYPE_LIGHT, &light_index);
 
 		if (!c_light)
 			continue;
 
 		assert(c_position);
-		assert(c_size);
 
-		if (!sprite_simple_cull(c_position->value, c_size->value))
+		if (!sprite_simple_cull(c_position->value, c_light->size))
 			continue;
 
 		light_quad quad;
-		const mat3 matrix = mat3_from_trs(c_position->value, c_rotation ? c_rotation->value : 0, c_size->value);
+		const mat3 matrix = mat3_from_trs(c_position->value, c_rotation ? c_rotation->value : 0, c_light->size);
 
 		for (uint8_t v = 0; v < 4; v++)
 		{

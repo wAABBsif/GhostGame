@@ -10,7 +10,6 @@
 #include "game/ecs_system.h"
 #include "game/components/component_position.h"
 #include "game/components/component_rotation.h"
-#include "game/components/component_size.h"
 #include "game/components/component_sprite.h"
 #include "gfx/sprite.h"
 
@@ -31,27 +30,24 @@ void system_draw_sprites_update(void)
 {
 	component_index position_index = 0;
 	component_index rotation_index = 0;
-	component_index size_index = 0;
 	component_index sprite_index = 0;
 
 	for (entity_index i = 0; i < entities_get_count(); i++)
 	{
 		const component_position *c_position = system_retrieve_component(i, COMPONENT_TYPE_POSITION, &position_index);
 		const component_rotation *c_rotation = system_retrieve_component(i, COMPONENT_TYPE_ROTATION, &rotation_index);
-		const component_size *c_size = system_retrieve_component(i, COMPONENT_TYPE_SIZE, &size_index);
 		const component_sprite *c_sprite = system_retrieve_component(i, COMPONENT_TYPE_SPRITE, &sprite_index);
 
 		if (!c_sprite)
 			continue;
 
 		assert(c_position);
-		assert(c_size);
 
-		if (!sprite_simple_cull(c_position->value, c_size->value))
+		if (!sprite_simple_cull(c_position->value, c_sprite->size))
 			continue;
 
 		sprite_quad quad;
-		const mat3 matrix = mat3_from_trs(c_position->value, c_rotation ? c_rotation->value : 0, c_size->value);
+		const mat3 matrix = mat3_from_trs(c_position->value, c_rotation ? c_rotation->value : 0, c_sprite->size);
 
 		const uint16_t tex_coords[8] =
 		{
