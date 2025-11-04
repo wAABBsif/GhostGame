@@ -219,6 +219,12 @@ void shader_set_vec2(const shader_h s, const char *name, const vec2 value)
 	glUniform2f(glGetUniformLocation(sh.program, name), value.x, value.y);
 }
 
+void shader_set_vec2i(const shader_h s, const char* name, const int x, const int y)
+{
+	const shader sh = s_shader_entries[hash_map_get_index(&s_shaders, s)];
+	glUniform2i(glGetUniformLocation(sh.program, name), x, y);
+}
+
 void shader_set_mat3(const shader_h s, const char *name, const mat3 value)
 {
 	const shader sh = s_shader_entries[hash_map_get_index(&s_shaders, s)];

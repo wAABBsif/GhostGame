@@ -21,8 +21,9 @@ typedef struct light_vertex
 
 	color	color;
 
-	int8_t z;
 	light_type	type;
+	int8_t priority;
+	int8_t max_z;
 } light_vertex;
 
 typedef struct light_quad

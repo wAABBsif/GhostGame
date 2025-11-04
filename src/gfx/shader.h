@@ -52,4 +52,5 @@ void shader_set_int32_t(shader_h s, const char *name, int32_t value);
 void shader_set_uint32_t(shader_h s, const char *name, uint32_t value);
 void shader_set_float(shader_h s, const char *name, float value);
 void shader_set_vec2(shader_h s, const char* name, vec2 value);
+void shader_set_vec2i(shader_h s, const char* name, int x, int y);
 void shader_set_mat3(shader_h s, const char *name, mat3 value);

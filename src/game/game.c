@@ -43,6 +43,7 @@ static void _game_init(void)
 
 static void _game_update(void)
 {
+	log_message("%f", game_time_get_fps());
 	game_time_update();
 	sdl_interface_update();
 	input_update();

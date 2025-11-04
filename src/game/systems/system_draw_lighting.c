@@ -72,7 +72,8 @@ void system_draw_lighting_update(void)
 			quad.vertices[v].texture_y = S_TEX_COORDS[v * 2 + 1];
 
 			quad.vertices[v].color = c_light->color;
-			quad.vertices[v].z = c_light->z;
+			quad.vertices[v].priority = c_light->priority;
+			quad.vertices[v].max_z = c_light->max_z;
 			quad.vertices[v].type = c_light->type;
 		}
 

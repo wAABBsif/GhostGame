@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "gfx.h"
 #include "shader.h"
+#include "window.h"
 #include "core/logging.h"
 #include "core/mat3.h"
 #include "core/vec2.h"
@@ -44,13 +45,17 @@ void lighting_init(void)
 	glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, true, sizeof(light_vertex), (void *)offsetof(light_vertex, color));
 	glEnableVertexAttribArray(2);
 
-	//z
-	glVertexAttribPointer(3, 1, GL_BYTE, true, sizeof(light_vertex), (void *)offsetof(light_vertex, z));
+	//type
+	glVertexAttribIPointer(3, 1, GL_BYTE, sizeof(light_vertex), (void *)offsetof(light_vertex, type));
 	glEnableVertexAttribArray(3);
 
-	//type
-	glVertexAttribIPointer(4, 1, GL_BYTE, sizeof(light_vertex), (void *)offsetof(light_vertex, type));
+	//priority
+	glVertexAttribPointer(4, 1, GL_BYTE, true, sizeof(light_vertex), (void *)offsetof(light_vertex, priority));
 	glEnableVertexAttribArray(4);
+
+	//max_z
+	glVertexAttribPointer(5, 1, GL_BYTE, true, sizeof(light_vertex), (void *)offsetof(light_vertex, max_z));
+	glEnableVertexAttribArray(5);
 
 	const uint16_t quad_indices[6] = QUAD_INDICES;
 	uint16_t indices[6 * MAX_LIGHTS];
@@ -87,7 +92,7 @@ static uint16_t s_get_ordered_index(const int8_t z, const uint16_t start, const 
 		return start;
 
 	const uint16_t mid = (start + end) / 2;
-	const int8_t mid_z = s_quads[mid].vertices->z;
+	const int8_t mid_z = s_quads[mid].vertices->priority;
 
 	if (mid_z < z)
 		return s_get_ordered_index(z, mid + 1, end);
@@ -100,7 +105,7 @@ void add_light_quad(const light_quad *quad)
 {
 	assert(s_light_count < MAX_LIGHTS);
 
-	const uint16_t index = s_get_ordered_index(quad->vertices->z, 0, s_light_count);
+	const uint16_t index = s_get_ordered_index(quad->vertices->priority, 0, s_light_count);
 	memmove(s_quads + index + 1, s_quads + index, sizeof(light_quad) * (s_light_count - index));
 	s_quads[index] = *quad;
 	s_light_count++;
@@ -115,6 +120,12 @@ void draw_lighting(void)
 
 	texture_set(texture_get_id(s_texture), 0);
 	shader_set_int32_t(s_shader, "radial_texture", 0);
+
+	texture_set(get_main_camera()->main_texture.depth_texture, 1);
+	shader_set_int32_t(s_shader, "depth_texture", 1);
+
+	const vec2 size = camera_get_render_size(get_main_camera());
+	shader_set_vec2i(s_shader, "render_size", size.x, size.y);
 
 	shader_set_mat3(s_shader, "world_to_screen_matrix", world_to_screen_matrix(get_main_camera()));
 

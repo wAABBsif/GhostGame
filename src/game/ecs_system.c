@@ -36,11 +36,11 @@ void *system_retrieve_component(const entity_index entity, const component_type 
 
 void systems_init(void)
 {
-	for (int i = 0; i <= 2; i++)
+	for (int i = -1; i <= 1; i++)
 	{
 		entities_add();
 		component_position *pos =  entity_add_component(COMPONENT_TYPE_POSITION);
-		pos->value = (vec2){i * 32 + 32, 0};
+		pos->value = (vec2){i * 32, 0};
 
 		component_rotation *rot =  entity_add_component(COMPONENT_TYPE_ROTATION);
 		rot->value = 0;
@@ -49,34 +49,33 @@ void systems_init(void)
 		size->value = (vec2){16.0, 16.0};
 
 		component_sprite *spr =  entity_add_component(COMPONENT_TYPE_SPRITE);
-		if (i == 0)
-			spr->texture = texture_get("res/sprites/test.png");
-		else
-			spr->texture = texture_get("res/sprites/test2.png");
+		spr->texture = texture_get("res/sprites/test.png");
 		spr->texture_x = 0;
 		spr->texture_y = 0;
 		spr->texture_w = 16;
 		spr->texture_h = 16;
-		spr->color = (color){i == 0 ? 0xFF : 0x00, i == 1 ? 0xFF : 0x00, i == 2 ? 0xFF : 0x00, i == 1 ? 0x80 : 0xFF};
+		spr->color = (color){0xFF, 0xFF, 0xFF, 0xFF};
 		spr->z = i;
 		spr->use_camera_to_screen_matrix = false;
-		spr->draw_sorted = true;
+		spr->draw_sorted = false;
 
 		component_velocity *vel =  entity_add_component(COMPONENT_TYPE_VELOCITY);
-		vel->value = (vec2){48 - i * 32, 0};
+		vel->value = (vec2){0, 0};
 	}
+	{
+		entities_add();
+		component_position *pos =  entity_add_component(COMPONENT_TYPE_POSITION);
+		pos->value = (vec2){0, 0};
 
-	entities_add();
-	component_position *pos =  entity_add_component(COMPONENT_TYPE_POSITION);
-	pos->value = (vec2){0, 0};
+		component_size *size =  entity_add_component(COMPONENT_TYPE_SIZE);
+		size->value = (vec2){1000.0, 1000.0};
 
-	component_size *size =  entity_add_component(COMPONENT_TYPE_SIZE);
-	size->value = (vec2){1000.0, 1000.0};
-
-	component_light *light =  entity_add_component(COMPONENT_TYPE_LIGHT);
-	light->color = COLOR_WHITE;
-	light->z = 0;
-	light->type = LIGHT_TYPE_AREA;
+		component_light *light =  entity_add_component(COMPONENT_TYPE_LIGHT);
+		light->color = (color){0xFF, 0xC0, 0xCF, 0xFF};
+		light->priority = -64;
+		light->max_z = 2;
+		light->type = LIGHT_TYPE_AREA;
+	}
 
 	for (int i = 0; i < sizeof(SYSTEMS) / sizeof(ecs_system); i++)
 	{
