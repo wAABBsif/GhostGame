@@ -7,11 +7,6 @@
 #include "../components/component_position.h"
 #include "../components/component_velocity.h"
 
-void system_kinematics_init(void)
-{
-
-}
-
 void system_kinematics_update(void)
 {
 	component_index position_index = 0;

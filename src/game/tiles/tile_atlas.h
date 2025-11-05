@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "game/ecs/components/component_collider.h"
 #include "gfx/texture.h"
 
 #define MAX_TILE_ATLASES	1
@@ -7,10 +8,11 @@ typedef struct tile_atlas tile_atlas;
 
 typedef struct atlas_tile
 {
-	uint16_t texture_x;
-	uint16_t texture_y;
-	uint16_t texture_w;
-	uint16_t texture_h;
+	uint16_t x;
+	uint16_t y;
+	uint8_t w;
+	uint8_t h;
+	collider_type coll_type;
 } atlas_tile;
 
 typedef hash tile_atlas_h;

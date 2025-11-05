@@ -11,6 +11,7 @@
 #include "components/component_velocity.h"
 #include "components/component_sprite.h"
 #include "components/component_light.h"
+#include "components/component_collider.h"
 
 const register_component_entry COMPONENT_ENTRIES[] =
 {
@@ -20,6 +21,7 @@ const register_component_entry COMPONENT_ENTRIES[] =
 	(register_component_entry){sizeof(component_velocity), ECS_MAX_ENTITIES / 2},	//COMPONENT_TYPE_VELOCITY
 	(register_component_entry){sizeof(component_sprite), ECS_MAX_ENTITIES},			//COMPONENT_TYPE_SPRITE
 	(register_component_entry){sizeof(component_light), ECS_MAX_ENTITIES / 4},		//COMPONENT_TYPE_LIGHT
+	(register_component_entry){sizeof(component_collider), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_COLLIDER
 };
 
 static void *s_components[COMPONENT_TYPE_COUNT];

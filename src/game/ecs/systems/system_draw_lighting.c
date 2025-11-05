@@ -30,11 +30,6 @@ const static uint16_t S_TEX_COORDS[8] =
 	0, 0
 };
 
-void system_draw_lighting_init(void)
-{
-
-}
-
 void system_draw_lighting_update(void)
 {
 	component_index position_index = 0;

@@ -21,11 +21,6 @@ const static vec2 S_VERTEX_QUADS[4] =
 	{-0.5f, +0.5f}
 };
 
-void system_draw_sprites_init(void)
-{
-
-}
-
 void system_draw_sprites_update(void)
 {
 	component_index position_index = 0;
@@ -60,14 +55,14 @@ void system_draw_sprites_update(void)
 		for (uint8_t v = 0; v < 4; v++)
 		{
 			const vec2 vec = vec2_transform(S_VERTEX_QUADS[v], matrix);
-			quad.vertices[v].x = lroundf(vec.x);
-			quad.vertices[v].y = lroundf(vec.y);
+			quad.vertices[v].x = vec.x;
+			quad.vertices[v].y = vec.y;
 
 			int32_t w, h;
 			texture_get_size(c_sprite->texture, &w, &h);
 
-			quad.vertices[v].texture_x = lroundf((float)tex_coords[v * 2] / (float)w * 65535.0f);
-			quad.vertices[v].texture_y = lroundf((float)tex_coords[v * 2 + 1] / (float)h * 65535.0f);
+			quad.vertices[v].texture_x = (float)tex_coords[v * 2] / (float)w * 65535.0f;
+			quad.vertices[v].texture_y = (float)tex_coords[v * 2 + 1] / (float)h * 65535.0f;
 
 			quad.vertices[v].color = c_sprite->color;
 			quad.vertices[v].z = c_sprite->z;

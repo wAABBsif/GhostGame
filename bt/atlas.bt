@@ -1,26 +1,25 @@
 //------------------------------------------------
 //--- 010 Editor v14.0 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
+//      File: atlas.bt
+//   Authors: wAABBsif
+//   Version: 1.0
+//   Purpose: Parse GhostGame atlas files
 //  Category: 
-// File Mask: 
+// File Mask: *.atlas
 //  ID Bytes: 
 //   History: 
 //------------------------------------------------
 
-struct ATLAS
-{
-    char    texture[64];
-    uint16  tile_count;
-    char    padding[14];
-    struct  TILE
-    {
-        uint16  texture_x;
-        uint16  texture_y;
-        uint16  texture_w;
-        uint16  texture_h;
-    } tiles[tile_count];
-} atlas;
+char    texture[64];
+uint16  tile_count;
+uint8   padding[14];
+
+struct
+{    
+    uint16  texture_x;
+    uint16  texture_y;
+    uint8   texture_w;
+    uint8   texture_h;
+    enum    <uint16> {NONE=0, BOX=1} coll_type;
+} tiles[tile_count];

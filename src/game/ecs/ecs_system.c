@@ -16,12 +16,17 @@
 #include "systems/system_draw_sprites.h"
 #include "systems/system_kinematics.h"
 
-const ecs_system SYSTEMS[] =
+typedef void (*system_init_func)();
+typedef void (*system_update_func)();
+
+const system_init_func INIT_SYSTEMS[] = {};
+
+const system_init_func UPDATE_SYSTEMS[] =
 {
-	(ecs_system){system_deletion_init, system_deletion_update},
-	(ecs_system){system_kinematics_init, system_kinematics_update},
-	(ecs_system){system_draw_sprites_init, system_draw_sprites_update},
-	(ecs_system){system_draw_lighting_init, system_draw_lighting_update}
+	system_deletion_update,
+	system_kinematics_update,
+	system_draw_sprites_update,
+	system_draw_lighting_update
 };
 
 void *system_retrieve_component(const entity_index entity, const component_type type, component_index *index)
@@ -36,16 +41,16 @@ void *system_retrieve_component(const entity_index entity, const component_type 
 
 void systems_init(void)
 {
-	for (int i = 0; i < sizeof(SYSTEMS) / sizeof(ecs_system); i++)
+	for (int i = 0; i < sizeof(INIT_SYSTEMS) / sizeof(system_init_func); i++)
 	{
-		SYSTEMS[i].init();
+		INIT_SYSTEMS[i]();
 	}
 }
 
 void systems_update(void)
 {
-	for (int i = 0; i < sizeof(SYSTEMS) / sizeof(ecs_system); i++)
+	for (int i = 0; i < sizeof(UPDATE_SYSTEMS) / sizeof(system_update_func); i++)
 	{
-		SYSTEMS[i].update();
+		UPDATE_SYSTEMS[i]();
 	}
 }

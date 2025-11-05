@@ -14,26 +14,26 @@
 #include "input/input.h"
 #include "tiles/tile_atlas.h"
 
-static void _game_init(void);
-static void _game_update(void);
-static void _game_terminate(void);
-static bool _is_game_running(void);
+static void s_game_init(void);
+static void s_game_update(void);
+static void s_game_terminate(void);
+static bool s_is_game_running(void);
 
 void game_run(void)
 {
-	_game_init();
+	s_game_init();
 	log_message("Completed initialization");
 
-	while (_is_game_running())
+	while (s_is_game_running())
 	{
-		_game_update();
+		s_game_update();
 	}
 
-	_game_terminate();
+	s_game_terminate();
 	log_message("Completed termination");
 }
 
-static void _game_init(void)
+static void s_game_init(void)
 {
 	sdl_interface_init();
 	game_time_init();
@@ -45,10 +45,10 @@ static void _game_init(void)
 	tile_atlas_init();
 
 	const tile_atlas_h h = tile_atlas_load("res/tiles/test_tile.atlas");
-	entity_tile_create(h, 0, VEC2_ZERO, 0);
+	entity_tile_create(h, 1, VEC2_ZERO, 0);
 }
 
-static void _game_update(void)
+static void s_game_update(void)
 {
 	game_time_update();
 	sdl_interface_update();
@@ -58,7 +58,7 @@ static void _game_update(void)
 	gfx_draw();
 }
 
-static void _game_terminate(void)
+static void s_game_terminate(void)
 {
 	tile_atlas_clear();
 	components_terminate();
@@ -68,7 +68,7 @@ static void _game_terminate(void)
 	sdl_interface_terminate();
 }
 
-static bool _is_game_running(void)
+static bool s_is_game_running(void)
 {
 	return !sdl_interface_ready_to_quit();
 }

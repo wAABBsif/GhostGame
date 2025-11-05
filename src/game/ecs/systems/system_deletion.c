@@ -5,11 +5,6 @@
 #include "../ecs_component.h"
 #include "../ecs_entity.h"
 
-void system_deletion_init(void)
-{
-
-}
-
 void system_deletion_update(void)
 {
 	entity_index i = 0;
