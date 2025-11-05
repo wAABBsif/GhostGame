@@ -8,8 +8,11 @@
 #include "audio/audio.h"
 #include "core/game_time.h"
 #include "core/logging.h"
+#include "core/vec2.h"
+#include "ecs/entities/entity_tile.h"
 #include "gfx/gfx.h"
 #include "input/input.h"
+#include "tiles/tile_atlas.h"
 
 static void _game_init(void);
 static void _game_update(void);
@@ -39,6 +42,10 @@ static void _game_init(void)
 	audio_init();
 	components_init();
 	systems_init();
+	tile_atlas_init();
+
+	const tile_atlas_h h = tile_atlas_load("res/tiles/test_tile.atlas");
+	entity_tile_create(h, 0, VEC2_ZERO, 0);
 }
 
 static void _game_update(void)
@@ -53,6 +60,7 @@ static void _game_update(void)
 
 static void _game_terminate(void)
 {
+	tile_atlas_clear();
 	components_terminate();
 	input_terminate();
 	audio_terminate();

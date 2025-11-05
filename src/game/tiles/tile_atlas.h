@@ -18,9 +18,11 @@ typedef hash tile_atlas_h;
 void tile_atlas_init(void);
 void tile_atlas_clear(void);
 
-texture_h tile_atlas_load(const char* name);
+tile_atlas_h tile_atlas_load(const char* filename);
 void tile_atlas_unload(texture_h h);
-texture_h tile_atlas_get(const char* name);
+tile_atlas_h tile_atlas_get(const char* name);
+
+uint32_t tile_atlas_get_size(uint16_t tile_count);
 
 atlas_tile tile_atlas_get_tile(tile_atlas_h atlas, uint16_t tile);
 texture_h tile_atlas_get_texture(tile_atlas_h atlas);

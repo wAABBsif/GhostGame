@@ -1,0 +1,26 @@
+//------------------------------------------------
+//--- 010 Editor v14.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct ATLAS
+{
+    char    texture[64];
+    uint16  tile_count;
+    char    padding[14];
+    struct  TILE
+    {
+        uint16  texture_x;
+        uint16  texture_y;
+        uint16  texture_w;
+        uint16  texture_h;
+    } tiles[tile_count];
+} atlas;
