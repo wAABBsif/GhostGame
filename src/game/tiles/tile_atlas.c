@@ -52,15 +52,15 @@ tile_atlas_h tile_atlas_load(const char* filename)
 {
 	SDL_IOStream* stream = SDL_IOFromFile(filename, "r");
 	if (stream == NULL)
-		return SIZE_MAX;
+		return HASH_INVALID;
 
 	tile_atlas_file* buffer = SDL_LoadFile_IO(stream, NULL, true);
 	if (buffer == NULL)
-		return SIZE_MAX;
+		return HASH_INVALID;
 
 	const texture_h texture = texture_load(buffer->texture_name);
-	if (texture == SIZE_MAX)
-		return SIZE_MAX;
+	if (texture == HASH_INVALID)
+		return HASH_INVALID;
 
 	tile_atlas_hashmap_entry entry;
 	entry.key = hash_string(filename);
@@ -75,7 +75,7 @@ tile_atlas_h tile_atlas_load(const char* filename)
 
 	log_message("Loaded tile atlas %s", filename);
 	const size_t add_result = hash_map_add(&s_tile_atlases, &entry);
-	assert(add_result != SIZE_MAX);
+	assert(add_result != HASH_INVALID);
 
 	return entry.key;
 }
@@ -83,7 +83,7 @@ tile_atlas_h tile_atlas_load(const char* filename)
 void tile_atlas_unload(const tile_atlas_h h)
 {
 	const size_t index = hash_map_get_index(&s_tile_atlases, h);
-	assert(index != SIZE_MAX);
+	assert(index != HASH_INVALID);
 	free(s_tile_atlas_entries[index].value);
 	hash_map_remove(&s_tile_atlases, index);
 }
@@ -91,7 +91,7 @@ void tile_atlas_unload(const tile_atlas_h h)
 tile_atlas_h tile_atlas_get(const char* name)
 {
 	const hash h = hash_string(name);
-	assert(hash_map_get_index(&s_tile_atlases, h) != SIZE_MAX);
+	assert(hash_map_get_index(&s_tile_atlases, h) != HASH_INVALID);
 	return h;
 }
 

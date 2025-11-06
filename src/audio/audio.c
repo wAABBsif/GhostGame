@@ -70,7 +70,7 @@ audio_clip_h audio_clip_load(const char* name, const bool is_sfx)
 	clip.hash = hash_string(name);
 	log_message("Loaded audio clip: %s", name);
 	const size_t add_result = hash_map_add(&s_clips, &clip);
-	assert(add_result != SIZE_MAX);
+	assert(add_result != HASH_INVALID);
 
 	return clip.hash;
 }
@@ -78,7 +78,7 @@ audio_clip_h audio_clip_load(const char* name, const bool is_sfx)
 void audio_clip_unload(const audio_clip_h h)
 {
 	const size_t index = hash_map_get_index(&s_clips, h);
-	assert(index != SIZE_MAX);
+	assert(index != HASH_INVALID);
 
 	const audio_clip clip = s_clip_entries[index];
 	MIX_DestroyAudio(clip.audio);
@@ -88,7 +88,7 @@ void audio_clip_unload(const audio_clip_h h)
 audio_clip_h audio_clip_get(const char* name)
 {
 	const hash h = hash_string(name);
-	assert(hash_map_get_index(&s_clips, h) != SIZE_MAX);
+	assert(hash_map_get_index(&s_clips, h) != HASH_INVALID);
 	return h;
 }
 

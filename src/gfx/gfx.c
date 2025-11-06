@@ -56,6 +56,8 @@ void gfx_init(void)
 	test_camera_init();
 	sprite_init();
 	lighting_init();
+
+	SDL_SetWindowFullscreen(window_get_sdl_handle(), true);
 }
 
 void gfx_draw(void)

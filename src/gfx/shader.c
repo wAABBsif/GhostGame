@@ -148,7 +148,7 @@ shader_h shader_load(const char* name)
 	glDeleteShader(frag_shader);
 
 	const size_t add_result = hash_map_add(&s_shaders, &result);
-	assert(add_result != SIZE_MAX);
+	assert(add_result != HASH_INVALID);
 
 	log_message("Loaded shader %s", name);
 
@@ -158,7 +158,7 @@ shader_h shader_load(const char* name)
 void shader_unload(const shader_h h)
 {
 	const size_t index = hash_map_get_index(&s_shaders, h);
-	assert(index != SIZE_MAX);
+	assert(index != HASH_INVALID);
 	const shader s = s_shader_entries[index];
 	glDeleteProgram(s.program);
 	hash_map_remove(&s_shaders, index);
@@ -167,7 +167,7 @@ void shader_unload(const shader_h h)
 shader_h shader_get(const char* name)
 {
 	const hash h = hash_string(name);
-	assert(hash_map_get_index(&s_shaders, h) != SIZE_MAX);
+	assert(hash_map_get_index(&s_shaders, h) != HASH_INVALID);
 	return h;
 }
 

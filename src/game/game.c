@@ -10,6 +10,7 @@
 #include "core/logging.h"
 #include "core/vec2.h"
 #include "ecs/entities/entity_tile.h"
+#include "ecs/systems/system_collision.h"
 #include "gfx/gfx.h"
 #include "input/input.h"
 #include "tiles/tile_atlas.h"
@@ -45,7 +46,15 @@ static void s_game_init(void)
 	tile_atlas_init();
 
 	const tile_atlas_h h = tile_atlas_load("res/tiles/test_tile.atlas");
-	entity_tile_create(h, 1, VEC2_ZERO, 0);
+	for (int i = -7; i <= 7; i++)
+	{
+		for (int j = -7; j <= 7; j++)
+		{
+			if (i <= 2 && j <= 2 && i >= -2 && j >= -2)
+				continue;
+			entity_tile_create(h, 2, (vec2){i * 16, j * 16}, 0);
+		}
+	}
 }
 
 static void s_game_update(void)
@@ -53,6 +62,16 @@ static void s_game_update(void)
 	game_time_update();
 	sdl_interface_update();
 	input_update();
+
+	static vec2 pos = (vec2){-256, 0};
+	pos = vec2_add(pos, (vec2){game_time_get_delta() * 32, 0});
+	entity_index in = system_collision_overlap_point(pos, ENTITY_INDEX_INVALID);
+	for (int i = 0; i < 64; i++)
+	{
+		system_collision_overlap_point((vec2){i, 0}, ENTITY_INDEX_INVALID);
+	}
+	log_message("%f", 1 / game_time_get_delta());
+
 	systems_update();
 	audio_update();
 	gfx_draw();

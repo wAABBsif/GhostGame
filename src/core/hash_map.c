@@ -39,7 +39,7 @@ size_t hash_map_add(hash_map *map, const void *data)
 	if (map->size >= map->capacity)
 	{
 		log_error("Attempted to add new elements to hash_map at full capacity.");
-		return SIZE_MAX;
+		return HASH_INVALID;
 	}
 
 	size_t new_index = 0;
@@ -53,7 +53,7 @@ size_t hash_map_add(hash_map *map, const void *data)
 		if (current_index_hash == *(hash*)data)
 		{
 			log_warning("Key already exists.");
-			return SIZE_MAX;
+			return HASH_INVALID;
 		}
 		if (*(hash*)data > current_index_hash)
 			new_index++;
@@ -101,11 +101,11 @@ size_t hash_map_get_range(const hash_map *map, const hash h, const size_t start_
 size_t hash_map_get_index(const hash_map *map, const hash h)
 {
 	if (map->size < 1)
-		return SIZE_MAX;
+		return HASH_INVALID;
 
 	const size_t index = hash_map_get_range(map, h, 0, map->size - 1);
 	if (*(hash*)hash_map_index(map, index) != h)
-		return SIZE_MAX;
+		return HASH_INVALID;
 
 	return index;
 }

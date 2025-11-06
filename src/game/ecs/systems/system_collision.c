@@ -4,12 +4,24 @@
 #include "game/ecs/components/component_collider.h"
 #include "game/ecs/components/component_position.h"
 
-bool overlap_point(vec2 point, component_position *p, component_collider *c)
+bool overlap_point(const vec2 point, component_position *p, component_collider *c)
 {
-	return false;
+	switch (c->type)
+	{
+		case COLLIDER_TYPE_BOX:
+			const uint16_t w = c->box.w / 2;
+			const uint16_t h = c->box.h / 2;
+			return point.x > p->value.x - w && point.y > p->value.y - h && point.x < p->value.x + w && point.y < p->value.y + h;
+		default:
+			return false;
+
+		// case COLLIDER_TYPE_CIRCLE:
+		// 	const vec2 v = vec2_sub(point, p->value);
+		// 	return vec2_sqr_mag(v) < c.circle.radius * c.circle.radius;
+	}
 }
 
-entity_index system_collision_overlap_point(vec2 point, const entity_index obj_index)
+entity_index system_collision_overlap_point(const vec2 point, const entity_index obj_index)
 {
 	component_index position_index = 0;
 	component_index collider_index = 0;
@@ -29,5 +41,5 @@ entity_index system_collision_overlap_point(vec2 point, const entity_index obj_i
 			return i;
 	}
 
-	return UINT16_MAX;
+	return ENTITY_INDEX_INVALID;
 }
