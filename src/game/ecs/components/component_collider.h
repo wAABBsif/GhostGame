@@ -5,6 +5,7 @@
 
 #define COLLIDER_TYPE_NONE		0
 #define COLLIDER_TYPE_BOX		1
+#define COLLIDER_TYPE_CIRCLE	2
 
 typedef uint8_t collider_type;
 
@@ -18,5 +19,9 @@ typedef struct component_collider
 			uint16_t w;
 			uint16_t h;
 		} box;
+		struct
+		{
+			float radius;
+		} circle;
 	};
 } component_collider;

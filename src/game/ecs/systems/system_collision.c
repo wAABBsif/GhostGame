@@ -12,12 +12,11 @@ bool overlap_point(const vec2 point, component_position *p, component_collider *
 			const uint16_t w = c->box.w / 2;
 			const uint16_t h = c->box.h / 2;
 			return point.x > p->value.x - w && point.y > p->value.y - h && point.x < p->value.x + w && point.y < p->value.y + h;
+		case COLLIDER_TYPE_CIRCLE:
+			const vec2 v = vec2_sub(point, p->value);
+			return vec2_sqr_mag(v) < c->circle.radius * c->circle.radius;
 		default:
 			return false;
-
-		// case COLLIDER_TYPE_CIRCLE:
-		// 	const vec2 v = vec2_sub(point, p->value);
-		// 	return vec2_sqr_mag(v) < c.circle.radius * c.circle.radius;
 	}
 }
 
