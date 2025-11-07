@@ -55,7 +55,7 @@ tile_atlas_h tile_atlas_load(const char* filename)
 	const uint16_t *file_tile_count = (uint16_t *)(buffer + 64);
 	const atlas_tile *file_tiles = (atlas_tile *)(buffer + 80);
 
-	const texture_h texture = texture_load(buffer);
+	const texture_h texture = texture_load(file_texture_name);
 	if (texture == HASH_INVALID)
 		return HASH_INVALID;
 
