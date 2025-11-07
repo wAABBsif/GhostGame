@@ -1,0 +1,47 @@
+//------------------------------------------------
+//--- 010 Editor v14.0 Binary Template
+//
+//      File: level.bt
+//   Authors: wAABBsif
+//   Version: 1.0
+//   Purpose: Parse GhostGame level files
+//  Category: 
+// File Mask: *.level
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+char    atlas[64];
+uint16  chunk_count;
+uint8   padding[14];
+
+struct
+{    
+    int8 x;
+    int8 y;
+} position_data[chunk_count];
+
+struct
+{
+    struct
+    {
+        uint16 tile_index;
+	    int8 z;
+	    uint8 flip_x : 1;
+	    uint8 flip_y : 1;
+	    uint8 rotate_ccw : 1;
+	    uint8 rotate_cw : 1;
+	    uint8 additional_flags : 4;    
+    } tiles[512];
+} tile_data[chunk_count];
+
+struct
+{
+    struct
+    {
+        uint16 type;
+        int8 x;
+        int8 y;  
+        uint8 data[12];
+    } objects[64];
+} object_data[chunk_count];
