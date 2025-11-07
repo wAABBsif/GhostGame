@@ -10,6 +10,9 @@
 #include "gfx/shader.h"
 #include "glad/glad.h"
 
+#define MIN_ASPECT_RATIO	(5.0f / 4.0f)
+#define MAX_ASPECT_RATIO	(7.0f / 3.0f)
+
 static uint32_t s_vertex_array;
 static uint32_t s_vertex_buffer;
 static uint32_t s_index_buffer;
@@ -22,7 +25,7 @@ typedef struct camera_quad_vertex
 	vec2 tex_coord;
 } camera_quad_vertex;
 
-const camera_quad_vertex vertices[] =
+static camera_quad_vertex s_vertices[] =
 {
 	{-1, -1, +0, +0},
 	{+1, -1, +1, +0},
@@ -37,7 +40,7 @@ void camera_init()
 
 	glGenBuffers(1, &s_vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(s_vertices), s_vertices, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(camera_quad_vertex), 0);
 	glEnableVertexAttribArray(0);
@@ -64,16 +67,15 @@ void camera_terminate()
 
 static vec2 get_matrix_scale(const float scale)
 {
-	const float aspect = window_get_aspect_ratio();
-	assert(scale != 0);
+	float aspect = window_get_aspect_ratio();
+	aspect = SDL_clamp(aspect, MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
 	return (vec2){2 / scale, 2 / scale * aspect};
 }
 
 static vec2 get_matrix_scale_inverted(const float scale)
 {
-	const float aspect = window_get_aspect_ratio();
-	assert(scale != 0);
-	assert(aspect != 0);
+	float aspect = window_get_aspect_ratio();
+	aspect = SDL_clamp(aspect, MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
 	return (vec2){scale / 2, scale / 2 / aspect};
 }
 
@@ -221,8 +223,8 @@ void camera_texture_free_depth_texture(const camera_texture *cam_texture)
 
 vec2 camera_get_render_size(const camera *cam)
 {
-	const float aspect = window_get_aspect_ratio();
-	assert(aspect != 0);
+	float aspect = window_get_aspect_ratio();
+	aspect = SDL_clamp(aspect, MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
 	return (vec2){cam->render_size, cam->render_size / aspect};
 }
 
@@ -309,4 +311,38 @@ void camera_get_bounds(const camera *cam, vec2 *bounds_min, vec2 *bounds_max)
 
 	*bounds_min = (vec2){fminf(fminf(a.x, b.x), fminf(c.x, d.x)), fminf(fminf(a.y, b.y), fminf(c.y, d.y))};
 	*bounds_max = (vec2){fmaxf(fmaxf(a.x, b.x), fmaxf(c.x, d.x)), fmaxf(fmaxf(a.y, b.y), fmaxf(c.y, d.y))};
+}
+
+void camera_window_resize(const camera *cam)
+{
+	const vec2 size = camera_get_render_size(cam);
+
+	camera_texture_create_renderbuffer(&get_main_camera()->main_texture, size);
+	camera_texture_create_color_texture(&get_main_camera()->main_texture, size);
+	camera_texture_create_depth_texture(&get_main_camera()->main_texture, size);
+
+	camera_texture_create_renderbuffer(&get_main_camera()->lighting_texture, size);
+	camera_texture_create_color_texture(&get_main_camera()->lighting_texture, size);
+	camera_texture_create_depth_texture(&get_main_camera()->lighting_texture, size);
+
+	const float aspect = window_get_aspect_ratio();
+	vec2 vertex_scale = VEC2_ONE;
+	if (aspect < MIN_ASPECT_RATIO)
+	{
+		vertex_scale.y = aspect / MIN_ASPECT_RATIO;
+	}
+	else if (aspect > MAX_ASPECT_RATIO)
+	{
+		vertex_scale.x = MAX_ASPECT_RATIO / aspect;
+	}
+
+	for (int i = 0; i < sizeof(s_vertices) / sizeof(s_vertices[0]); i++)
+	{
+		s_vertices[i].position.x /= fabsf(s_vertices[i].position.x);
+		s_vertices[i].position.y /= fabsf(s_vertices[i].position.y);
+		s_vertices[i].position = vec2_scale(s_vertices[i].position, vertex_scale);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, s_vertex_buffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(s_vertices), s_vertices);
 }

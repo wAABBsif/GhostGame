@@ -8,6 +8,9 @@
 #include "glad/glad.h"
 #include "SDL3/SDL_events.h"
 
+#define	WINDOW_MIN_WIDTH 320
+#define	WINDOW_MIN_HEIGHT 240
+
 static SDL_Window *s_window = NULL;
 
 const char *WINDOW_TITLE = "Ghost Game";
@@ -30,6 +33,8 @@ SDL_Window *window_create(void)
 
 	s_window = SDL_CreateWindow(WINDOW_TITLE, s_window_width, s_window_height, WINDOW_FLAGS);
 	assert(s_window != NULL);
+
+	SDL_SetWindowMinimumSize(s_window, s_window_width, s_window_height);
 
 	return s_window;
 }
@@ -58,15 +63,7 @@ void window_handle_sdl_event(const SDL_Event *event)
 	if (s_window_height <= 0)
 		s_window_height = 1;
 
-	const vec2 size = camera_get_render_size(get_main_camera());
-
-	camera_texture_create_renderbuffer(&get_main_camera()->main_texture, size);
-	camera_texture_create_color_texture(&get_main_camera()->main_texture, size);
-	camera_texture_create_depth_texture(&get_main_camera()->main_texture, size);
-
-	camera_texture_create_renderbuffer(&get_main_camera()->lighting_texture, size);
-	camera_texture_create_color_texture(&get_main_camera()->lighting_texture, size);
-	camera_texture_create_depth_texture(&get_main_camera()->lighting_texture, size);
+	camera_window_resize(get_main_camera());
 
 	log_message("Resizing window (%i, %i)", s_window_width, s_window_height);
 }

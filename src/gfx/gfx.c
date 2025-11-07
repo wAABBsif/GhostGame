@@ -73,7 +73,7 @@ void gfx_draw(void)
 	draw_lighting();
 
 	camera_unbind_framebuffer();
-	glClearColor(1, 1, 1, 1);
+	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	camera_render_to_screen(&cam);

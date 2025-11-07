@@ -59,3 +59,5 @@ void camera_unbind_framebuffer(void);
 void camera_render_to_screen(const camera *cam);
 
 void camera_get_bounds(const camera *cam, vec2 *bounds_min, vec2 *bounds_max);
+
+void camera_window_resize(const camera *cam);
