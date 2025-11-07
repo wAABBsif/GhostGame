@@ -1,7 +1,8 @@
 ﻿#pragma once
 #include "../ecs_entity.h"
+#include "game/level/tile.h"
 #include "gfx/texture.h"
 
 #include "game/level/tile_atlas.h"
 
-entity_index entity_tile_create(const tile_atlas_h atlas, const uint16_t tile_index, const vec2 pos, const int8_t z);
+entity_index entity_tile_create(tile_atlas_h atlas, tile tile);

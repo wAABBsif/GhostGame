@@ -5,7 +5,9 @@
 #include "core/hash_map.h"
 #include "core/logging.h"
 #include "glad/glad.h"
-#include "SDL3_image/SDL_image.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 typedef struct texture
 {
@@ -43,20 +45,14 @@ texture_h texture_load(const char* name)
 		return 0;
 	}
 
-	SDL_Surface *raw_img = IMG_Load(name);
-	if (raw_img == NULL)
+	texture t;
+	t.key = hash_string(name);
+	const stbi_uc *img = stbi_load(name, &t.width, &t.height, NULL, 4);
+	if (img == NULL)
 	{
 		log_error("Failed to load texture from file \"%s\"", name);
 		return 0;
 	}
-
-	const SDL_Surface *img = SDL_ConvertSurface(raw_img, SDL_PIXELFORMAT_RGBA32);
-	SDL_DestroySurface(raw_img);
-
-	texture t;
-	t.key = hash_string(name);
-	t.width = img->w;
-	t.height = img->h;
 
 	if (t.width == 0 || t.height == 0)
 	{
@@ -66,7 +62,7 @@ texture_h texture_load(const char* name)
 
 	glGenTextures(1, &t.id);
 	glBindTexture(GL_TEXTURE_2D, t.id);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, t.width, t.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, t.width, t.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

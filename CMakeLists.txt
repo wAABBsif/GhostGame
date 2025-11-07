@@ -72,17 +72,18 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/systems/system_collision.h
 		src/game/level/tile.c
 		src/game/level/tile.h
+		src/game/level/level.c
+		src/game/level/level.h
+		src/game/level/object.h
+		src/game/level/object.c
 )
 
 include_directories(src)
+include_directories(lib)
 
 add_subdirectory(lib/SDL EXCLUDE_FROM_ALL)
 include_directories(lib/SDL/include)
 target_link_libraries(${PROJECT_NAME} SDL3::SDL3)
-
-add_subdirectory(lib/SDL_image EXCLUDE_FROM_ALL)
-include_directories(lib/SDL_image/include)
-target_link_libraries(${PROJECT_NAME} SDL3_image::SDL3_image)
 
 add_subdirectory(lib/SDL_mixer EXCLUDE_FROM_ALL)
 include_directories(lib/SDL_mixer/include)

@@ -46,15 +46,6 @@ static void s_game_init(void)
 	tile_atlas_init();
 
 	const tile_atlas_h h = tile_atlas_load("res/tiles/test_tile.atlas");
-	for (int i = -7; i <= 7; i++)
-	{
-		for (int j = -7; j <= 7; j++)
-		{
-			if (i <= 2 && j <= 2 && i >= -2 && j >= -2)
-				continue;
-			entity_tile_create(h, 2, (vec2){i * 16, j * 16}, 0);
-		}
-	}
 }
 
 static void s_game_update(void)
