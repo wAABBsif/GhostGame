@@ -13,6 +13,7 @@ static SDL_Window *s_window = NULL;
 const char *WINDOW_TITLE = "Ghost Game";
 static int s_window_width = 320;
 static int s_window_height = 240;
+
 const SDL_WindowFlags WINDOW_FLAGS =
 {
 	SDL_WINDOW_OPENGL
@@ -50,6 +51,12 @@ void window_handle_sdl_event(const SDL_Event *event)
 
 	s_window_width = event->window.data1;
 	s_window_height = event->window.data2;
+
+	if (s_window_width <= 0)
+		s_window_width = 1;
+
+	if (s_window_height <= 0)
+		s_window_height = 1;
 
 	const vec2 size = camera_get_render_size(get_main_camera());
 
