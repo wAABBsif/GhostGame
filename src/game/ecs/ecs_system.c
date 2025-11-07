@@ -3,14 +3,6 @@
 #include <tgmath.h>
 
 #include "ecs_entity.h"
-#include "components/component_light.h"
-#include "components/component_position.h"
-#include "components/component_rotation.h"
-#include "components/component_sprite.h"
-#include "components/component_velocity.h"
-#include "core/game_time.h"
-#include "core/logging.h"
-#include "entities/entity_tile.h"
 #include "systems/system_deletion.h"
 #include "systems/system_draw_lighting.h"
 #include "systems/system_draw_sprites.h"

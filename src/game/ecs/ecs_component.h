@@ -2,14 +2,13 @@
 #include <stdint.h>
 
 #define COMPONENT_TYPE_DELETION_FLAG		0
-#define COMPONENT_TYPE_POSITION				1
-#define COMPONENT_TYPE_ROTATION				2
-#define COMPONENT_TYPE_VELOCITY				3
-#define COMPONENT_TYPE_SPRITE				4
-#define COMPONENT_TYPE_LIGHT				5
-#define COMPONENT_TYPE_COLLIDER				6
+#define COMPONENT_TYPE_TRANSFORM			1
+#define COMPONENT_TYPE_VELOCITY				2
+#define COMPONENT_TYPE_SPRITE				3
+#define COMPONENT_TYPE_LIGHT				4
+#define COMPONENT_TYPE_COLLIDER				5
 
-#define COMPONENT_TYPE_COUNT				7
+#define COMPONENT_TYPE_COUNT				6
 #define COMPONENT_GET_MASK(component)		(1 << (component))
 
 typedef uint16_t component_type;

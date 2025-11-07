@@ -8,8 +8,7 @@
 #include "../ecs_component.h"
 #include "../ecs_entity.h"
 #include "../ecs_system.h"
-#include "../components/component_position.h"
-#include "../components/component_rotation.h"
+#include "../components/component_transform.h"
 #include "../components/component_sprite.h"
 #include "gfx/sprite.h"
 
@@ -23,26 +22,24 @@ const static vec2 S_VERTEX_QUADS[4] =
 
 void system_draw_sprites_update(void)
 {
-	component_index position_index = 0;
-	component_index rotation_index = 0;
+	component_index transform_index = 0;
 	component_index sprite_index = 0;
 
 	for (entity_index i = 0; i < entities_get_count(); i++)
 	{
-		const component_position *c_position = system_retrieve_component(i, COMPONENT_TYPE_POSITION, &position_index);
-		const component_rotation *c_rotation = system_retrieve_component(i, COMPONENT_TYPE_ROTATION, &rotation_index);
+		const component_transform *c_transform = system_retrieve_component(i, COMPONENT_TYPE_TRANSFORM, &transform_index);
 		const component_sprite *c_sprite = system_retrieve_component(i, COMPONENT_TYPE_SPRITE, &sprite_index);
 
 		if (!c_sprite)
 			continue;
 
-		assert(c_position);
+		assert(c_transform);
 
-		if (!sprite_simple_cull(c_position->value, c_sprite->size))
+		if (!sprite_simple_cull(c_transform->position, c_sprite->size))
 			continue;
 
 		sprite_quad quad;
-		const mat3 matrix = mat3_from_trs(c_position->value, c_rotation ? c_rotation->value : 0, c_sprite->size);
+		const mat3 matrix = mat3_from_trs(c_transform->position, c_transform->rotation, c_sprite->size);
 
 		const uint16_t tex_coords[8] =
 		{

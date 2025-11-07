@@ -9,8 +9,7 @@
 #include "../ecs_entity.h"
 #include "../ecs_system.h"
 #include "../components/component_light.h"
-#include "../components/component_position.h"
-#include "../components/component_rotation.h"
+#include "../components/component_transform.h"
 #include "gfx/lighting.h"
 #include "gfx/sprite.h"
 
@@ -32,26 +31,24 @@ const static uint16_t S_TEX_COORDS[8] =
 
 void system_draw_lighting_update(void)
 {
-	component_index position_index = 0;
-	component_index rotation_index = 0;
+	component_index transform_index = 0;
 	component_index light_index = 0;
 
 	for (entity_index i = 0; i < entities_get_count(); i++)
 	{
-		const component_position *c_position = system_retrieve_component(i, COMPONENT_TYPE_POSITION, &position_index);
-		const component_rotation *c_rotation = system_retrieve_component(i, COMPONENT_TYPE_ROTATION, &rotation_index);
+		const component_transform *c_transform = system_retrieve_component(i, COMPONENT_TYPE_TRANSFORM, &transform_index);
 		const component_light *c_light = system_retrieve_component(i, COMPONENT_TYPE_LIGHT, &light_index);
 
 		if (!c_light)
 			continue;
 
-		assert(c_position);
+		assert(c_transform);
 
-		if (!sprite_simple_cull(c_position->value, c_light->size))
+		if (!sprite_simple_cull(c_transform->position, c_light->size))
 			continue;
 
 		light_quad quad;
-		const mat3 matrix = mat3_from_trs(c_position->value, c_rotation ? c_rotation->value : 0, c_light->size);
+		const mat3 matrix = mat3_from_trs(c_transform->position, c_transform->rotation, c_light->size);
 
 		for (uint8_t v = 0; v < 4; v++)
 		{

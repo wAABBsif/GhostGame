@@ -66,7 +66,7 @@ static void s_game_update(void)
 	static vec2 pos = (vec2){-256, 0};
 	pos = vec2_add(pos, (vec2){game_time_get_delta() * 32, 0});
 	entity_index in = system_collision_overlap_point(pos, ENTITY_INDEX_INVALID);
-	
+
 	systems_update();
 	audio_update();
 	gfx_draw();

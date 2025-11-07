@@ -50,8 +50,7 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/ecs_system.h
 		src/game/ecs/systems/system_deletion.c
 		src/game/ecs/systems/system_deletion.h
-		src/game/ecs/components/component_position.h
-		src/game/ecs/components/component_rotation.h
+		src/game/ecs/components/component_transform.h
 		src/game/ecs/components/component_velocity.h
 		src/game/ecs/components/component_sprite.h
 		src/game/ecs/systems/system_kinematics.c
