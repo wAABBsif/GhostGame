@@ -16,9 +16,9 @@ const register_component_entry COMPONENT_ENTRIES[] =
 {
 	(register_component_entry){0, 0},												//COMPONENT_TYPE_DELETION_FLAG
 	(register_component_entry){sizeof(component_transform), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_TRANSFORM
-	(register_component_entry){sizeof(component_velocity), ECS_MAX_ENTITIES / 2},	//COMPONENT_TYPE_VELOCITY
+	(register_component_entry){sizeof(component_velocity), ECS_MAX_ENTITIES / 4},	//COMPONENT_TYPE_VELOCITY
 	(register_component_entry){sizeof(component_sprite), ECS_MAX_ENTITIES},			//COMPONENT_TYPE_SPRITE
-	(register_component_entry){sizeof(component_light), ECS_MAX_ENTITIES / 4},		//COMPONENT_TYPE_LIGHT
+	(register_component_entry){sizeof(component_light), ECS_MAX_ENTITIES / 16},		//COMPONENT_TYPE_LIGHT
 	(register_component_entry){sizeof(component_collider), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_COLLIDER
 };
 

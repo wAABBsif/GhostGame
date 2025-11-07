@@ -4,7 +4,7 @@
 
 #include "ecs_component.h"
 
-#define ECS_MAX_ENTITIES 2048
+#define ECS_MAX_ENTITIES 1024
 #define ENTITY_INDEX_INVALID UINT16_MAX
 
 typedef uint16_t entity_index;
