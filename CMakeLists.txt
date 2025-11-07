@@ -65,11 +65,13 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/systems/system_draw_lighting.h
 		src/game/ecs/entities/entity_tile.c
 		src/game/ecs/entities/entity_tile.h
-		src/game/tiles/tile_atlas.c
-		src/game/tiles/tile_atlas.h
+		src/game/level/tile_atlas.c
+		src/game/level/tile_atlas.h
 		src/game/ecs/components/component_collider.h
 		src/game/ecs/systems/system_collision.c
 		src/game/ecs/systems/system_collision.h
+		src/game/level/tile.c
+		src/game/level/tile.h
 )
 
 include_directories(src)

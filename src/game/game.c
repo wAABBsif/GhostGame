@@ -13,7 +13,7 @@
 #include "ecs/systems/system_collision.h"
 #include "gfx/gfx.h"
 #include "input/input.h"
-#include "tiles/tile_atlas.h"
+#include "level/tile_atlas.h"
 
 static void s_game_init(void);
 static void s_game_update(void);
