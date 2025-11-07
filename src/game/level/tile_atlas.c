@@ -15,13 +15,6 @@ typedef struct tile_atlas
 	atlas_tile tiles[1];
 } tile_atlas;
 
-typedef struct tile_atlas_file
-{
-	const char texture_name[64];
-	uint16_t tile_count;
-	alignas(16) atlas_tile tiles[1];
-} tile_atlas_file;
-
 typedef struct tile_atlas_hashmap_entry
 {
 	tile_atlas_h key;
@@ -54,22 +47,26 @@ tile_atlas_h tile_atlas_load(const char* filename)
 	if (stream == NULL)
 		return HASH_INVALID;
 
-	tile_atlas_file* buffer = SDL_LoadFile_IO(stream, NULL, true);
+	void* buffer = SDL_LoadFile_IO(stream, NULL, true);
 	if (buffer == NULL)
 		return HASH_INVALID;
 
-	const texture_h texture = texture_load(buffer->texture_name);
+	char *file_texture_name = (char *)(buffer);
+	const uint16_t *file_tile_count = (uint16_t *)(buffer + 64);
+	const atlas_tile *file_tiles = (atlas_tile *)(buffer + 80);
+
+	const texture_h texture = texture_load(buffer);
 	if (texture == HASH_INVALID)
 		return HASH_INVALID;
 
 	tile_atlas_hashmap_entry entry;
 	entry.key = hash_string(filename);
-	entry.value = (tile_atlas*)malloc(tile_atlas_get_size(buffer->tile_count));
+	entry.value = (tile_atlas*)malloc(tile_atlas_get_size(*file_tile_count));
 
 	entry.value->texture = texture;
-	entry.value->tile_count = buffer->tile_count;
+	entry.value->tile_count = *file_tile_count;
 
-	memcpy(entry.value->tiles, buffer->tiles, entry.value->tile_count * sizeof(atlas_tile));
+	memcpy(entry.value->tiles, file_tiles, entry.value->tile_count * sizeof(atlas_tile));
 
 	SDL_free(buffer);
 
