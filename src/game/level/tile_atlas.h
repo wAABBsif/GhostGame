@@ -13,6 +13,7 @@ typedef struct atlas_tile
 	uint8_t w;
 	uint8_t h;
 	collider_type coll_type;
+	bool is_sorted;
 } atlas_tile;
 
 typedef hash tile_atlas_h;

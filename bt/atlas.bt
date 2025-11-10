@@ -21,5 +21,6 @@ struct
     uint16  texture_y;
     uint8   texture_w;
     uint8   texture_h;
-    enum    <uint16> {NONE=0, BOX=1} coll_type;
+    enum    <uint8> {None=0, Box=1} coll_type;
+    enum    <uint8> {False=0, True=1} is_sorted;
 } tiles[tile_count];

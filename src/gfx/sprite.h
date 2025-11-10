@@ -4,7 +4,7 @@
 #include "color.h"
 #include "texture.h"
 
-#define MAX_SPRITES				1024
+#define MAX_SPRITES				2048
 #define MAX_SPRITE_TEXTURES		16
 
 typedef struct sprite_vertex

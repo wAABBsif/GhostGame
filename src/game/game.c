@@ -44,8 +44,9 @@ static void s_game_init(void)
 	components_init();
 	systems_init();
 	tile_atlas_init();
+	levels_init();
 
-	const tile_atlas_h h = tile_atlas_load("res/tiles/test_tile.atlas");
+	level_load("res/levels/test.level");
 }
 
 static void s_game_update(void)
@@ -53,11 +54,6 @@ static void s_game_update(void)
 	game_time_update();
 	sdl_interface_update();
 	input_update();
-
-	static vec2 pos = (vec2){-256, 0};
-	pos = vec2_add(pos, (vec2){game_time_get_delta() * 32, 0});
-	entity_index in = system_collision_overlap_point(pos, ENTITY_INDEX_INVALID);
-
 	systems_update();
 	audio_update();
 	gfx_draw();

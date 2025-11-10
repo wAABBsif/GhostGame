@@ -70,12 +70,14 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/components/component_collider.h
 		src/game/ecs/systems/system_collision.c
 		src/game/ecs/systems/system_collision.h
-		src/game/level/tile.c
 		src/game/level/tile.h
 		src/game/level/level.c
 		src/game/level/level.h
 		src/game/level/object.h
 		src/game/level/object.c
+		src/game/ecs/components/component_tile.h
+		src/game/ecs/systems/system_tiles.c
+		src/game/ecs/systems/system_tiles.h
 )
 
 include_directories(src)

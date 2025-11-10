@@ -12,7 +12,7 @@
 //------------------------------------------------
 
 char    atlas[64];
-uint16  chunk_count;
+int16  chunk_count;
 uint8   padding[14];
 
 struct
@@ -25,13 +25,12 @@ struct
 {
     struct
     {
-        uint16 tile_index;
+        uint16 atlas_index;
 	    int8 z;
 	    uint8 flip_x : 1;
 	    uint8 flip_y : 1;
 	    uint8 rotate_ccw : 1;
-	    uint8 rotate_cw : 1;
-	    uint8 additional_flags : 4;    
+	    uint8 additional_flags : 5;    
     } tiles[512];
 } tile_data[chunk_count];
 
