@@ -45,6 +45,7 @@ void entity_tile_from_chunk(const chunk_index chunk, const uint16_t tile_index, 
 	const atlas_tile atlas_entry = tile_atlas_get_tile(level_get_tile_atlas(), t.atlas_index);
 
 	c_transform->position = level_chunk_position_to_vec2(*level_get_chunk_position(chunk));
+	c_transform->position = vec2_sub(c_transform->position, (vec2){LEVEL_CHUNK_WIDTH_IN_PIXELS / 2, LEVEL_CHUNK_HEIGHT_IN_PIXELS / 2});
 	c_transform->position.x += tile_index % LEVEL_CHUNK_WIDTH * TILE_SIZE_IN_PIXELS;
 	c_transform->position.y += tile_index / LEVEL_CHUNK_WIDTH * TILE_SIZE_IN_PIXELS;
 	c_transform->rotation = t.rotate_ccw ? M_PI_2 : 0;

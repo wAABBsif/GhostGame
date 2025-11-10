@@ -99,5 +99,5 @@ const object_chunk *level_get_object_chunk(const chunk_index index)
 
 vec2 level_chunk_position_to_vec2(const chunk_position pos)
 {
-	return (vec2){pos.x * LEVEL_CHUNK_WIDTH_IN_PIXELS, pos.y * LEVEL_CHUNK_HEIGHT_IN_PIXELS};
+	return (vec2){pos.x * LEVEL_CHUNK_WIDTH_IN_PIXELS + TILE_SIZE_IN_PIXELS / 2, pos.y * LEVEL_CHUNK_HEIGHT_IN_PIXELS + TILE_SIZE_IN_PIXELS / 2};
 }
