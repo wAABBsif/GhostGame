@@ -81,6 +81,7 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/components/component_update.h
 		src/game/ecs/systems/system_update.c
 		src/game/ecs/systems/system_update.h
+		src/game/ecs/components/component_collision_receiver.h
 )
 
 include_directories(src)

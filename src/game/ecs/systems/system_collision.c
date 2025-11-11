@@ -1,7 +1,10 @@
 #include "system_collision.h"
 
+#include <assert.h>
+
 #include "game/ecs/ecs_system.h"
 #include "game/ecs/components/component_collider.h"
+#include "game/ecs/components/component_collision_receiver.h"
 #include "game/ecs/components/component_transform.h"
 
 bool overlap_point(const vec2 point, component_transform *t, component_collider *c)
@@ -30,15 +33,46 @@ entity_index system_collision_overlap_point(const vec2 point, const entity_index
 		component_transform *c_transform = system_retrieve_component(i, COMPONENT_TYPE_TRANSFORM, &transform_index);
 		component_collider *c_collider = system_retrieve_component(i, COMPONENT_TYPE_COLLIDER, &collider_index);
 
-		if (!c_transform || !c_collider)
+		if (!c_collider)
 			continue;
+
+		assert(c_transform);
 
 		if (!overlap_point(point, c_transform, c_collider))
 			continue;
 
-		if (i != obj_index)
-			return i;
+		if (i == obj_index)
+			continue;
+
+		return i;
 	}
 
 	return ENTITY_INDEX_INVALID;
+}
+
+void system_collision_receiver_update(void)
+{
+	component_index transform_index = 0;
+	component_index collision_receiver_index = 0;
+
+	for (entity_index i = 0; i < entities_get_count(); i++)
+	{
+		component_transform *c_transform = system_retrieve_component(i, COMPONENT_TYPE_TRANSFORM, &transform_index);
+		component_collision_receiver *c_collision_receiver = system_retrieve_component(i, COMPONENT_TYPE_COLLISION_RECEIVER, &collision_receiver_index);
+
+		if (!c_transform || !c_collision_receiver)
+			continue;
+
+		for (uint8_t j = 0; j < COLLISION_RECEIVER_COUNT; j++)
+		{
+			if (c_collision_receiver->receivers[j].x_offset == 0 && c_collision_receiver->receivers[j].y_offset == 0)
+				continue;
+
+			vec2 position;
+			position.x = c_transform->position.x + c_collision_receiver->receivers[j].x_offset;
+			position.y = c_transform->position.y + c_collision_receiver->receivers[j].y_offset;
+
+			c_collision_receiver->receivers[j].received_index = system_collision_overlap_point(position, i);
+		}
+	}
 }

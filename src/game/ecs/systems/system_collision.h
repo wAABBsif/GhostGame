@@ -3,3 +3,4 @@
 #include "game/ecs/ecs_entity.h"
 
 entity_index system_collision_overlap_point(vec2 point, entity_index obj_index);
+void system_collision_receiver_update(void);

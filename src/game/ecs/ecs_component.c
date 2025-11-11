@@ -13,6 +13,7 @@
 #include "components/component_collider.h"
 #include "components/component_tile.h"
 #include "components/component_update.h"
+#include "components/component_collision_receiver.h"
 #include "game/level/level.h"
 
 const register_component_entry COMPONENT_ENTRIES[] =
@@ -25,6 +26,7 @@ const register_component_entry COMPONENT_ENTRIES[] =
 	(register_component_entry){sizeof(component_collider), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_COLLIDER
 	(register_component_entry){sizeof(component_tile), LEVEL_CHUNK_SIZE * 4},		//COMPONENT_TYPE_TILE
 	(register_component_entry){sizeof(component_update), ECS_MAX_ENTITIES / 2},		//COMPONENT_TYPE_UPDATE
+	(register_component_entry){sizeof(component_collision_receiver), 256}			//COMPONENT_TYPE_COLLISION_RECIVER
 };
 
 static void *s_components[COMPONENT_TYPE_COUNT];

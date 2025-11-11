@@ -3,11 +3,13 @@
 #include <tgmath.h>
 
 #include "ecs_entity.h"
+#include "systems/system_collision.h"
 #include "systems/system_deletion.h"
 #include "systems/system_draw_lighting.h"
 #include "systems/system_draw_sprites.h"
 #include "systems/system_kinematics.h"
 #include "systems/system_tiles.h"
+#include "systems/system_update.h"
 
 typedef void (*system_init_func)();
 typedef void (*system_update_func)();
@@ -18,6 +20,8 @@ const system_init_func UPDATE_SYSTEMS[] =
 {
 	system_deletion_update,
 	system_tiles_update,
+	system_update_update,
+	system_collision_receiver_update,
 	system_kinematics_update,
 	system_draw_sprites_update,
 	system_draw_lighting_update
