@@ -8,8 +8,9 @@
 #define COMPONENT_TYPE_LIGHT				4
 #define COMPONENT_TYPE_COLLIDER				5
 #define COMPONENT_TYPE_TILE					6
+#define COMPONENT_TYPE_UPDATE				7
 
-#define COMPONENT_TYPE_COUNT				7
+#define COMPONENT_TYPE_COUNT				8
 #define COMPONENT_GET_MASK(component)		(1 << (component))
 
 typedef uint16_t component_type;

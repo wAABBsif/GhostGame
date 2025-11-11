@@ -78,6 +78,9 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/components/component_tile.h
 		src/game/ecs/systems/system_tiles.c
 		src/game/ecs/systems/system_tiles.h
+		src/game/ecs/components/component_update.h
+		src/game/ecs/systems/system_update.c
+		src/game/ecs/systems/system_update.h
 )
 
 include_directories(src)
