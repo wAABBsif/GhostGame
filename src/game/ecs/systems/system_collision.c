@@ -4,7 +4,7 @@
 
 #include "game/ecs/ecs_system.h"
 #include "game/ecs/components/component_collider.h"
-#include "game/ecs/components/component_collision_receiver.h"
+#include "game/ecs/components/component_dynamic_body.h"
 #include "game/ecs/components/component_transform.h"
 
 bool overlap_point(const vec2 point, component_transform *t, component_collider *c)
@@ -14,10 +14,10 @@ bool overlap_point(const vec2 point, component_transform *t, component_collider 
 		case COLLIDER_TYPE_BOX:
 			const uint16_t w = c->box.w / 2;
 			const uint16_t h = c->box.h / 2;
-			return point.x > t->position.x - w && point.y > t->position.y - h && point.x < t->position.x + w && point.y < t->position.y + h;
+			return point.x >= t->position.x - w && point.y >= t->position.y - h && point.x <= t->position.x + w && point.y <= t->position.y + h;
 		case COLLIDER_TYPE_CIRCLE:
 			const vec2 v = vec2_sub(point, t->position);
-			return vec2_sqr_mag(v) < c->circle.radius * c->circle.radius;
+			return vec2_sqr_mag(v) <= c->circle.radius * c->circle.radius;
 		default:
 			return false;
 	}
@@ -48,31 +48,4 @@ entity_index system_collision_overlap_point(const vec2 point, const entity_index
 	}
 
 	return ENTITY_INDEX_INVALID;
-}
-
-void system_collision_receiver_update(void)
-{
-	component_index transform_index = 0;
-	component_index collision_receiver_index = 0;
-
-	for (entity_index i = 0; i < entities_get_count(); i++)
-	{
-		component_transform *c_transform = system_retrieve_component(i, COMPONENT_TYPE_TRANSFORM, &transform_index);
-		component_collision_receiver *c_collision_receiver = system_retrieve_component(i, COMPONENT_TYPE_COLLISION_RECEIVER, &collision_receiver_index);
-
-		if (!c_transform || !c_collision_receiver)
-			continue;
-
-		for (uint8_t j = 0; j < COLLISION_RECEIVER_COUNT; j++)
-		{
-			if (c_collision_receiver->receivers[j].x_offset == 0 && c_collision_receiver->receivers[j].y_offset == 0)
-				continue;
-
-			vec2 position;
-			position.x = c_transform->position.x + c_collision_receiver->receivers[j].x_offset;
-			position.y = c_transform->position.y + c_collision_receiver->receivers[j].y_offset;
-
-			c_collision_receiver->receivers[j].received_index = system_collision_overlap_point(position, i);
-		}
-	}
 }

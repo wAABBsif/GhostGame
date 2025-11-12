@@ -7,10 +7,11 @@ typedef struct vec2
 	float y;
 } vec2;
 
-#define VEC2_ZERO (vec2){0, 0}
-#define VEC2_ONE (vec2){1, 1}
+#define VEC2_ZERO	(vec2){0, 0}
+#define VEC2_ONE	(vec2){1, 1}
 #define VEC2_UNIT_X (vec2){1, 0}
 #define VEC2_UNIT_Y (vec2){0, 1}
+#define VEC2_NAN	(vec2){0.0/0.0, 0.0/0.0}
 
 typedef struct mat3 mat3;
 

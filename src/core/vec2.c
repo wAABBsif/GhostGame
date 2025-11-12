@@ -103,7 +103,10 @@ vec2 vec2_project(const vec2 a, const vec2 b)
 vec2 vec2_project_on_plane(const vec2 a, vec2 normal)
 {
 	normal = vec2_normalize(normal);
-	return vec2_sub(a, vec2_project(a, normal));
+	const float dot = vec2_dot(a, normal);
+	if (dot > 0)
+		return a;
+	return vec2_sub(a, vec2_mul(normal, dot));
 }
 
 float vec2_angle_to(const vec2 a, const vec2 b)

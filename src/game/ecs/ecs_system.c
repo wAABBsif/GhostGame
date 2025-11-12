@@ -7,6 +7,7 @@
 #include "systems/system_deletion.h"
 #include "systems/system_draw_lighting.h"
 #include "systems/system_draw_sprites.h"
+#include "systems/system_dynamics.h"
 #include "systems/system_kinematics.h"
 #include "systems/system_tiles.h"
 #include "systems/system_update.h"
@@ -21,7 +22,7 @@ const system_init_func UPDATE_SYSTEMS[] =
 	system_deletion_update,
 	system_tiles_update,
 	system_update_update,
-	system_collision_receiver_update,
+	system_dynamics_update,
 	system_kinematics_update,
 	system_draw_sprites_update,
 	system_draw_lighting_update

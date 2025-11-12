@@ -7,26 +7,26 @@
 #include "ecs_entity.h"
 
 #include "components/component_transform.h"
-#include "components/component_velocity.h"
+#include "components/component_kinematic_body.h"
 #include "components/component_sprite.h"
 #include "components/component_light.h"
 #include "components/component_collider.h"
 #include "components/component_tile.h"
 #include "components/component_update.h"
-#include "components/component_collision_receiver.h"
+#include "components/component_dynamic_body.h"
 #include "game/level/level.h"
 
 const register_component_entry COMPONENT_ENTRIES[] =
 {
 	(register_component_entry){0, 0},												//COMPONENT_TYPE_DELETION_FLAG
 	(register_component_entry){sizeof(component_transform), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_TRANSFORM
-	(register_component_entry){sizeof(component_velocity), 256},					//COMPONENT_TYPE_VELOCITY
+	(register_component_entry){sizeof(component_kinematic_body), 256},				//COMPONENT_TYPE_KINEMATIC_BODY
+	(register_component_entry){sizeof(component_dynamic_body), 64},					//COMPONENT_TYPE_DYNAMIC_BODY
 	(register_component_entry){sizeof(component_sprite), ECS_MAX_ENTITIES},			//COMPONENT_TYPE_SPRITE
 	(register_component_entry){sizeof(component_light), 64},						//COMPONENT_TYPE_LIGHT
 	(register_component_entry){sizeof(component_collider), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_COLLIDER
 	(register_component_entry){sizeof(component_tile), LEVEL_CHUNK_SIZE * 4},		//COMPONENT_TYPE_TILE
 	(register_component_entry){sizeof(component_update), ECS_MAX_ENTITIES / 2},		//COMPONENT_TYPE_UPDATE
-	(register_component_entry){sizeof(component_collision_receiver), 256}			//COMPONENT_TYPE_COLLISION_RECIVER
 };
 
 static void *s_components[COMPONENT_TYPE_COUNT];

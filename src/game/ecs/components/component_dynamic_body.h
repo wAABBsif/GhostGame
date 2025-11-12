@@ -13,7 +13,7 @@ typedef struct collision_receiver
 	entity_index received_index;
 } collision_receiver;
 
-typedef struct component_collision_receiver
+typedef struct component_dynamic_body
 {
 	collision_receiver receivers[COLLISION_RECEIVER_COUNT];
-} component_collision_receiver;
+} component_dynamic_body;

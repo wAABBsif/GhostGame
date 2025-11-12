@@ -14,16 +14,16 @@ void system_update_update(void)
 
 	for (entity_index i = 0; i < entities_get_count(); i++)
 	{
+		const component_update *c_update = system_retrieve_component(i, COMPONENT_TYPE_UPDATE, &update_index);
+		if (c_update)
+		{
+			c_update->func(component_indices, i);
+		}
+
 		for (component_type j = 0; j < COMPONENT_TYPE_COUNT; j++)
 		{
 			if (entity_has_component(i, j))
 				component_indices[j]++;
 		}
-
-		component_update *c_update = system_retrieve_component(i, COMPONENT_TYPE_UPDATE, &update_index);
-		if (!c_update)
-			continue;
-
-		c_update->func(component_indices);
 	}
 }

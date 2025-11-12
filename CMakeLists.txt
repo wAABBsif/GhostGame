@@ -51,7 +51,7 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/systems/system_deletion.c
 		src/game/ecs/systems/system_deletion.h
 		src/game/ecs/components/component_transform.h
-		src/game/ecs/components/component_velocity.h
+		src/game/ecs/components/component_kinematic_body.h
 		src/game/ecs/components/component_sprite.h
 		src/game/ecs/systems/system_kinematics.c
 		src/game/ecs/systems/system_kinematics.h
@@ -81,7 +81,9 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/components/component_update.h
 		src/game/ecs/systems/system_update.c
 		src/game/ecs/systems/system_update.h
-		src/game/ecs/components/component_collision_receiver.h
+		src/game/ecs/components/component_dynamic_body.h
+		src/game/ecs/systems/system_dynamics.c
+		src/game/ecs/systems/system_dynamics.h
 )
 
 include_directories(src)

@@ -51,6 +51,10 @@ SDL_Window *window_get_sdl_handle(void)
 
 void window_handle_sdl_event(const SDL_Event *event)
 {
+	if (event->type == SDL_EVENT_KEY_DOWN)
+		if (event->key.key == SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_F11))
+			SDL_SetWindowFullscreen(s_window, SDL_GetWindowFlags(s_window) & SDL_WINDOW_FULLSCREEN ? false : true);
+
 	if (event->type != SDL_EVENT_WINDOW_RESIZED)
 		return;
 
