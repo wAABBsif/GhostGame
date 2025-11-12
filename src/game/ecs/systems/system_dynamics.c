@@ -42,7 +42,6 @@ void system_dynamics_update(void)
 			{
 				const vec2 normal = vec2_normalize(vec2_neg(receiver_offset));
 				c_kinematics->velocity = vec2_project_on_plane(c_kinematics->velocity, normal);
-				log_message("%f, %f", c_kinematics->velocity.x, c_kinematics->velocity.y);
 			}
 		}
 	}
