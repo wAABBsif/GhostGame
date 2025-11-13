@@ -23,7 +23,7 @@ bool overlap_point(const vec2 point, component_transform *t, component_collider 
 	}
 }
 
-entity_index system_collision_overlap_point(const vec2 point, const entity_index obj_index)
+collision_properties system_collision_overlap_point(const vec2 point, const entity_index obj_index)
 {
 	component_index transform_index = 0;
 	component_index collider_index = 0;
@@ -44,8 +44,8 @@ entity_index system_collision_overlap_point(const vec2 point, const entity_index
 		if (i == obj_index)
 			continue;
 
-		return i;
+		return (collision_properties){i, c_transform, c_collider};
 	}
 
-	return ENTITY_INDEX_INVALID;
+	return (collision_properties){ENTITY_INDEX_INVALID, NULL, NULL};
 }

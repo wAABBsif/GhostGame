@@ -37,8 +37,9 @@ void system_dynamics_update(void)
 
 			const vec2 receiver_offset = (vec2){c_dynamics->receivers[j].x_offset, c_dynamics->receivers[j].y_offset};
 
-			c_dynamics->receivers[j].received_index = system_collision_overlap_point(vec2_add(c_transform->position, receiver_offset), i);
-			if (c_dynamics->receivers[j].received_index != ENTITY_INDEX_INVALID)
+			const collision_properties collision = system_collision_overlap_point(vec2_add(c_transform->position, receiver_offset), i);
+			c_dynamics->receivers[j].received_index = collision.entity;
+			if (collision.entity != ENTITY_INDEX_INVALID)
 			{
 				const vec2 normal = vec2_normalize(vec2_neg(receiver_offset));
 				c_kinematics->velocity = vec2_project_on_plane(c_kinematics->velocity, normal);
