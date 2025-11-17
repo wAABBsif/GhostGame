@@ -42,7 +42,7 @@ static void my_cute_lil_update(const component_index *components, entity_index i
 {
 	component_kinematic_body *kinematics = components_get_index(COMPONENT_TYPE_KINEMATIC_BODY, components[COMPONENT_TYPE_KINEMATIC_BODY]);
 	vec2 input = input_get_vector(INPUT_ACTION_MOVE_L, INPUT_ACTION_MOVE_R, INPUT_ACTION_MOVE_D, INPUT_ACTION_MOVE_U);
-	kinematics->velocity = vec2_mul(input, 720);
+	kinematics->velocity = vec2_mul(input, 7200);
 }
 
 static void s_game_init(void)
@@ -88,10 +88,8 @@ static void s_game_init(void)
 	c_kinematics->velocity = VEC2_ZERO;
 
 	component_dynamic_body *c_dynamics = entity_add_component(COMPONENT_TYPE_DYNAMIC_BODY);
-	c_dynamics->receivers[0] = (collision_receiver){8, 0, ENTITY_INDEX_INVALID};
-	c_dynamics->receivers[1] = (collision_receiver){-8, 0, ENTITY_INDEX_INVALID};
-	c_dynamics->receivers[2] = (collision_receiver){0, 8, ENTITY_INDEX_INVALID};
-	c_dynamics->receivers[3] = (collision_receiver){0, -8, ENTITY_INDEX_INVALID};
+	c_dynamics->width = 12;
+	c_dynamics->height = 12;
 
 	component_update *c_update = entity_add_component(COMPONENT_TYPE_UPDATE);
 	c_update->func = my_cute_lil_update;

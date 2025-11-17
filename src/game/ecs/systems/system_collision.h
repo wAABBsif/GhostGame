@@ -6,9 +6,9 @@
 
 typedef struct collision_properties
 {
-	entity_index entity;
 	component_transform *transform;
 	component_collider *collider;
 } collision_properties;
 
+vec2 system_collision_get_closest_point_to_collider(vec2 point, collision_properties collision);
 collision_properties system_collision_overlap_point(vec2 point, entity_index obj_index);

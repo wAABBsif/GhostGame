@@ -16,12 +16,12 @@ typedef struct component_collider
 	{
 		struct
 		{
-			uint16_t w;
-			uint16_t h;
-		} box;
+			uint8_t width_radius;
+			uint8_t height_radius;
+		};
 		struct
 		{
-			float radius;
-		} circle;
+			uint16_t radius;
+		};
 	};
 } component_collider;

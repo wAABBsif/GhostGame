@@ -30,8 +30,8 @@ entity_index entity_tile_create(const uint8_t chunk_index)
 
 	component_collider *c_coll = entity_add_component(COMPONENT_TYPE_COLLIDER);
 	c_coll->type = COLLIDER_TYPE_NONE;
-	c_coll->box.w = 0;
-	c_coll->box.h = 0;
+	c_coll->width_radius = 0;
+	c_coll->height_radius = 0;
 
 	component_tile *c_tile = entity_add_component(COMPONENT_TYPE_TILE);
 	c_tile->chunk_index = chunk_index;
@@ -62,8 +62,8 @@ void entity_tile_from_chunk(const chunk_index chunk, const uint16_t tile_index, 
 	switch (c_collider->type)
 	{
 		case COLLIDER_TYPE_BOX:
-			c_collider->box.w = atlas_entry.w;
-			c_collider->box.h = atlas_entry.h;
+			c_collider->width_radius = atlas_entry.w / 2;
+			c_collider->height_radius = atlas_entry.h / 2;
 			break;
 		default:
 			break;
