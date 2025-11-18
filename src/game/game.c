@@ -9,12 +9,14 @@
 #include "core/game_time.h"
 #include "core/logging.h"
 #include "core/vec2.h"
+#include "ecs/ecs_deletion.h"
 #include "ecs/components/component_dynamic_body.h"
 #include "ecs/components/component_kinematic_body.h"
 #include "ecs/components/component_light.h"
 #include "ecs/components/component_update.h"
 #include "ecs/entities/entity_tile.h"
 #include "ecs/systems/system_collision.h"
+#include "ecs/systems/system_tiles.h"
 #include "gfx/gfx.h"
 #include "input/input.h"
 #include "level/tile_atlas.h"
@@ -38,9 +40,9 @@ void game_run(void)
 	log_message("Completed termination");
 }
 
-static void my_cute_lil_update(const component_index *components, entity_index index)
+static void my_cute_lil_update(void **components, entity_index entity)
 {
-	component_kinematic_body *kinematics = components_get_index(COMPONENT_TYPE_KINEMATIC_BODY, components[COMPONENT_TYPE_KINEMATIC_BODY]);
+	component_kinematic_body *kinematics = components[COMPONENT_TYPE_KINEMATIC_BODY];
 	vec2 input = input_get_vector(INPUT_ACTION_MOVE_L, INPUT_ACTION_MOVE_R, INPUT_ACTION_MOVE_D, INPUT_ACTION_MOVE_U);
 	kinematics->velocity = vec2_mul(input, 7200);
 }
@@ -100,6 +102,8 @@ static void s_game_update(void)
 	game_time_update();
 	sdl_interface_update();
 	input_update();
+	entity_deletion_update();
+	system_tiles_begin_frame();
 	systems_update();
 	audio_update();
 	gfx_draw();

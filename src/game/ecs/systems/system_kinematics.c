@@ -9,21 +9,15 @@
 #include "../components/component_transform.h"
 #include "../components/component_kinematic_body.h"
 
-void system_kinematics_update(void)
+void system_kinematics_update(void **components, const entity_index entity)
 {
-	component_index transform_index = 0;
-	component_index kinematics_index = 0;
+	if (!entity_has_component(entity, COMPONENT_TYPE_KINEMATIC_BODY))
+		return;
 
-	for (entity_index i = 0; i < entities_get_count(); i++)
-	{
-		component_transform *c_transform = system_retrieve_component(i, COMPONENT_TYPE_TRANSFORM, &transform_index);
-		component_kinematic_body *c_kinematics = system_retrieve_component(i, COMPONENT_TYPE_KINEMATIC_BODY, &kinematics_index);
+	assert(entity_has_component(entity, COMPONENT_TYPE_TRANSFORM));
 
-		if (!c_kinematics)
-			continue;
+	component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
+	component_kinematic_body *c_kinematics = components[COMPONENT_TYPE_KINEMATIC_BODY];
 
-		assert(c_transform);
-
-		c_transform->position = vec2_add(c_transform->position, vec2_mul(c_kinematics->velocity, game_time_get_delta()));
-	}
+	c_transform->position = vec2_add(c_transform->position, vec2_mul(c_kinematics->velocity, game_time_get_delta()));
 }

@@ -29,42 +29,36 @@ const static uint16_t S_TEX_COORDS[8] =
 	0, 0
 };
 
-void system_draw_lighting_update(void)
+void system_draw_lighting_update(void **components, entity_index entity)
 {
-	component_index transform_index = 0;
-	component_index light_index = 0;
+	if (!entity_has_component(entity, COMPONENT_TYPE_LIGHT))
+		return;
 
-	for (entity_index i = 0; i < entities_get_count(); i++)
+	assert(entity_has_component(entity, COMPONENT_TYPE_TRANSFORM));
+
+	const component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
+	const component_light *c_light = components[COMPONENT_TYPE_LIGHT];
+
+	if (!sprite_simple_cull(c_transform->position, c_light->size))
+		return;
+
+	light_quad quad;
+	const mat3 matrix = mat3_from_trs(c_transform->position, c_transform->rotation, c_light->size);
+
+	for (uint8_t v = 0; v < 4; v++)
 	{
-		const component_transform *c_transform = system_retrieve_component(i, COMPONENT_TYPE_TRANSFORM, &transform_index);
-		const component_light *c_light = system_retrieve_component(i, COMPONENT_TYPE_LIGHT, &light_index);
+		const vec2 vec = vec2_transform(S_VERTEX_QUADS[v], matrix);
+		quad.vertices[v].x = lroundf(vec.x);
+		quad.vertices[v].y = lroundf(vec.y);
 
-		if (!c_light)
-			continue;
+		quad.vertices[v].texture_x = S_TEX_COORDS[v * 2];
+		quad.vertices[v].texture_y = S_TEX_COORDS[v * 2 + 1];
 
-		assert(c_transform);
-
-		if (!sprite_simple_cull(c_transform->position, c_light->size))
-			continue;
-
-		light_quad quad;
-		const mat3 matrix = mat3_from_trs(c_transform->position, c_transform->rotation, c_light->size);
-
-		for (uint8_t v = 0; v < 4; v++)
-		{
-			const vec2 vec = vec2_transform(S_VERTEX_QUADS[v], matrix);
-			quad.vertices[v].x = lroundf(vec.x);
-			quad.vertices[v].y = lroundf(vec.y);
-
-			quad.vertices[v].texture_x = S_TEX_COORDS[v * 2];
-			quad.vertices[v].texture_y = S_TEX_COORDS[v * 2 + 1];
-
-			quad.vertices[v].color = c_light->color;
-			quad.vertices[v].priority = c_light->priority;
-			quad.vertices[v].z = c_light->z;
-			quad.vertices[v].type = c_light->type;
-		}
-
-		add_light_quad(&quad);
+		quad.vertices[v].color = c_light->color;
+		quad.vertices[v].priority = c_light->priority;
+		quad.vertices[v].z = c_light->z;
+		quad.vertices[v].type = c_light->type;
 	}
+
+	add_light_quad(&quad);
 }

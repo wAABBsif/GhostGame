@@ -1,11 +1,8 @@
-﻿#include "system_deletion.h"
+﻿#include "ecs_deletion.h"
 
-#include <string.h>
+#include "ecs_entity.h"
 
-#include "../ecs_component.h"
-#include "../ecs_entity.h"
-
-void system_deletion_update(void)
+void entity_deletion_update()
 {
 	entity_index i = 0;
 	component_index component_indices[COMPONENT_TYPE_COUNT];

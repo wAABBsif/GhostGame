@@ -29,39 +29,32 @@ vec2 component_dynamic_body_get_offset(const component_dynamic_body *component, 
 	}
 }
 
-void system_dynamics_update(void)
+void system_dynamics_update(void **components, entity_index entity)
 {
-	component_index transform_index = 0;
-	component_index kinematics_index = 0;
-	component_index dynamics_index = 0;
+	if (!entity_has_component(entity, COMPONENT_TYPE_DYNAMIC_BODY))
+		return;
 
-	for (entity_index i = 0; i < entities_get_count(); i++)
+	assert(entity_has_component(entity, COMPONENT_TYPE_KINEMATIC_BODY));
+	assert(entity_has_component(entity, COMPONENT_TYPE_TRANSFORM));
+
+	component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
+	component_kinematic_body *c_kinematics = components[COMPONENT_TYPE_KINEMATIC_BODY];
+	component_dynamic_body *c_dynamics = components[COMPONENT_TYPE_DYNAMIC_BODY];
+
+	for (uint8_t j = 0; j < COLLISION_RECEIVER_COUNT; j++)
 	{
-		component_transform *c_transform = system_retrieve_component(i, COMPONENT_TYPE_TRANSFORM, &transform_index);
-		component_kinematic_body *c_kinematics = system_retrieve_component(i, COMPONENT_TYPE_KINEMATIC_BODY, &kinematics_index);
-		component_dynamic_body *c_dynamics = system_retrieve_component(i, COMPONENT_TYPE_DYNAMIC_BODY, &dynamics_index);
+		const vec2 receiver_offset = component_dynamic_body_get_offset(c_dynamics, j);
+		const vec2 receiver_pos = vec2_add(c_transform->position, receiver_offset);
 
-		if (!c_dynamics)
-			continue;
+		const collision_properties collision = system_collision_overlap_point(receiver_pos, entity);
 
-		assert(c_transform);
-		assert(c_kinematics);
-
-		for (uint8_t j = 0; j < COLLISION_RECEIVER_COUNT; j++)
+		if (collision.transform != NULL)
 		{
-			const vec2 receiver_offset = component_dynamic_body_get_offset(c_dynamics, j);
-			const vec2 receiver_pos = vec2_add(c_transform->position, receiver_offset);
-
-			const collision_properties collision = system_collision_overlap_point(receiver_pos, i);
-
-			if (collision.transform != NULL)
-			{
-				const vec2 normal = vec2_normalize(vec2_neg(receiver_offset));
-				const vec2 point = system_collision_get_closest_point_to_collider(c_transform->position, collision);
-				const float point_to_dist = vec2_mag(vec2_sub(point, receiver_pos));
-				c_transform->position = vec2_add(c_transform->position, vec2_mul(normal, point_to_dist));
-				c_kinematics->velocity = vec2_project_on_plane(c_kinematics->velocity, normal);
-			}
+			const vec2 normal = vec2_normalize(vec2_neg(receiver_offset));
+			const vec2 point = system_collision_get_closest_point_to_collider(c_transform->position, collision);
+			const float point_to_dist = vec2_mag(vec2_sub(point, receiver_pos));
+			c_transform->position = vec2_add(c_transform->position, vec2_mul(normal, point_to_dist));
+			c_kinematics->velocity = vec2_project_on_plane(c_kinematics->velocity, normal);
 		}
 	}
 }

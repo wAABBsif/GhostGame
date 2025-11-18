@@ -1,7 +1,7 @@
 #pragma once
 #include "game/ecs/ecs_component.h"
 
-typedef void (*entity_update_func)(const component_index *components, entity_index index);
+typedef void (*entity_update_func)(void **components, entity_index entity);
 
 typedef struct component_update
 {

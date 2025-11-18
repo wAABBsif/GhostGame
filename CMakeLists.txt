@@ -48,8 +48,6 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/ecs_component.h
 		src/game/ecs/ecs_system.c
 		src/game/ecs/ecs_system.h
-		src/game/ecs/systems/system_deletion.c
-		src/game/ecs/systems/system_deletion.h
 		src/game/ecs/components/component_transform.h
 		src/game/ecs/components/component_kinematic_body.h
 		src/game/ecs/components/component_sprite.h
@@ -84,6 +82,8 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/components/component_dynamic_body.h
 		src/game/ecs/systems/system_dynamics.c
 		src/game/ecs/systems/system_dynamics.h
+		src/game/ecs/ecs_deletion.c
+		src/game/ecs/ecs_deletion.h
 )
 
 include_directories(src)

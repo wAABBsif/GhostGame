@@ -4,26 +4,11 @@
 #include "game/ecs/ecs_system.h"
 #include "game/ecs/components/component_update.h"
 
-void system_update_update(void)
+void system_update_update(void **components, const entity_index entity)
 {
-	component_index component_indices[COMPONENT_TYPE_COUNT];
-	for (component_type j = 0; j < COMPONENT_TYPE_COUNT; j++)
-		component_indices[j] = 0;
+	if (!entity_has_component(entity, COMPONENT_TYPE_UPDATE))
+		return;
 
-	component_index update_index = 0;
-
-	for (entity_index i = 0; i < entities_get_count(); i++)
-	{
-		const component_update *c_update = system_retrieve_component(i, COMPONENT_TYPE_UPDATE, &update_index);
-		if (c_update)
-		{
-			c_update->func(component_indices, i);
-		}
-
-		for (component_type j = 0; j < COMPONENT_TYPE_COUNT; j++)
-		{
-			if (entity_has_component(i, j))
-				component_indices[j]++;
-		}
-	}
+	component_update *c_update = components[COMPONENT_TYPE_UPDATE];
+	c_update->func(components, entity);
 }
