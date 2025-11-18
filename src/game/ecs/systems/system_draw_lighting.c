@@ -38,12 +38,13 @@ void system_draw_lighting_update(void **components, entity_index entity)
 
 	const component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
 	const component_light *c_light = components[COMPONENT_TYPE_LIGHT];
+	const vec2 rounded_position = vec2_truncate(c_transform->position);
 
-	if (!sprite_simple_cull(c_transform->position, c_light->size))
+	if (!sprite_simple_cull(rounded_position, c_light->size))
 		return;
 
 	light_quad quad;
-	const mat3 matrix = mat3_from_trs(c_transform->position, c_transform->rotation, c_light->size);
+	const mat3 matrix = mat3_from_trs(rounded_position, c_transform->rotation, c_light->size);
 
 	for (uint8_t v = 0; v < 4; v++)
 	{

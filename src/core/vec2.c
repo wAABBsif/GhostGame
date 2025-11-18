@@ -77,6 +77,11 @@ vec2 vec2_normalize(const vec2 v)
 	return vec2_div(v, vec2_mag(v));
 }
 
+vec2 vec2_truncate(const vec2 v)
+{
+	return (vec2){(int)v.x, (int)v.y};
+}
+
 float vec2_angle(const vec2 v)
 {
 	return atan2f(v.y, v.x);
