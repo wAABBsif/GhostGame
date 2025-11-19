@@ -47,9 +47,6 @@ void systems_init(void)
 
 void systems_update(void)
 {
-	game_timer t;
-	game_timer_start(&t);
-
 	void *components[COMPONENT_TYPE_COUNT];
 	for (component_type j = 0; j < COMPONENT_TYPE_COUNT; j++)
 		components[j] = components_get(j);
@@ -67,7 +64,4 @@ void systems_update(void)
 				components[type] += components_get_size(type);
 		}
 	}
-
-	game_timer_end(&t);
-	log_message("%f", game_timer_get_elapsed(&t));
 }

@@ -44,7 +44,7 @@ static void my_cute_lil_update(void **components, entity_index entity)
 {
 	component_kinematic_body *kinematics = components[COMPONENT_TYPE_KINEMATIC_BODY];
 	vec2 input = input_get_vector(INPUT_ACTION_MOVE_L, INPUT_ACTION_MOVE_R, INPUT_ACTION_MOVE_D, INPUT_ACTION_MOVE_U);
-	kinematics->velocity = vec2_mul(input, 7200);
+	kinematics->velocity = vec2_mul(input, 180);
 }
 
 static void s_game_init(void)
