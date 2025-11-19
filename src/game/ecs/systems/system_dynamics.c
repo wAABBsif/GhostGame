@@ -31,8 +31,7 @@ vec2 component_dynamic_body_get_offset(const component_dynamic_body *component, 
 
 void system_dynamics_update(void **components, entity_index entity)
 {
-	game_timer t;
-	game_timer_start(&t);
+	QUICK_PERFORMANCE_TIMER_START(dynamics);
 
 	if (!entity_has_component(entity, COMPONENT_TYPE_DYNAMIC_BODY))
 		return;
@@ -61,6 +60,5 @@ void system_dynamics_update(void **components, entity_index entity)
 		}
 	}
 
-	game_timer_end(&t);
-	log_message("%f", game_timer_get_elapsed(&t));
+	QUICK_PERFORMANCE_TIMER_END(dynamics);
 }
