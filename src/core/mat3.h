@@ -11,7 +11,11 @@
 
 typedef struct mat3
 {
-	float m[2][3];
+	union
+	{
+		float rows[2][3];
+		float m[6];
+	};
 } mat3;
 
 #define M_20 0

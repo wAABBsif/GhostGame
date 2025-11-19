@@ -13,14 +13,14 @@ mat3 mat3_multiply(const mat3 a, const mat3 b)
 	return (mat3)
 	{
 		//first row
-		a.m[0][0] * b.m[0][0] + a.m[0][1] * b.m[1][0] + a.m[0][2] * M_20,
-		a.m[0][0] * b.m[0][1] + a.m[0][1] * b.m[1][1] + a.m[0][2] * M_21,
-		a.m[0][0] * b.m[0][2] + a.m[0][1] * b.m[1][2] + a.m[0][2] * M_22,
+		a.rows[0][0] * b.rows[0][0] + a.rows[0][1] * b.rows[1][0] + a.rows[0][2] * M_20,
+		a.rows[0][0] * b.rows[0][1] + a.rows[0][1] * b.rows[1][1] + a.rows[0][2] * M_21,
+		a.rows[0][0] * b.rows[0][2] + a.rows[0][1] * b.rows[1][2] + a.rows[0][2] * M_22,
 
 		//second row
-		a.m[1][0] * b.m[0][0] + a.m[1][1] * b.m[1][0] + a.m[1][2] * M_20,
-		a.m[1][0] * b.m[0][1] + a.m[1][1] * b.m[1][1] + a.m[1][2] * M_21,
-		a.m[1][0] * b.m[0][2] + a.m[1][1] * b.m[1][2] + a.m[1][2] * M_22,
+		a.rows[1][0] * b.rows[0][0] + a.rows[1][1] * b.rows[1][0] + a.rows[1][2] * M_20,
+		a.rows[1][0] * b.rows[0][1] + a.rows[1][1] * b.rows[1][1] + a.rows[1][2] * M_21,
+		a.rows[1][0] * b.rows[0][2] + a.rows[1][1] * b.rows[1][2] + a.rows[1][2] * M_22,
 	};
 }
 
@@ -28,16 +28,16 @@ mat3 mat3_multiplyf(const mat3 m, const float scalar)
 {
 	return (mat3)
 	{
-		m.m[0][0] * scalar, m.m[0][1] * scalar, m.m[0][2] * scalar,
-		m.m[1][0] * scalar, m.m[1][1] * scalar, m.m[1][2] * scalar
+		m.rows[0][0] * scalar, m.rows[0][1] * scalar, m.rows[0][2] * scalar,
+		m.rows[1][0] * scalar, m.rows[1][1] * scalar, m.rows[1][2] * scalar
 	};
 }
 
 float mat3_determinant(const mat3 m)
 {
-	return m.m[0][0] * (m.m[1][1] * M_22 - m.m[1][2] * M_21)
-	- m.m[1][0] * (m.m[0][1] * M_22 - m.m[1][2] * M_20)
-	+ m.m[0][2] * (m.m[0][1] * M_21 - m.m[1][1] * M_20);
+	return m.rows[0][0] * (m.rows[1][1] * M_22 - m.rows[1][2] * M_21)
+	- m.rows[1][0] * (m.rows[0][1] * M_22 - m.rows[1][2] * M_20)
+	+ m.rows[0][2] * (m.rows[0][1] * M_21 - m.rows[1][1] * M_20);
 }
 
 mat3 mat3_inverse(const mat3 m)
@@ -48,14 +48,14 @@ mat3 mat3_inverse(const mat3 m)
 	return mat3_multiplyf((mat3)
 	{
 		//first row
-		m.m[1][1] * M_22 - m.m[1][2] * M_21,
-		m.m[0][2] * M_21 - m.m[1][0] * M_22,
-		m.m[1][0] * m.m[1][2] - m.m[0][2] * m.m[1][1],
+		m.rows[1][1] * M_22 - m.rows[1][2] * M_21,
+		m.rows[0][2] * M_21 - m.rows[1][0] * M_22,
+		m.rows[1][0] * m.rows[1][2] - m.rows[0][2] * m.rows[1][1],
 
 		//second row
-		m.m[1][2] * M_20 - m.m[0][1] * M_22,
-		m.m[0][2] * M_20 - m.m[0][0] * M_22,
-		m.m[0][2] * m.m[0][1] - m.m[0][0] * m.m[1][2]
+		m.rows[1][2] * M_20 - m.rows[0][1] * M_22,
+		m.rows[0][2] * M_20 - m.rows[0][0] * M_22,
+		m.rows[0][2] * m.rows[0][1] - m.rows[0][0] * m.rows[1][2]
 	}, 1 / determinant);
 }
 

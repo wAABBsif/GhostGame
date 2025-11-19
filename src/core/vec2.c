@@ -43,9 +43,9 @@ vec2 vec2_scale(const vec2 a, const vec2 b)
 
 vec2 vec2_transform(const vec2 v, const mat3 m)
 {
-	const vec2 v1 = vec2_mul((vec2){m.m[0][0], m.m[1][0]}, v.x);
-	const vec2 v2 = vec2_mul((vec2){m.m[0][1], m.m[1][1]}, v.y);
-	const vec2 v3 = (vec2){m.m[0][2], m.m[1][2]};
+	const vec2 v1 = vec2_mul((vec2){m.rows[0][0], m.rows[1][0]}, v.x);
+	const vec2 v2 = vec2_mul((vec2){m.rows[0][1], m.rows[1][1]}, v.y);
+	const vec2 v3 = (vec2){m.rows[0][2], m.rows[1][2]};
 
 	return vec2_add(vec2_add(v1, v2), v3);
 }

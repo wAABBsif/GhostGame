@@ -215,5 +215,5 @@ void shader_set_vec2i(const shader_h s, const char* name, const int x, const int
 void shader_set_mat3(const shader_h s, const char *name, const mat3 value)
 {
 	const shader sh = s_shader_entries[hash_map_get_index(&s_shaders, s)];
- 	glUniformMatrix3fv(glGetUniformLocation(sh.program, name), 1, true, (float *)&value.m);
+ 	glUniformMatrix3fv(glGetUniformLocation(sh.program, name), 1, true, value.m);
 }
