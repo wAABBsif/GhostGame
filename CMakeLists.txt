@@ -66,8 +66,6 @@ add_executable(GhostGame src/main.c
 		src/game/level/tile_atlas.c
 		src/game/level/tile_atlas.h
 		src/game/ecs/components/component_collider.h
-		src/game/ecs/systems/system_collision.c
-		src/game/ecs/systems/system_collision.h
 		src/game/level/tile.h
 		src/game/level/level.c
 		src/game/level/level.h
@@ -79,11 +77,12 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/components/component_update.h
 		src/game/ecs/systems/system_update.c
 		src/game/ecs/systems/system_update.h
-		src/game/ecs/components/component_dynamic_body.h
 		src/game/ecs/systems/system_dynamics.c
 		src/game/ecs/systems/system_dynamics.h
 		src/game/ecs/ecs_deletion.c
 		src/game/ecs/ecs_deletion.h
+		src/core/collision.c
+		src/core/collision.h
 )
 
 include_directories(src)

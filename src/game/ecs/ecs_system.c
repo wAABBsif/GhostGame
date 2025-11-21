@@ -1,5 +1,6 @@
 ﻿#include "ecs_system.h"
 
+#include <stddef.h>
 #include <tgmath.h>
 
 #include "ecs_entity.h"

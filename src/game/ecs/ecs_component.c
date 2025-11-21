@@ -13,7 +13,6 @@
 #include "components/component_collider.h"
 #include "components/component_tile.h"
 #include "components/component_update.h"
-#include "components/component_dynamic_body.h"
 #include "game/level/level.h"
 
 const register_component_entry COMPONENT_ENTRIES[] =
@@ -21,7 +20,6 @@ const register_component_entry COMPONENT_ENTRIES[] =
 	(register_component_entry){0, 0},												//COMPONENT_TYPE_DELETION_FLAG
 	(register_component_entry){sizeof(component_transform), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_TRANSFORM
 	(register_component_entry){sizeof(component_kinematic_body), 256},				//COMPONENT_TYPE_KINEMATIC_BODY
-	(register_component_entry){sizeof(component_dynamic_body), 64},					//COMPONENT_TYPE_DYNAMIC_BODY
 	(register_component_entry){sizeof(component_sprite), ECS_MAX_ENTITIES},			//COMPONENT_TYPE_SPRITE
 	(register_component_entry){sizeof(component_light), 64},						//COMPONENT_TYPE_LIGHT
 	(register_component_entry){sizeof(component_collider), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_COLLIDER

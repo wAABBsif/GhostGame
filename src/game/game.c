@@ -10,12 +10,10 @@
 #include "core/logging.h"
 #include "core/vec2.h"
 #include "ecs/ecs_deletion.h"
-#include "ecs/components/component_dynamic_body.h"
 #include "ecs/components/component_kinematic_body.h"
 #include "ecs/components/component_light.h"
 #include "ecs/components/component_update.h"
 #include "ecs/entities/entity_tile.h"
-#include "ecs/systems/system_collision.h"
 #include "ecs/systems/system_tiles.h"
 #include "gfx/gfx.h"
 #include "input/input.h"
@@ -89,9 +87,10 @@ static void s_game_init(void)
 	component_kinematic_body *c_kinematics = entity_add_component(COMPONENT_TYPE_KINEMATIC_BODY);
 	c_kinematics->velocity = VEC2_ZERO;
 
-	component_dynamic_body *c_dynamics = entity_add_component(COMPONENT_TYPE_DYNAMIC_BODY);
-	c_dynamics->width = 12;
-	c_dynamics->height = 12;
+	component_collider *c_collider = entity_add_component(COMPONENT_TYPE_COLLIDER);
+	c_collider->type = COLLIDER_TYPE_BOX;
+	c_collider->width_radius = 6;
+	c_collider->height_radius = 6;
 
 	component_update *c_update = entity_add_component(COMPONENT_TYPE_UPDATE);
 	c_update->func = my_cute_lil_update;
