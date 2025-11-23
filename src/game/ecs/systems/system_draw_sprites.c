@@ -39,23 +39,21 @@ void system_draw_sprites_update(void **components, entity_index entity)
 
 	const uint16_t tex_coords[8] =
 	{
-		c_sprite->texture_x, c_sprite->texture_y + c_sprite->texture_h,
-		c_sprite->texture_x + c_sprite->texture_w, c_sprite->texture_y + c_sprite->texture_h,
-		c_sprite->texture_x + c_sprite->texture_w, c_sprite->texture_y,
-		c_sprite->texture_x, c_sprite->texture_y,
+		c_sprite->texture_pos.x, c_sprite->texture_pos.y + c_sprite->texture_size.y,
+		c_sprite->texture_pos.x + c_sprite->texture_size.x, c_sprite->texture_pos.y + c_sprite->texture_size.y,
+		c_sprite->texture_pos.x + c_sprite->texture_size.x, c_sprite->texture_pos.y,
+		c_sprite->texture_pos.x, c_sprite->texture_pos.y,
 	};
 
 	for (uint8_t v = 0; v < 4; v++)
 	{
 		const vec2 vec = vec2_transform(S_VERTEX_QUADS[v], matrix);
-		quad.vertices[v].x = vec.x;
-		quad.vertices[v].y = vec.y;
+		quad.vertices[v].position = (vec2i16){vec.x, vec.y};
 
 		int32_t w, h;
 		texture_get_size(c_sprite->texture, &w, &h);
 
-		quad.vertices[v].texture_x = (float)tex_coords[v * 2] / (float)w * 65535.0f;
-		quad.vertices[v].texture_y = (float)tex_coords[v * 2 + 1] / (float)h * 65535.0f;
+		quad.vertices[v].texture_size = (vec2u16){(float)tex_coords[v * 2] / (float)w * 65535.0f, (float)tex_coords[v * 2 + 1] / (float)h * 65535.0f};
 
 		quad.vertices[v].color = c_sprite->color;
 		quad.vertices[v].z = c_sprite->z;

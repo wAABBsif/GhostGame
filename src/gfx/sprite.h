@@ -3,20 +3,17 @@
 
 #include "color.h"
 #include "texture.h"
+#include "core/vec2.h"
 
 #define MAX_SPRITES				2048
 #define MAX_SPRITE_TEXTURES		16
 
 typedef struct sprite_vertex
 {
-	int16_t x;
-	int16_t y;
-
-	uint16_t texture_x;
-	uint16_t texture_y;
+	vec2i16 position;
+	vec2u16 texture_size;
 
 	color    color;
-
 	int8_t z;
 	bool use_camera_to_screen_matrix;
 	uint8_t texture_index;

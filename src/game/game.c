@@ -15,6 +15,7 @@
 #include "ecs/components/component_update.h"
 #include "ecs/entities/entity_tile.h"
 #include "ecs/systems/system_tiles.h"
+#include "gfx/camera.h"
 #include "gfx/gfx.h"
 #include "input/input.h"
 #include "level/tile_atlas.h"
@@ -40,6 +41,7 @@ void game_run(void)
 
 static void my_cute_lil_update(void **components, entity_index entity)
 {
+	component_transform *transform = components[COMPONENT_TYPE_TRANSFORM];
 	component_kinematic_body *kinematics = components[COMPONENT_TYPE_KINEMATIC_BODY];
 	vec2 input = input_get_vector(INPUT_ACTION_MOVE_L, INPUT_ACTION_MOVE_R, INPUT_ACTION_MOVE_D, INPUT_ACTION_MOVE_U);
 	kinematics->velocity = vec2_mul(input, 180);
@@ -68,10 +70,8 @@ static void s_game_init(void)
 	component_sprite *c_sprite = entity_add_component(COMPONENT_TYPE_SPRITE);
 	c_sprite->size = (vec2){16, 16};
 	c_sprite->texture = texture_load("res/sprites/test.png");
-	c_sprite->texture_x = 0;
-	c_sprite->texture_y = 0;
-	c_sprite->texture_w = 16;
-	c_sprite->texture_h = 16;
+	c_sprite->texture_pos = (vec2u16){0, 0};
+	c_sprite->texture_size = (vec2u16){16, 16};
 	c_sprite->color = COLOR_WHITE;
 	c_sprite->z = 2;
 	c_sprite->use_camera_to_screen_matrix = false;
@@ -88,9 +88,7 @@ static void s_game_init(void)
 	c_kinematics->velocity = VEC2_ZERO;
 
 	component_collider *c_collider = entity_add_component(COMPONENT_TYPE_COLLIDER);
-	c_collider->type = COLLIDER_TYPE_BOX;
-	c_collider->width_radius = 6;
-	c_collider->height_radius = 6;
+	c_collider->radius = (vec2u8){6, 6};
 
 	component_update *c_update = entity_add_component(COMPONENT_TYPE_UPDATE);
 	c_update->func = my_cute_lil_update;

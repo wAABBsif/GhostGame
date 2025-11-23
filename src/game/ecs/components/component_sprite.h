@@ -9,10 +9,8 @@ typedef struct component_sprite
 
 	texture_h texture;
 
-	uint16_t texture_x;
-	uint16_t texture_y;
-	uint16_t texture_w;
-	uint16_t texture_h;
+	vec2u16 texture_pos;
+	vec2u16 texture_size;
 
 	color    color;
 	int8_t z;

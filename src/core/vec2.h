@@ -1,11 +1,36 @@
 ﻿#pragma once
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct vec2
 {
 	float x;
 	float y;
 } vec2;
+
+typedef struct vec2u8
+{
+	uint8_t x;
+	uint8_t y;
+} vec2u8;
+
+typedef struct vec2u16
+{
+	uint16_t x;
+	uint16_t y;
+} vec2u16;
+
+typedef struct vec2i8
+{
+	int8_t x;
+	int8_t y;
+} vec2i8;
+
+typedef struct vec2i16
+{
+	int16_t x;
+	int16_t y;
+} vec2i16;
 
 #define VEC2_ZERO	(vec2){0, 0}
 #define VEC2_ONE	(vec2){1, 1}

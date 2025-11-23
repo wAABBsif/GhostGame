@@ -30,7 +30,7 @@
 #endif
 
 
-void _log_vraw(const char *format, const va_list args)
+void _log_vraw(const char *format, va_list args)
 {
 	vprintf(format, args);
 }

@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "core/vec2.h"
 #include "game/ecs/components/component_collider.h"
 #include "gfx/texture.h"
 
@@ -8,11 +9,9 @@ typedef struct tile_atlas tile_atlas;
 
 typedef struct atlas_tile
 {
-	uint16_t x;
-	uint16_t y;
-	uint8_t w;
-	uint8_t h;
-	collider_type coll_type;
+	vec2u16 position;
+	vec2u8 size;
+	bool has_collision;
 	bool is_sorted;
 } atlas_tile;
 

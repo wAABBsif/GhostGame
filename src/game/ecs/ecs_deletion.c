@@ -1,5 +1,4 @@
 ﻿#include "ecs_deletion.h"
-
 #include "ecs_entity.h"
 
 void entity_deletion_update()

@@ -19,19 +19,15 @@ entity_index entity_tile_create(const uint8_t chunk_index)
 	component_sprite *c_spr =  entity_add_component(COMPONENT_TYPE_SPRITE);
 	c_spr->size = VEC2_ZERO;
 	c_spr->texture = HASH_INVALID;
-	c_spr->texture_x = 0;
-	c_spr->texture_y = 0;
-	c_spr->texture_w = 0;
-	c_spr->texture_h = 0;
+	c_spr->texture_pos = (vec2u16){0, 0};
+	c_spr->texture_size = (vec2u16){0, 0};
 	c_spr->color = COLOR_WHITE;
 	c_spr->z = 0;
 	c_spr->use_camera_to_screen_matrix = false;
 	c_spr->draw_sorted = false;
 
 	component_collider *c_coll = entity_add_component(COMPONENT_TYPE_COLLIDER);
-	c_coll->type = COLLIDER_TYPE_NONE;
-	c_coll->width_radius = 0;
-	c_coll->height_radius = 0;
+	c_coll->radius = (vec2u8){0, 0};
 
 	component_tile *c_tile = entity_add_component(COMPONENT_TYPE_TILE);
 	c_tile->chunk_index = chunk_index;
@@ -50,23 +46,19 @@ void entity_tile_from_chunk(const chunk_index chunk, const uint16_t tile_index, 
 	c_transform->position.y += tile_index / LEVEL_CHUNK_WIDTH * TILE_SIZE_IN_PIXELS;
 	c_transform->rotation = t.rotate_ccw ? M_PI_2 : 0;
 
-	c_sprite->size = (vec2){t.flip_x ? -atlas_entry.w : atlas_entry.w, t.flip_y ? -atlas_entry.h : atlas_entry.h};
-	c_sprite->texture_x = atlas_entry.x;
-	c_sprite->texture_y = atlas_entry.y;
-	c_sprite->texture_w = atlas_entry.w;
-	c_sprite->texture_h = atlas_entry.h;
+	c_sprite->size = (vec2){t.flip_x ? -atlas_entry.size.x : atlas_entry.size.x, t.flip_y ? -atlas_entry.size.y : atlas_entry.size.y};
+	c_sprite->texture_pos = atlas_entry.position;
+	c_sprite->texture_size = (vec2u16){atlas_entry.size.x, atlas_entry.size.y};
 	c_sprite->z = t.z;
 	c_sprite->draw_sorted = atlas_entry.is_sorted;
 
-	c_collider->type = atlas_entry.coll_type;
-	switch (c_collider->type)
+	if (atlas_entry.has_collision)
 	{
-		case COLLIDER_TYPE_BOX:
-			c_collider->width_radius = atlas_entry.w / 2;
-			c_collider->height_radius = atlas_entry.h / 2;
-			break;
-		default:
-			break;
+		c_collider->radius = (vec2u8){atlas_entry.size.x / 2, atlas_entry.size.y / 2};
+	}
+	else
+	{
+		c_collider->radius = (vec2u8){0, 0};
 	}
 }
 

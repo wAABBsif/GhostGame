@@ -15,12 +15,26 @@ char    texture[64];
 uint16  tile_count;
 uint8   padding[14];
 
+typedef enum <uint8>
+{
+    True,
+    False
+} boolean;
+
 struct
 {    
-    uint16  texture_x;
-    uint16  texture_y;
-    uint8   texture_w;
-    uint8   texture_h;
-    enum    <uint8> {None=0, Box=1} coll_type;
-    enum    <uint8> {False=0, True=1} is_sorted;
+    struct
+    {
+        uint16 x;
+        uint16 y;
+    } position;
+    
+    struct
+    {
+        uint8 x;
+        uint8 y;    
+    } size;
+    
+    boolean has_collision;
+    boolean is_sorted;
 } tiles[tile_count];

@@ -328,13 +328,9 @@ void camera_window_resize(const camera *cam)
 	const float aspect = window_get_aspect_ratio();
 	vec2 vertex_scale = VEC2_ONE;
 	if (aspect < MIN_ASPECT_RATIO)
-	{
 		vertex_scale.y = aspect / MIN_ASPECT_RATIO;
-	}
 	else if (aspect > MAX_ASPECT_RATIO)
-	{
 		vertex_scale.x = MAX_ASPECT_RATIO / aspect;
-	}
 
 	for (int i = 0; i < sizeof(s_vertices) / sizeof(s_vertices[0]); i++)
 	{
