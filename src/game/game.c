@@ -13,7 +13,9 @@
 #include "ecs/components/component_controller.h"
 #include "ecs/components/component_kinematic_body.h"
 #include "ecs/components/component_light.h"
+#include "ecs/components/component_movement_properties.h"
 #include "ecs/components/component_update.h"
+#include "ecs/entities/entity_actor.h"
 #include "ecs/entities/entity_tile.h"
 #include "ecs/systems/system_tiles.h"
 #include "gfx/camera.h"
@@ -45,7 +47,11 @@ static void my_cute_lil_update(void **components, entity_index entity)
 	component_transform *transform = components[COMPONENT_TYPE_TRANSFORM];
 	component_kinematic_body *kinematics = components[COMPONENT_TYPE_KINEMATIC_BODY];
 	const component_controller *controller = components[COMPONENT_TYPE_CONTROLLER];
-	kinematics->velocity = vec2_mul(controller->move, 180);
+	const component_movement_properties *movement_properties = components[COMPONENT_TYPE_MOVEMENT_PROPERTIES];
+	entity_actor_apply_acceleration(kinematics, movement_properties->acceleration, controller->move);
+	entity_actor_apply_ground_friction(kinematics, movement_properties->ground_friction);
+	entity_actor_apply_speed_cap(kinematics, movement_properties->max_speed);
+	entity_actor_apply_drag(kinematics, movement_properties->drag);
 }
 
 static void s_game_init(void)
@@ -96,6 +102,12 @@ static void s_game_init(void)
 
 	component_controller *c_controller = entity_add_component(COMPONENT_TYPE_CONTROLLER);
 	c_controller->type = CONTROLLER_TYPE_PLAYER;
+
+	component_movement_properties *c_movement = entity_add_component(COMPONENT_TYPE_MOVEMENT_PROPERTIES);
+	c_movement->acceleration = 1920;
+	c_movement->ground_friction = 720;
+	c_movement->max_speed = 120;
+	c_movement->drag = 0.4;
 }
 
 static void s_game_update(void)

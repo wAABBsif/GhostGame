@@ -10,8 +10,9 @@
 #define COMPONENT_TYPE_TILE					6
 #define COMPONENT_TYPE_UPDATE				7
 #define COMPONENT_TYPE_CONTROLLER			8
+#define COMPONENT_TYPE_MOVEMENT_PROPERTIES	9
 
-#define COMPONENT_TYPE_COUNT				9
+#define COMPONENT_TYPE_COUNT				10
 #define COMPONENT_GET_MASK(component)		(1 << (component))
 
 typedef uint16_t component_type;
