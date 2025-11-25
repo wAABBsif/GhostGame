@@ -1,8 +1,10 @@
-rework collision system
-controller
+message system
 hitbox/hurtbox
 health system
+movement parameters
+texture atlas
 program player and basic enemies
 camera brain system
 mouse-based aim
+level object system
 come up with a vague structure idk

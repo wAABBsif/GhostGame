@@ -49,8 +49,6 @@ static void s_system_dynamics_collision_response(component_transform *c_transfor
 
 void system_dynamics_update(void **components, entity_index entity)
 {
-	QUICK_PERFORMANCE_TIMER_START(dynamics);
-
 	if (!entity_has_component(entity, COMPONENT_TYPE_COLLIDER) || !entity_has_component(entity, COMPONENT_TYPE_KINEMATIC_BODY))
 		return;
 
@@ -75,6 +73,4 @@ void system_dynamics_update(void **components, entity_index entity)
 		const vec2 closest_point = collision_get_closest_point(y_check_position, y_collision_data.transform->position, (vec2){y_collision_data.collider->radius.x, y_collision_data.collider->radius.y});
 		s_system_dynamics_collision_response(c_transform, c_kinematics, (vec2){c_collider->radius.x, c_collider->radius.y}, closest_point, false);
 	}
-
-	QUICK_PERFORMANCE_TIMER_END(dynamics);
 }

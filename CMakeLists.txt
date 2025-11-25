@@ -83,6 +83,11 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/ecs_deletion.h
 		src/core/collision.c
 		src/core/collision.h
+		src/game/ecs/components/component_controller.h
+		src/game/ecs/systems/system_controller.c
+		src/game/ecs/systems/system_controller.h
+		src/game/ecs/systems/controllers/controller_player.c
+		src/game/ecs/systems/controllers/controller_player.h
 )
 
 include_directories(src)

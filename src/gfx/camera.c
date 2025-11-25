@@ -296,6 +296,8 @@ void camera_render_to_screen(const camera *cam)
 	texture_set(cam->lighting_texture.color_texture, 1);
 	shader_set_int32_t(s_shader, "lighting_texture", 1);
 
+	shader_set_vec2(s_shader, "resolution", camera_get_render_size(cam));
+
 	glBindVertexArray(s_vertex_array);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

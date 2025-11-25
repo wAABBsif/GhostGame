@@ -22,7 +22,6 @@ void game_time_update(void);
 
 float game_time_get_elapsed(void);
 float game_time_get_delta(void);
-float game_time_get_fps(void);
 
 void game_timer_start(game_timer *timer);
 void game_timer_end(game_timer *timer);

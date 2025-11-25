@@ -6,6 +6,7 @@
 #include "ecs_entity.h"
 #include "core/game_time.h"
 #include "core/logging.h"
+#include "systems/system_controller.h"
 #include "systems/system_draw_lighting.h"
 #include "systems/system_draw_sprites.h"
 #include "systems/system_dynamics.h"
@@ -20,6 +21,7 @@ const system_init_func INIT_SYSTEMS[] = {};
 
 const system_update_func UPDATE_SYSTEMS[] =
 {
+	system_controller_update,
 	system_tiles_update,
 	system_update_update,
 	system_dynamics_update,

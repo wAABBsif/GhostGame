@@ -10,6 +10,7 @@
 #include "core/logging.h"
 #include "core/vec2.h"
 #include "ecs/ecs_deletion.h"
+#include "ecs/components/component_controller.h"
 #include "ecs/components/component_kinematic_body.h"
 #include "ecs/components/component_light.h"
 #include "ecs/components/component_update.h"
@@ -43,8 +44,8 @@ static void my_cute_lil_update(void **components, entity_index entity)
 {
 	component_transform *transform = components[COMPONENT_TYPE_TRANSFORM];
 	component_kinematic_body *kinematics = components[COMPONENT_TYPE_KINEMATIC_BODY];
-	vec2 input = input_get_vector(INPUT_ACTION_MOVE_L, INPUT_ACTION_MOVE_R, INPUT_ACTION_MOVE_D, INPUT_ACTION_MOVE_U);
-	kinematics->velocity = vec2_mul(input, 180);
+	const component_controller *controller = components[COMPONENT_TYPE_CONTROLLER];
+	kinematics->velocity = vec2_mul(controller->move, 180);
 }
 
 static void s_game_init(void)
@@ -92,6 +93,9 @@ static void s_game_init(void)
 
 	component_update *c_update = entity_add_component(COMPONENT_TYPE_UPDATE);
 	c_update->func = my_cute_lil_update;
+
+	component_controller *c_controller = entity_add_component(COMPONENT_TYPE_CONTROLLER);
+	c_controller->type = CONTROLLER_TYPE_PLAYER;
 }
 
 static void s_game_update(void)
