@@ -27,21 +27,30 @@ void level_load(const char* filename)
 
 	SDL_IOStream* stream = SDL_IOFromFile(filename, "r");
 	if (stream == NULL)
-		return log_error("Cannot open level %s", filename);
+	{
+		LOG_ERROR("Cannot open level %s", filename);
+		return;
+	}
 
 	void* buffer = SDL_LoadFile_IO(stream, NULL, true);
 	if (buffer == NULL)
-		return log_error("Cannot open level %s", filename);
+	{
+		LOG_ERROR("Cannot open level %s", filename);
+		return;
+	}
 
 	const char *file_atlas_name = (char *)(buffer);
-	const uint16_t *file_chunk_count = (uint16_t *)(buffer + 0x40);
+	const int16_t *file_chunk_count = (int16_t *)(buffer + 0x40);
 	const chunk_position *file_chunk_position = (chunk_position *)(buffer + 0x50);
 	const tile_chunk *file_chunk_tile = (tile_chunk *)((void *)file_chunk_position + sizeof(chunk_position) * *file_chunk_count);
 	const object_chunk *file_chunk_object = (object_chunk *)((void *)file_chunk_tile + sizeof(tile_chunk) * *file_chunk_count);
 
 	s_level.atlas = tile_atlas_load(file_atlas_name);
 	if (s_level.atlas == HASH_INVALID)
-		return log_error("Cannot open atlas %s", filename);
+	{
+		LOG_ERROR("Cannot open atlas %s", filename);
+		return;
+	}
 
 	s_level.chunk_count = *file_chunk_count;
 
@@ -57,7 +66,7 @@ void level_load(const char* filename)
 	SDL_free(buffer);
 	system_tiles_load_level();
 
-	log_message("Loaded level %s", filename);
+	LOG_MESSAGE("Loaded level %s", filename);
 }
 
 void level_unload()

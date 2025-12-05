@@ -22,7 +22,7 @@ static void _sdl_interface_handle_events(void);
 
 bool sdl_interface_init(void)
 {
-	log_message("Initializing SDL...");
+	LOG_MESSAGE("Initializing SDL...");
 
 	const bool successfully_init = SDL_Init(INIT_FLAGS);
 	assert(successfully_init);
@@ -37,7 +37,7 @@ void sdl_interface_update(void)
 
 void sdl_interface_terminate(void)
 {
-	log_message("Terminating SDL...");
+	LOG_MESSAGE("Terminating SDL...");
 
 	SDL_Quit();
 }

@@ -26,7 +26,7 @@ static uint16_t s_sorted_count;
 
 void sprite_init(void)
 {
-	log_message("Initializing sprites...");
+	LOG_MESSAGE("Initializing sprites...");
 
 	glGenVertexArrays(1, &s_vao);
 	glBindVertexArray(s_vao);
@@ -78,7 +78,7 @@ void sprite_init(void)
 
 void sprite_terminate(void)
 {
-	log_message("Terminating sprites...");
+	LOG_MESSAGE("Terminating sprites...");
 
 	glDeleteVertexArrays(1, &s_vao);
 	glDeleteBuffers(1, &s_vbo);
