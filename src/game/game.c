@@ -104,10 +104,10 @@ static void s_game_init(void)
 	c_controller->type = CONTROLLER_TYPE_PLAYER;
 
 	component_movement_properties *c_movement = entity_add_component(COMPONENT_TYPE_MOVEMENT_PROPERTIES);
-	c_movement->acceleration = 1920;
-	c_movement->ground_friction = 720;
+	c_movement->acceleration = 3200;
+	c_movement->ground_friction = 800;
 	c_movement->max_speed = 120;
-	c_movement->drag = 0.4;
+	c_movement->drag = 0.2f;
 }
 
 static void s_game_update(void)
