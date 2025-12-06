@@ -1,4 +1,3 @@
-file logging
 rewrite ECS!!
 optimize tiles
 rewrite audio

@@ -1,8 +1,11 @@
 ﻿#pragma once
 
 #include <stdio.h>
+#include <string.h>
 
+void log_init();
 void log_raw(const char *format, ...);
+void log_flush();
 
 #if defined(WIN32)
 #include <windows.h>
@@ -47,6 +50,7 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 	log_raw(message_start);																\
 	log_raw(format, ##__VA_ARGS__);														\
 	log_raw("\n");																		\
+	log_flush();																		\
 }
 
 #define LOG_WARNING(format, ...)														\
@@ -62,6 +66,7 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 	log_raw(message_start);																\
 	log_raw(format, ##__VA_ARGS__);														\
 	log_raw("\n");																		\
+	log_flush();																		\
 	SET_CONSOLE_TEXT_COLOR_WHITE();														\
 }
 
@@ -78,5 +83,6 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 	log_raw(message_start);																\
 	log_raw(format, ##__VA_ARGS__);														\
 	log_raw("\n");																		\
+	log_flush();																		\
 	SET_CONSOLE_TEXT_COLOR_WHITE();														\
 }

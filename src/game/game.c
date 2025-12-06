@@ -56,6 +56,7 @@ static void my_cute_lil_update(void **components, entity_index entity)
 
 static void s_game_init(void)
 {
+	log_init();
 	sdl_interface_init();
 	game_time_init();
 	input_init();
