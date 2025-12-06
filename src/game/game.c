@@ -31,7 +31,7 @@ static bool s_is_game_running(void);
 void game_run(void)
 {
 	s_game_init();
-	LOG_MESSAGE("Completed initialization");
+	LOG_MESSAGE("Initialized successfully!\n");
 
 	while (s_is_game_running())
 	{
@@ -39,7 +39,7 @@ void game_run(void)
 	}
 
 	s_game_terminate();
-	LOG_MESSAGE("Completed termination");
+	LOG_MESSAGE("Terminated successfully!");
 }
 
 static void my_cute_lil_update(void **components, entity_index entity)

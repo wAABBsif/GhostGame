@@ -39,7 +39,7 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 #define LOG_SPACE	48
 
 #define LOG_MESSAGE(format, ...)														\
-{																						\
+({																						\
 	char message_start[LOG_SPACE];														\
 	snprintf(message_start, LOG_SPACE, "[MESSAGE (%s:%d)]", __FILE_NAME__, __LINE__);	\
 	const int length = strlen(message_start);											\
@@ -51,10 +51,10 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 	log_raw(format, ##__VA_ARGS__);														\
 	log_raw("\n");																		\
 	log_flush();																		\
-}
+})
 
 #define LOG_WARNING(format, ...)														\
-{																						\
+({																						\
 	char message_start[LOG_SPACE];														\
 	snprintf(message_start, LOG_SPACE, "[MESSAGE (%s:%d)]", __FILE_NAME__, __LINE__);	\
 	const int length = strlen(message_start);											\
@@ -68,10 +68,10 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 	log_raw("\n");																		\
 	log_flush();																		\
 	SET_CONSOLE_TEXT_COLOR_WHITE();														\
-}
+})
 
 #define LOG_ERROR(format, ...)															\
-{																						\
+({																						\
 	char message_start[LOG_SPACE];														\
 	snprintf(message_start, LOG_SPACE, "[MESSAGE (%s:%d)]", __FILE_NAME__, __LINE__);	\
 	const int length = strlen(message_start);											\
@@ -85,4 +85,4 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 	log_raw("\n");																		\
 	log_flush();																		\
 	SET_CONSOLE_TEXT_COLOR_WHITE();														\
-}
+})
