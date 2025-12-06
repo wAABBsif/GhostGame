@@ -56,7 +56,9 @@ float vec2_mag(vec2 v);
 vec2 vec2_set_mag(vec2 v, float magnitude);
 vec2 vec2_clamp_mag(vec2 v, float max_magnitude);
 vec2 vec2_normalize(vec2 v);
+
 vec2 vec2_truncate(vec2 v);
+vec2 vec2_round(vec2 v);
 
 float vec2_angle(vec2 v);
 float vec2_dot(vec2 a, vec2 b);

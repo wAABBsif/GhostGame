@@ -29,13 +29,12 @@ void system_draw_sprites_update(void **components, entity_index entity)
 
 	const component_sprite *c_sprite = components[COMPONENT_TYPE_SPRITE];
 	const component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
-	const vec2 rounded_position = vec2_truncate(c_transform->position);
 
-	if (!sprite_simple_cull(rounded_position, c_sprite->size))
+	if (!sprite_simple_cull(c_transform->position, c_sprite->size))
 		return;
 
 	sprite_quad quad;
-	const mat3 matrix = mat3_from_trs(rounded_position, c_transform->rotation, c_sprite->size);
+	const mat3 matrix = mat3_from_trs(c_transform->position, c_transform->rotation, c_sprite->size);
 
 	const uint16_t tex_coords[8] =
 	{
@@ -48,7 +47,7 @@ void system_draw_sprites_update(void **components, entity_index entity)
 	for (uint8_t v = 0; v < 4; v++)
 	{
 		const vec2 vec = vec2_transform(S_VERTEX_QUADS[v], matrix);
-		quad.vertices[v].position = (vec2i16){vec.x, vec.y};
+		quad.vertices[v].position = (vec2i16){lroundf(vec.x), lroundf(vec.y)};
 
 		int32_t w, h;
 		texture_get_size(c_sprite->texture, &w, &h);
