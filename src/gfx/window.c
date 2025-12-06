@@ -14,8 +14,8 @@
 static SDL_Window *s_window = NULL;
 
 const char *WINDOW_TITLE = "Ghost Game";
-static int s_window_width = 320;
-static int s_window_height = 240;
+static int s_window_width = WINDOW_MIN_WIDTH;
+static int s_window_height = WINDOW_MIN_HEIGHT;
 
 const SDL_WindowFlags WINDOW_FLAGS =
 {
