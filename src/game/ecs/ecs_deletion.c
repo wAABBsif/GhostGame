@@ -10,7 +10,7 @@ void entity_deletion_update()
 
 	while (i < entities_get_count())
 	{
-		if (!entity_has_component(i, COMPONENT_TYPE_DELETION_FLAG))
+		if (!entity_get_tag(i, TAG_DELETION))
 		{
 			for (component_type j = 0; j < COMPONENT_TYPE_COUNT; j++)
 			{

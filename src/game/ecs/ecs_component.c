@@ -19,7 +19,6 @@
 
 const register_component_entry COMPONENT_ENTRIES[] =
 {
-	(register_component_entry){0, 0},												//COMPONENT_TYPE_DELETION_FLAG
 	(register_component_entry){sizeof(component_transform), ECS_MAX_ENTITIES},		//COMPONENT_TYPE_TRANSFORM
 	(register_component_entry){sizeof(component_kinematic_body), 256},				//COMPONENT_TYPE_KINEMATIC_BODY
 	(register_component_entry){sizeof(component_sprite), ECS_MAX_ENTITIES},			//COMPONENT_TYPE_SPRITE
@@ -65,8 +64,6 @@ void components_terminate(void)
 
 component_index components_add(const component_type type)
 {
-	assert(type != COMPONENT_TYPE_DELETION_FLAG);
-
 	uint16_t *count = &s_component_count[type];
 
 	const component_index result = *count;
@@ -77,8 +74,6 @@ component_index components_add(const component_type type)
 
 void components_remove(const component_type type, const component_index index)
 {
-	assert(type != COMPONENT_TYPE_DELETION_FLAG);
-
 	void *array = s_components[type];
 	const uint16_t size = COMPONENT_ENTRIES[type].size;
 

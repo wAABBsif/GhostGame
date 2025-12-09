@@ -32,15 +32,14 @@ void entities_remove(const entity_index index)
 
 void entity_queue_remove(const entity_index index)
 {
-	if (entity_has_component(index, COMPONENT_TYPE_DELETION_FLAG))
+	if (entity_has_component(index, TAG_DELETION))
 		return;
-	entity_enable_component(index, COMPONENT_TYPE_DELETION_FLAG);
+	entity_set_tag(index, TAG_DELETION, true);
 }
 
 bool entity_has_component(const entity_index index, const component_type component)
 {
-	const ecs_entity *e = &s_entities[index];
-	return e->components & COMPONENT_GET_MASK(component);
+	return s_entities[index].components & COMPONENT_GET_MASK(component);
 }
 
 void entity_enable_component(const entity_index index, const component_type type)
@@ -56,4 +55,17 @@ void *entity_add_component(const component_type type)
 	entity_enable_component(s_entity_count - 1, type);
 	const component_index c_index = components_add(type);
 	return components_get_index(type, c_index);
+}
+
+bool entity_get_tag(const entity_index index, const ecs_tag tag)
+{
+	return s_entities[index].tags & COMPONENT_GET_MASK(tag);
+}
+
+void entity_set_tag(const entity_index index, const ecs_tag tag, bool const value)
+{
+	if (value)
+		s_entities[index].tags |= COMPONENT_GET_MASK(tag);
+	else
+		s_entities[index].tags &= ~COMPONENT_GET_MASK(tag);
 }
