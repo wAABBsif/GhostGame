@@ -107,22 +107,15 @@ void system_tiles_begin_frame(void)
 	}
 }
 
-void system_tiles_update(void **components, entity_index entity)
+void system_tiles_update(entity_index entity, void **components)
 {
 	if (!s_marked_dirty)
 		return;
 
-	if (!entity_has_component(entity, COMPONENT_TYPE_TILE))
-		return;
-
-	assert(entity_has_component(entity, COMPONENT_TYPE_TRANSFORM));
-	assert(entity_has_component(entity, COMPONENT_TYPE_SPRITE));
-	assert(entity_has_component(entity, COMPONENT_TYPE_COLLIDER));
-
-	component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
-	component_sprite *c_sprite = components[COMPONENT_TYPE_SPRITE];
-	component_collider *c_collider = components[COMPONENT_TYPE_COLLIDER];
-	component_tile *c_tile = components[COMPONENT_TYPE_TILE];
+	component_transform *c_transform = components[0];
+	component_sprite *c_sprite = components[1];
+	component_collider *c_collider = components[2];
+	component_tile *c_tile = components[3];
 
 	if (s_screen_chunk_indices[c_tile->chunk_index] < 0)
 		return;

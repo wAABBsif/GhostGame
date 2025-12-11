@@ -20,15 +20,10 @@ const static vec2 S_VERTEX_QUADS[4] =
 	{-0.5f, +0.5f}
 };
 
-void system_draw_sprites_update(void **components, entity_index entity)
+void system_draw_sprites_update(entity_index entity, void **components)
 {
-	if (!entity_has_component(entity, COMPONENT_TYPE_SPRITE))
-		return;
-
-	assert(entity_has_component(entity, COMPONENT_TYPE_TRANSFORM));
-
-	const component_sprite *c_sprite = components[COMPONENT_TYPE_SPRITE];
-	const component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
+	const component_transform *c_transform = components[0];
+	const component_sprite *c_sprite = components[1];
 
 	if (!sprite_simple_cull(c_transform->position, c_sprite->size))
 		return;

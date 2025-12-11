@@ -29,15 +29,11 @@ const static uint16_t S_TEX_COORDS[8] =
 	0, 0
 };
 
-void system_draw_lighting_update(void **components, entity_index entity)
+void system_draw_lighting_update(entity_index entity, void **components)
 {
-	if (!entity_has_component(entity, COMPONENT_TYPE_LIGHT))
-		return;
+	const component_transform *c_transform = components[0];
+	const component_light *c_light = components[1];
 
-	assert(entity_has_component(entity, COMPONENT_TYPE_TRANSFORM));
-
-	const component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
-	const component_light *c_light = components[COMPONENT_TYPE_LIGHT];
 	const vec2 rounded_position = vec2_truncate(c_transform->position);
 
 	if (!sprite_simple_cull(rounded_position, c_light->size))

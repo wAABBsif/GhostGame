@@ -12,7 +12,7 @@
 #define COMPONENT_TYPE_MOVEMENT_PROPERTIES	8
 
 #define COMPONENT_TYPE_COUNT				9
-#define COMPONENT_GET_MASK(component)		(1 << (component))
+#define COMPONENT_MASK(component)		(1 << (component))
 
 typedef uint16_t component_type;
 typedef uint16_t component_index;

@@ -42,16 +42,16 @@ void game_run(void)
 	LOG_MESSAGE("Terminated successfully!");
 }
 
-static void my_cute_lil_update(void **components, entity_index entity)
+static void my_cute_lil_update(entity_index entity, void **components)
 {
-	component_transform *transform = components[COMPONENT_TYPE_TRANSFORM];
-	component_kinematic_body *kinematics = components[COMPONENT_TYPE_KINEMATIC_BODY];
-	const component_controller *controller = components[COMPONENT_TYPE_CONTROLLER];
-	const component_movement_properties *movement_properties = components[COMPONENT_TYPE_MOVEMENT_PROPERTIES];
-	entity_actor_apply_acceleration(kinematics, movement_properties->acceleration, controller->move);
-	entity_actor_apply_ground_friction(kinematics, movement_properties->ground_friction);
-	entity_actor_apply_speed_cap(kinematics, movement_properties->max_speed);
-	entity_actor_apply_drag(kinematics, movement_properties->drag);
+	// component_transform *transform = components[0];
+	// component_kinematic_body *kinematics = components[1];
+	// const component_controller *controller = components[2];
+	// const component_movement_properties *movement_properties = components[3];
+	// entity_actor_apply_acceleration(kinematics, movement_properties->acceleration, controller->move);
+	// entity_actor_apply_ground_friction(kinematics, movement_properties->ground_friction);
+	// entity_actor_apply_speed_cap(kinematics, movement_properties->max_speed);
+	// entity_actor_apply_drag(kinematics, movement_properties->drag);
 }
 
 static void s_game_init(void)

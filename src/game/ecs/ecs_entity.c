@@ -37,9 +37,14 @@ void entity_queue_remove(const entity_index index)
 	entity_set_tag(index, TAG_DELETION, true);
 }
 
+component_mask entity_get_component_mask(const entity_index index)
+{
+	return s_entities[index].components;
+}
+
 bool entity_has_component(const entity_index index, const component_type component)
 {
-	return s_entities[index].components & COMPONENT_GET_MASK(component);
+	return s_entities[index].components & COMPONENT_MASK(component);
 }
 
 void entity_enable_component(const entity_index index, const component_type type)
@@ -47,7 +52,7 @@ void entity_enable_component(const entity_index index, const component_type type
 	ecs_entity *e = &s_entities[index];
 
 	assert(!entity_has_component(index, type));
-	e->components |= COMPONENT_GET_MASK(type);
+	e->components |= COMPONENT_MASK(type);
 }
 
 void *entity_add_component(const component_type type)
@@ -59,13 +64,13 @@ void *entity_add_component(const component_type type)
 
 bool entity_get_tag(const entity_index index, const ecs_tag tag)
 {
-	return s_entities[index].tags & COMPONENT_GET_MASK(tag);
+	return s_entities[index].tags & COMPONENT_MASK(tag);
 }
 
 void entity_set_tag(const entity_index index, const ecs_tag tag, bool const value)
 {
 	if (value)
-		s_entities[index].tags |= COMPONENT_GET_MASK(tag);
+		s_entities[index].tags |= COMPONENT_MASK(tag);
 	else
-		s_entities[index].tags &= ~COMPONENT_GET_MASK(tag);
+		s_entities[index].tags &= ~COMPONENT_MASK(tag);
 }

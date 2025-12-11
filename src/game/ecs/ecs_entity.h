@@ -24,6 +24,7 @@ void entities_remove(entity_index index);
 
 void entity_queue_remove(entity_index index);
 
+component_mask entity_get_component_mask(entity_index index);
 bool entity_has_component(entity_index index, component_type component);
 void entity_enable_component(entity_index index, component_type type);
 void *entity_add_component(component_type type);
