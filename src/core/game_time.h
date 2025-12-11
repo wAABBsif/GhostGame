@@ -9,7 +9,7 @@
 
 #define QUICK_PERFORMANCE_TIMER_END(name) \
 game_timer_end(&name); \
-log_message("Timer [%s]: %f", #name, game_timer_get_elapsed(&name))
+LOG_MESSAGE("Timer [%s]: %f", #name, game_timer_get_elapsed(&name))
 
 typedef struct game_timer
 {

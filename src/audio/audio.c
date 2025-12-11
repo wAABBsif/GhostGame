@@ -26,7 +26,7 @@ audio_track_h t;
 
 void audio_init(void)
 {
-	log_message("Initializing audio...");
+	LOG_MESSAGE("Initializing audio...");
 
 	MIX_Init();
 	s_sdl_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
@@ -41,7 +41,7 @@ void audio_update(void)
 
 void audio_terminate(void)
 {
-	log_message("Terminating audio...");
+	LOG_MESSAGE("Terminating audio...");
 
 	for (int i = 0; i < s_clips.size; i++)
 	{
@@ -63,12 +63,12 @@ audio_clip_h audio_clip_load(const char* name, const bool is_sfx)
 	clip.audio = MIX_LoadAudio(s_sdl_mixer, name, is_sfx);
 	if (clip.audio == NULL)
 	{
-		log_error("Failed to load audio: %s", name);
+		LOG_ERROR("Failed to load audio: %s", name);
 		return 0;
 	}
 
 	clip.hash = hash_string(name);
-	log_message("Loaded audio clip: %s", name);
+	LOG_MESSAGE("Loaded audio clip: %s", name);
 	const size_t add_result = hash_map_add(&s_clips, &clip);
 	assert(add_result != HASH_INVALID);
 
@@ -109,7 +109,10 @@ audio_track_h audio_create_track(void)
 void audio_destroy_track(const audio_track_h track)
 {
 	if (!audio_track_is_valid(track))
-		return log_warning("Invalid audio track cannot be destroyed");
+	{
+		LOG_WARNING("Invalid audio track cannot be destroyed");
+		return;
+	}
 
 	MIX_DestroyTrack(s_tracks[track]);
 	s_tracks[track] = NULL;

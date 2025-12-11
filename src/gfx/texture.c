@@ -22,13 +22,13 @@ static texture s_texture_entries[MAX_TEXTURES];
 
 void texture_init(void)
 {
-	log_message("Initializing textures...");
+	LOG_MESSAGE("Initializing textures...");
 	hash_map_create(&s_textures, sizeof(texture), MAX_TEXTURES, s_texture_entries);
 }
 
 void texture_clear(void)
 {
-	log_message("Clearing textures...");
+	LOG_MESSAGE("Clearing textures...");
 	for (int i = 0; i < s_textures.size; i++)
 	{
 		glDeleteTextures(1, &s_texture_entries[i].id);
@@ -41,7 +41,7 @@ texture_h texture_load(const char* name)
 {
 	if (s_textures.size >= MAX_TEXTURES)
 	{
-		log_warning("Attempted to add texture when there are already too many textures!");
+		LOG_WARNING("Attempted to add texture when there are already too many textures!");
 		return 0;
 	}
 
@@ -50,13 +50,13 @@ texture_h texture_load(const char* name)
 	const stbi_uc *img = stbi_load(name, &t.width, &t.height, NULL, 4);
 	if (img == NULL)
 	{
-		log_error("Failed to load texture from file \"%s\"", name);
+		LOG_ERROR("Failed to load texture from file \"%s\"", name);
 		return 0;
 	}
 
 	if (t.width == 0 || t.height == 0)
 	{
-		log_error("0 is not a valid width or height!");
+		LOG_ERROR("0 is not a valid width or height!");
 		return 0;
 	}
 
@@ -71,7 +71,7 @@ texture_h texture_load(const char* name)
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	log_message("Loaded texture %s", name);
+	LOG_MESSAGE("Loaded texture %s", name);
 	const size_t add_result = hash_map_add(&s_textures, &t);
 	assert(add_result != HASH_INVALID);
 

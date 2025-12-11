@@ -83,7 +83,7 @@ input_device_kbm *device_kbm_init(void)
 	result->key_state = SDL_GetKeyboardState(NULL);
 	result->mouse_state = SDL_GetMouseState(NULL, NULL);
 
-	log_message("Keyboard (+ Mouse) initialized");
+	LOG_MESSAGE("Keyboard (+ Mouse) initialized");
 
 	return result;
 }

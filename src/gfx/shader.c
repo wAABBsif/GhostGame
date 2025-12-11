@@ -28,13 +28,13 @@ static shader s_shader_entries[MAX_SHADERS];
 
 void shader_init(void)
 {
-	log_message("Initializing shaders...");
+	LOG_MESSAGE("Initializing shaders...");
 	hash_map_create(&s_shaders, sizeof(shader), MAX_SHADERS, s_shader_entries);
 }
 
 void shader_clear(void)
 {
-	log_message("Clearing shaders...");
+	LOG_MESSAGE("Clearing shaders...");
 	for (int i = 0; i < s_shaders.size; i++)
 	{
 		glDeleteProgram(s_shader_entries[i].program);
@@ -96,7 +96,7 @@ static shader_program s_compile_shader(const char *source, const uint32_t shader
 		char *message = malloc(length);
 		glGetShaderInfoLog(id, length, &length, message);
 		message[length - 1] = 0;
-		log_error("%s shader error: %s", shader_type == GL_VERTEX_SHADER ? "Vertex" : "Fragment", message);
+		LOG_ERROR("%s shader error: %s", shader_type == GL_VERTEX_SHADER ? "Vertex" : "Fragment", message);
 		glDeleteShader(id);
 		return 0;
 	}
@@ -109,14 +109,14 @@ shader_program load_shader_program(const char *name, const uint32_t shader_type)
 	char *glsl = s_open_shader_file(name, APPROPRIATE_EXTENSION(shader_type));
 	if (!glsl)
 	{
-		log_error("Could not open %s%s", name, APPROPRIATE_EXTENSION(shader_type));
+		LOG_ERROR("Could not open %s%s", name, APPROPRIATE_EXTENSION(shader_type));
 		return 0;
 	}
 
 	const shader_program shader = s_compile_shader(glsl, shader_type);
 	if (!shader)
 	{
-		log_error("Could not compile %s.%s!", name, APPROPRIATE_EXTENSION(shader_type));
+		LOG_ERROR("Could not compile %s.%s!", name, APPROPRIATE_EXTENSION(shader_type));
 		return 0;
 	}
 
@@ -150,7 +150,7 @@ shader_h shader_load(const char* name)
 	const size_t add_result = hash_map_add(&s_shaders, &result);
 	assert(add_result != HASH_INVALID);
 
-	log_message("Loaded shader %s", name);
+	LOG_MESSAGE("Loaded shader %s", name);
 
 	return result.key;
 }

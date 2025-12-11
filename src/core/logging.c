@@ -4,78 +4,70 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#if defined(WIN32)
-#include <windows.h>
-#define SET_CONSOLE_TEXT_COLOR_WHITE() \
-	{	\
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);	\
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);	\
-	}
-#define SET_CONSOLE_TEXT_COLOR_YELLOW()	\
-	{	\
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);	\
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN);	\
-	}
-#define SET_CONSOLE_TEXT_COLOR_RED() \
-	{	\
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);	\
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);	\
-	}
-#endif
+static FILE *s_log_file = NULL;
 
-#ifndef SET_CONSOLE_TEXT_COLOR_WHITE
-#define SET_CONSOLE_TEXT_COLOR_WHITE()
-#define SET_CONSOLE_TEXT_COLOR_YELLOW()
-#define SET_CONSOLE_TEXT_COLOR_RED()
-#endif
-
-
-void _log_vraw(const char *format, va_list args)
+static void s_log_begin_file(const char *filename)
 {
-	vprintf(format, args);
+	s_log_file = fopen(filename, "w");
 }
 
-void _log_raw(const char *format, ...)
+void log_init()
+{
+	s_log_begin_file("log.txt");
+}
+
+void log_flush()
+{
+	fflush(s_log_file);
+}
+
+static void s_log_vraw(const char *format, va_list args)
+{
+	vprintf(format, args);
+	vfprintf(s_log_file, format, args);
+}
+
+void log_raw(const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	_log_vraw(format, args);
+	s_log_vraw(format, args);
 }
 
-void log_message(const char *format, ...)
-{
-	va_list list;
-	va_start(list, format);
-
-	_log_raw("[MESSAGE] ");
-	_log_vraw(format, list);
-	_log_raw("\n");
-}
-
-void log_warning(const char *format, ...)
-{
-	va_list list;
-	va_start(list, format);
-
-	SET_CONSOLE_TEXT_COLOR_YELLOW();
-	_log_raw("[WARNING] ");
-	_log_vraw(format, list);
-	_log_raw("\n");
-	SET_CONSOLE_TEXT_COLOR_WHITE();
-}
-
-void log_error(const char *format, ...)
-{
-	va_list list;
-	va_start(list, format);
-
-	SET_CONSOLE_TEXT_COLOR_RED();
-	_log_raw("[ERROR] ");
-	_log_vraw(format, list);
-	_log_raw("\n");
-	SET_CONSOLE_TEXT_COLOR_WHITE();
-
-#if !defined(IS_DEBUG)
-	abort();
-#endif
-}
+// void LOG_MESSAGE(const char *format, ...)
+// {
+// 	va_list list;
+// 	va_start(list, format);
+//
+// 	_log_raw("[MESSAGE] ");
+// 	_log_vraw(format, list);
+// 	_log_raw("\n");
+// }
+//
+// void LOG_WARNING(const char *format, ...)
+// {
+// 	va_list list;
+// 	va_start(list, format);
+//
+// 	SET_CONSOLE_TEXT_COLOR_YELLOW();
+// 	_log_raw("[WARNING] ");
+// 	_log_vraw(format, list);
+// 	_log_raw("\n");
+// 	SET_CONSOLE_TEXT_COLOR_WHITE();
+// }
+//
+// void LOG_ERROR(const char *format, ...)
+// {
+// 	va_list list;
+// 	va_start(list, format);
+//
+// 	SET_CONSOLE_TEXT_COLOR_RED();
+// 	_log_raw("[ERROR] ");
+// 	_log_vraw(format, list);
+// 	_log_raw("\n");
+// 	SET_CONSOLE_TEXT_COLOR_WHITE();
+//
+// #if !defined(IS_DEBUG)
+// 	abort();
+// #endif
+// }

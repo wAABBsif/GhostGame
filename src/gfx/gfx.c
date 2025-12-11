@@ -27,7 +27,7 @@ void test_camera_init(void)
 
 void gfx_init(void)
 {
-	log_message("Initializing graphics...");
+	LOG_MESSAGE("Initializing graphics...");
 
 	SDL_Window *window = window_create();
 	assert(window != NULL);
@@ -83,7 +83,7 @@ void gfx_draw(void)
 
 void gfx_terminate(void)
 {
-	log_message("Terminating graphics...");
+	LOG_MESSAGE("Terminating graphics...");
 
 	lighting_terminate();
 	sprite_terminate();

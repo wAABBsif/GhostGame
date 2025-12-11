@@ -116,9 +116,13 @@ input_device_gamepad *device_gamepad_init(const SDL_JoystickID id)
 	SDL_OpenJoystick(id);
 	result->gamepad = SDL_OpenGamepad(id);
 	if (result->gamepad == NULL)
-		log_warning("Gamepad %i could not be initialized!", id);
+	{
+		LOG_WARNING("Gamepad %i could not be initialized!", id);
+	}
 	else
-		log_message("Gamepad %i initialized", id);
+	{
+		LOG_MESSAGE("Gamepad %i initialized", id);
+	}
 
 	return result;
 }

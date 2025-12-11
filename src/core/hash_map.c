@@ -38,7 +38,7 @@ size_t hash_map_add(hash_map *map, const void *data)
 {
 	if (map->size >= map->capacity)
 	{
-		log_error("Attempted to add new elements to hash_map at full capacity.");
+		LOG_ERROR("Attempted to add new elements to hash_map at full capacity.");
 		return HASH_INVALID;
 	}
 
@@ -52,7 +52,7 @@ size_t hash_map_add(hash_map *map, const void *data)
 
 		if (current_index_hash == *(hash*)data)
 		{
-			log_warning("Key already exists.");
+			LOG_WARNING("Key already exists.");
 			return HASH_INVALID;
 		}
 		if (*(hash*)data > current_index_hash)

@@ -31,7 +31,7 @@ static bool s_is_game_running(void);
 void game_run(void)
 {
 	s_game_init();
-	log_message("Completed initialization");
+	LOG_MESSAGE("Initialized successfully!\n");
 
 	while (s_is_game_running())
 	{
@@ -39,7 +39,7 @@ void game_run(void)
 	}
 
 	s_game_terminate();
-	log_message("Completed termination");
+	LOG_MESSAGE("Terminated successfully!");
 }
 
 static void my_cute_lil_update(void **components, entity_index entity)
@@ -56,6 +56,7 @@ static void my_cute_lil_update(void **components, entity_index entity)
 
 static void s_game_init(void)
 {
+	log_init();
 	sdl_interface_init();
 	game_time_init();
 	input_init();
@@ -104,10 +105,10 @@ static void s_game_init(void)
 	c_controller->type = CONTROLLER_TYPE_PLAYER;
 
 	component_movement_properties *c_movement = entity_add_component(COMPONENT_TYPE_MOVEMENT_PROPERTIES);
-	c_movement->acceleration = 1920;
-	c_movement->ground_friction = 720;
+	c_movement->acceleration = 3200;
+	c_movement->ground_friction = 800;
 	c_movement->max_speed = 120;
-	c_movement->drag = 0.4;
+	c_movement->drag = 0.2f;
 }
 
 static void s_game_update(void)

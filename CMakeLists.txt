@@ -91,6 +91,8 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/components/component_movement_properties.h
 		src/game/ecs/entities/entity_actor.c
 		src/game/ecs/entities/entity_actor.h
+		src/game/ecs/ecs_tag.c
+		src/game/ecs/ecs_tag.h
 )
 
 include_directories(src)

@@ -26,13 +26,13 @@ static tile_atlas_hashmap_entry s_tile_atlas_entries[MAX_TILE_ATLASES];
 
 void tile_atlas_init(void)
 {
-	log_message("Initializing tile atlases...");
+	LOG_MESSAGE("Initializing tile atlases...");
 	hash_map_create(&s_tile_atlases, sizeof(tile_atlas_hashmap_entry), MAX_TILE_ATLASES, s_tile_atlas_entries);
 }
 
 void tile_atlas_clear(void)
 {
-	log_message("Clearing atlases...");
+	LOG_MESSAGE("Clearing atlases...");
 	for (int i = 0; i < s_tile_atlases.size; i++)
 	{
 		free(s_tile_atlas_entries[i].value);
@@ -70,7 +70,7 @@ tile_atlas_h tile_atlas_load(const char* filename)
 
 	SDL_free(buffer);
 
-	log_message("Loaded tile atlas %s", filename);
+	LOG_MESSAGE("Loaded tile atlas %s", filename);
 	const size_t add_result = hash_map_add(&s_tile_atlases, &entry);
 	assert(add_result != HASH_INVALID);
 

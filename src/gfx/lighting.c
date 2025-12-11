@@ -24,7 +24,7 @@ static uint16_t s_light_count;
 
 void lighting_init(void)
 {
-	log_message("Initializing lighting...");
+	LOG_MESSAGE("Initializing lighting...");
 
 	glGenVertexArrays(1, &s_vao);
 	glBindVertexArray(s_vao);
@@ -77,7 +77,7 @@ void lighting_init(void)
 
 void lighting_terminate(void)
 {
-	log_message("Terminating lighting...");
+	LOG_MESSAGE("Terminating lighting...");
 
 	glDeleteVertexArrays(1, &s_vao);
 	glDeleteBuffers(1, &s_vbo);

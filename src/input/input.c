@@ -22,7 +22,7 @@ static rumble_id s_rumble_current_id;
 
 void input_init(void)
 {
-	log_message("Initializing input...");
+	LOG_MESSAGE("Initializing input...");
 	s_device = (input_device *)device_kbm_init();
 }
 
@@ -60,7 +60,7 @@ void input_update(void)
 
 void input_terminate(void)
 {
-	log_message("Terminating input...");
+	LOG_MESSAGE("Terminating input...");
 	if (s_device)
 		s_device->terminate(s_device);
 }
