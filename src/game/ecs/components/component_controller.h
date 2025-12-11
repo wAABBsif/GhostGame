@@ -8,7 +8,7 @@ typedef uint16_t controller_type;
 
 typedef struct component_controller component_controller;
 
-typedef void (*controller_func)(component_controller *controller, entity_index entity);
+typedef void (*controller_func)(component_controller *controller, entity_id entity);
 
 typedef struct component_controller
 {

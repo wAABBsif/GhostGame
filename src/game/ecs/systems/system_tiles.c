@@ -76,7 +76,7 @@ void system_tiles_load_level(void)
 	component_index sprite_index = 0;
 	component_index tile_index = 0;
 
-	for (entity_index i = 0; i < entities_get_count(); i++)
+	for (entity_id i = 0; i < entities_get_count(); i++)
 	{
 		component_sprite *c_sprite = system_retrieve_component(i, COMPONENT_TYPE_SPRITE, &sprite_index);
 		component_tile *c_tile = system_retrieve_component(i, COMPONENT_TYPE_TILE, &tile_index);
@@ -107,7 +107,7 @@ void system_tiles_begin_frame(void)
 	}
 }
 
-void system_tiles_update(entity_index entity, void **components)
+void system_tiles_update(entity_id entity, void **components)
 {
 	if (!s_marked_dirty)
 		return;

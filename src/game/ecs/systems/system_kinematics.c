@@ -9,7 +9,7 @@
 #include "../components/component_transform.h"
 #include "../components/component_kinematic_body.h"
 
-void system_kinematics_update(entity_index entity, void **components)
+void system_kinematics_update(entity_id entity, void **components)
 {
 	component_transform *c_transform = components[0];
 	component_kinematic_body *c_kinematics = components[1];

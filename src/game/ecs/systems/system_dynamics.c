@@ -47,7 +47,7 @@ static void s_system_dynamics_collision_response(component_transform *c_transfor
 	c_transform->position = vec2_add(c_transform->position, vec2_mul(normal, vec2_mag(vec2_sub(point, closest_point))));
 }
 
-void system_dynamics_update(entity_index entity, void **components)
+void system_dynamics_update(entity_id entity, void **components)
 {
 	component_transform *c_transform = components[0];
 	component_kinematic_body *c_kinematics = components[1];

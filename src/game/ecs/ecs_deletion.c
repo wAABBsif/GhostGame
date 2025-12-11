@@ -3,7 +3,7 @@
 
 void entity_deletion_update()
 {
-	entity_index i = 0;
+	entity_id i = 0;
 	component_index component_indices[COMPONENT_TYPE_COUNT];
 	for (component_type j = 0; j < COMPONENT_TYPE_COUNT; j++)
 		component_indices[j] = 0;

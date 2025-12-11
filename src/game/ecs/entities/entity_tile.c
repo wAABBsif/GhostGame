@@ -8,9 +8,9 @@
 #include "game/ecs/components/component_tile.h"
 #include "game/level/tile.h"
 
-entity_index entity_tile_create(const uint8_t chunk_index)
+entity_id entity_tile_create(const uint8_t chunk_index)
 {
-	const entity_index result = entities_add();
+	const entity_id result = entities_add();
 
 	component_transform *c_pos =  entity_add_component(result, COMPONENT_TYPE_TRANSFORM);
 	c_pos->position = VEC2_ZERO;

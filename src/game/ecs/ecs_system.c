@@ -25,7 +25,7 @@ const ecs_system GAME_SYSTEMS[] =
 	(ecs_system){COMPONENT_MASK(COMPONENT_TYPE_TRANSFORM) | COMPONENT_MASK(COMPONENT_TYPE_LIGHT), system_draw_lighting_update}
 };
 
-void *system_retrieve_component(const entity_index entity, const component_type type, component_index *index)
+void *system_retrieve_component(const entity_id entity, const component_type type, component_index *index)
 {
 	if (!entity_has_component(entity, type))
 		return NULL;
@@ -56,7 +56,7 @@ void systems_update(void)
 			component_count++;
 		}
 
-		for (entity_index entity = 0; entity < entities_get_count(); entity++)
+		for (entity_id entity = 0; entity < entities_get_count(); entity++)
 		{
 			void *components[COMPONENT_TYPE_COUNT];
 			if ((entity_get_component_mask(entity) & GAME_SYSTEMS[sys].components) != GAME_SYSTEMS[sys].components)

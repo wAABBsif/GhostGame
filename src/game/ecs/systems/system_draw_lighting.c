@@ -29,7 +29,7 @@ const static uint16_t S_TEX_COORDS[8] =
 	0, 0
 };
 
-void system_draw_lighting_update(entity_index entity, void **components)
+void system_draw_lighting_update(entity_id entity, void **components)
 {
 	const component_transform *c_transform = components[0];
 	const component_light *c_light = components[1];

@@ -4,7 +4,7 @@
 #include "game/ecs/components/component_controller.h"
 #include "input/input.h"
 
-void controller_player(component_controller *controller, entity_index entity)
+void controller_player(component_controller *controller, entity_id entity)
 {
 	controller->move = input_get_vector(INPUT_ACTION_MOVE_L, INPUT_ACTION_MOVE_R, INPUT_ACTION_MOVE_D, INPUT_ACTION_MOVE_U);
 	controller->aim = input_get_vector(INPUT_ACTION_AIM_L, INPUT_ACTION_AIM_R, INPUT_ACTION_AIM_D, INPUT_ACTION_AIM_U);

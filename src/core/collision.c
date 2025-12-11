@@ -18,12 +18,12 @@ bool collision_check_point_box(const vec2 point, const vec2 pos, const vec2 radi
 	&&		point.y <= pos.y + radius.y;
 }
 
-collision_data collision_overlap_point(const vec2 point, const entity_index ignore_index)
+collision_data collision_overlap_point(const vec2 point, const entity_id ignore_index)
 {
 	component_index transform_index = 0;
 	component_index collider_index = 0;
 
-	for (entity_index i = 0; i < entities_get_count(); i++)
+	for (entity_id i = 0; i < entities_get_count(); i++)
 	{
 		component_transform *c_transform = system_retrieve_component(i, COMPONENT_TYPE_TRANSFORM, &transform_index);
 		component_collider *c_collider = system_retrieve_component(i, COMPONENT_TYPE_COLLIDER, &collider_index);
@@ -45,7 +45,7 @@ collision_data collision_overlap_point(const vec2 point, const entity_index igno
 		return (collision_data){c_transform, c_collider, i};
 	}
 
-	return (collision_data){NULL, NULL, ENTITY_INDEX_INVALID};
+	return (collision_data){NULL, NULL, entity_id_INVALID};
 }
 
 vec2 collision_get_closest_point(const vec2 point, const vec2 pos, const vec2 radius)

@@ -42,7 +42,7 @@ void game_run(void)
 	LOG_MESSAGE("Terminated successfully!");
 }
 
-static void my_cute_lil_update(entity_index entity, void **components)
+static void my_cute_lil_update(entity_id entity, void **components)
 {
 	component_transform *transform = components_get_index(COMPONENT_TYPE_TRANSFORM, entity);
 	component_kinematic_body *kinematics = components_get_index(COMPONENT_TYPE_KINEMATIC_BODY, entity);
@@ -69,7 +69,7 @@ static void s_game_init(void)
 
 	level_load("res/levels/test.level");
 
-	entity_index plr = entities_add();
+	entity_id plr = entities_add();
 
 	component_transform *c_pos =  entity_add_component(plr, COMPONENT_TYPE_TRANSFORM);
 	c_pos->position = VEC2_ZERO;

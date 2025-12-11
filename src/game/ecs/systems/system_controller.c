@@ -9,7 +9,7 @@ const controller_func CONTROLLER_FUNCS[] =
 	controller_player
 };
 
-void system_controller_update(entity_index entity, void **components)
+void system_controller_update(entity_id entity, void **components)
 {
 	component_controller *c_controller = components[0];
 	CONTROLLER_FUNCS[c_controller->type](c_controller, entity);
