@@ -12,8 +12,8 @@ typedef uint16_t entity_index;
 
 typedef struct ecs_entity
 {
-	uint64_t components;
-	uint16_t tags;
+	component_mask components;
+	tag_mask tags;
 } ecs_entity;
 
 ecs_entity *entities_get();

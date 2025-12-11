@@ -16,6 +16,7 @@
 
 typedef uint16_t component_type;
 typedef uint16_t component_index;
+typedef uint32_t component_mask;
 
 typedef struct register_component_entry
 {
