@@ -55,11 +55,11 @@ void entity_enable_component(const entity_index index, const component_type type
 	e->components |= COMPONENT_MASK(type);
 }
 
-void *entity_add_component(const component_type type)
+void *entity_add_component(const entity_index index, const component_type type)
 {
-	entity_enable_component(s_entity_count - 1, type);
-	const component_index c_index = components_add(type);
-	return components_get_index(type, c_index);
+	entity_enable_component(index, type);
+	const component_index c_index = components_add(type, index);
+	return components_get_index(type, index);
 }
 
 bool entity_get_tag(const entity_index index, const ecs_tag tag)

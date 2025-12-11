@@ -44,14 +44,14 @@ void game_run(void)
 
 static void my_cute_lil_update(entity_index entity, void **components)
 {
-	// component_transform *transform = components[0];
-	// component_kinematic_body *kinematics = components[1];
-	// const component_controller *controller = components[2];
-	// const component_movement_properties *movement_properties = components[3];
-	// entity_actor_apply_acceleration(kinematics, movement_properties->acceleration, controller->move);
-	// entity_actor_apply_ground_friction(kinematics, movement_properties->ground_friction);
-	// entity_actor_apply_speed_cap(kinematics, movement_properties->max_speed);
-	// entity_actor_apply_drag(kinematics, movement_properties->drag);
+	component_transform *transform = components_get_index(COMPONENT_TYPE_TRANSFORM, entity);
+	component_kinematic_body *kinematics = components_get_index(COMPONENT_TYPE_KINEMATIC_BODY, entity);
+	const component_controller *controller = components_get_index(COMPONENT_TYPE_CONTROLLER, entity);
+	const component_movement_properties *movement_properties = components_get_index(COMPONENT_TYPE_MOVEMENT_PROPERTIES, entity);
+	entity_actor_apply_acceleration(kinematics, movement_properties->acceleration, controller->move);
+	entity_actor_apply_ground_friction(kinematics, movement_properties->ground_friction);
+	entity_actor_apply_speed_cap(kinematics, movement_properties->max_speed);
+	entity_actor_apply_drag(kinematics, movement_properties->drag);
 }
 
 static void s_game_init(void)
@@ -69,13 +69,13 @@ static void s_game_init(void)
 
 	level_load("res/levels/test.level");
 
-	entities_add();
+	entity_index plr = entities_add();
 
-	component_transform *c_pos =  entity_add_component(COMPONENT_TYPE_TRANSFORM);
+	component_transform *c_pos =  entity_add_component(plr, COMPONENT_TYPE_TRANSFORM);
 	c_pos->position = VEC2_ZERO;
 	c_pos->rotation = 0;
 
-	component_sprite *c_sprite = entity_add_component(COMPONENT_TYPE_SPRITE);
+	component_sprite *c_sprite = entity_add_component(plr, COMPONENT_TYPE_SPRITE);
 	c_sprite->size = (vec2){16, 16};
 	c_sprite->texture = texture_load("res/sprites/test.png");
 	c_sprite->texture_pos = (vec2u16){0, 0};
@@ -85,7 +85,7 @@ static void s_game_init(void)
 	c_sprite->use_camera_to_screen_matrix = false;
 	c_sprite->draw_sorted = false;
 
-	component_light *c_light = entity_add_component(COMPONENT_TYPE_LIGHT);
+	component_light *c_light = entity_add_component(plr, COMPONENT_TYPE_LIGHT);
 	c_light->size = (vec2){32, 32};
 	c_light->color = COLOR_RED;
 	c_light->type = LIGHT_TYPE_RADIAL;
@@ -93,19 +93,19 @@ static void s_game_init(void)
 	c_light->z = 1;
 	c_light->intensity_multiplier = 1;
 
-	component_kinematic_body *c_kinematics = entity_add_component(COMPONENT_TYPE_KINEMATIC_BODY);
+	component_kinematic_body *c_kinematics = entity_add_component(plr, COMPONENT_TYPE_KINEMATIC_BODY);
 	c_kinematics->velocity = VEC2_ZERO;
 
-	component_collider *c_collider = entity_add_component(COMPONENT_TYPE_COLLIDER);
+	component_collider *c_collider = entity_add_component(plr, COMPONENT_TYPE_COLLIDER);
 	c_collider->radius = (vec2u8){6, 6};
 
-	component_update *c_update = entity_add_component(COMPONENT_TYPE_UPDATE);
+	component_update *c_update = entity_add_component(plr, COMPONENT_TYPE_UPDATE);
 	c_update->func = my_cute_lil_update;
 
-	component_controller *c_controller = entity_add_component(COMPONENT_TYPE_CONTROLLER);
+	component_controller *c_controller = entity_add_component(plr, COMPONENT_TYPE_CONTROLLER);
 	c_controller->type = CONTROLLER_TYPE_PLAYER;
 
-	component_movement_properties *c_movement = entity_add_component(COMPONENT_TYPE_MOVEMENT_PROPERTIES);
+	component_movement_properties *c_movement = entity_add_component(plr, COMPONENT_TYPE_MOVEMENT_PROPERTIES);
 	c_movement->acceleration = 3200;
 	c_movement->ground_friction = 800;
 	c_movement->max_speed = 120;

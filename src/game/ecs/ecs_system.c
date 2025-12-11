@@ -46,7 +46,6 @@ void systems_update(void)
 	{
 		uint16_t component_count = 0;
 		component_type component_types[COMPONENT_TYPE_COUNT];
-		void *component_ptrs[COMPONENT_TYPE_COUNT];
 
 		for (component_type type = 0; type < COMPONENT_TYPE_COUNT; type++)
 		{
@@ -54,20 +53,18 @@ void systems_update(void)
 				continue;
 
 			component_types[component_count] = type;
-			component_ptrs[component_count] = components_get(type);
 			component_count++;
 		}
 
 		for (entity_index entity = 0; entity < entities_get_count(); entity++)
 		{
-			if ((entity_get_component_mask(entity) & GAME_SYSTEMS[sys].components) == GAME_SYSTEMS[sys].components)
-				GAME_SYSTEMS[sys].func(entity, component_ptrs);
+			void *components[COMPONENT_TYPE_COUNT];
+			if ((entity_get_component_mask(entity) & GAME_SYSTEMS[sys].components) != GAME_SYSTEMS[sys].components)
+				continue;
 
 			for (component_type type_index = 0; type_index < component_count; type_index++)
-			{
-				if (entity_has_component(entity, component_types[type_index]))
-					component_ptrs[type_index] += components_get_size(component_types[type_index]);
-			}
+				components[type_index] = components_get_index(component_types[type_index], entity);
+			GAME_SYSTEMS[sys].func(entity, components);
 		}
 	}
 }

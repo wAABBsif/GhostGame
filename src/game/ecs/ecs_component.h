@@ -27,10 +27,9 @@ typedef struct register_component_entry
 void components_init(void);
 void components_terminate(void);
 
-component_index components_add(component_type type);
+component_index components_add(component_type type, component_index index);
 void components_remove(component_type type, component_index index);
 
 void *components_get(component_type type);
 void *components_get_index(component_type type, component_index index);
 uint16_t components_get_size(component_type type);
-component_index components_get_count(component_type type);

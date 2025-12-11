@@ -31,7 +31,6 @@ const register_component_entry COMPONENT_ENTRIES[] =
 };
 
 static void *s_components[COMPONENT_TYPE_COUNT];
-static component_index s_component_count[COMPONENT_TYPE_COUNT];
 
 void components_init(void)
 {
@@ -39,9 +38,8 @@ void components_init(void)
 
 	for (int i = 0; i < COMPONENT_TYPE_COUNT; i++)
 	{
-		s_component_count[i] = 0;
 		s_components[i] = (void*)total_size;
-		total_size += COMPONENT_ENTRIES[i].size * COMPONENT_ENTRIES[i].count;
+		total_size += COMPONENT_ENTRIES[i].size * ECS_MAX_ENTITIES;
 	}
 
 	void *component_data = malloc(total_size);
@@ -57,28 +55,25 @@ void components_terminate(void)
 
 	for (int i = 0; i < COMPONENT_TYPE_COUNT; i++)
 	{
-		s_component_count[i] = 0;
 		s_components[i] = NULL;
 	}
 }
 
-component_index components_add(const component_type type)
+component_index components_add(const component_type type, const component_index index)
 {
-	uint16_t *count = &s_component_count[type];
-
-	const component_index result = *count;
-	(*count)++;
-	assert(s_component_count[type] <= COMPONENT_ENTRIES[type].count);
-	return result;
+	// const component_index result = *count;
+	// (*count)++;
+	// assert(s_component_count[type] <= COMPONENT_ENTRIES[type].count);
+	// return result;
 }
 
 void components_remove(const component_type type, const component_index index)
 {
-	void *array = s_components[type];
-	const uint16_t size = COMPONENT_ENTRIES[type].size;
-
-	s_component_count[type]--;
-	memmove(array + index * size, array + (index + 1) * size, size * (s_component_count[type] - index));
+	// void *array = s_components[type];
+	// const uint16_t size = COMPONENT_ENTRIES[type].size;
+	//
+	// s_component_count[type]--;
+	// memmove(array + index * size, array + (index + 1) * size, size * (s_component_count[type] - index));
 }
 
 void *components_get(const component_type type)
@@ -94,9 +89,4 @@ void *components_get_index(const component_type type, const component_index inde
 uint16_t components_get_size(const component_type type)
 {
 	return COMPONENT_ENTRIES[type].size;
-}
-
-component_index components_get_count(const component_type type)
-{
-	return s_component_count[type];
 }
