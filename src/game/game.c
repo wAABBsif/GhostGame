@@ -91,6 +91,7 @@ static void s_game_init(void)
 	c_light->type = LIGHT_TYPE_RADIAL;
 	c_light->priority = 4;
 	c_light->z = 1;
+	c_light->intensity_multiplier = 1;
 
 	component_kinematic_body *c_kinematics = entity_add_component(COMPONENT_TYPE_KINEMATIC_BODY);
 	c_kinematics->velocity = VEC2_ZERO;

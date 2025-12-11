@@ -1,5 +1,6 @@
 in vec2 tex_coords;
 in vec4 color;
+in float intensity;
 in float light_type;
 in float z;
 
@@ -28,5 +29,5 @@ void main()
     depth = (depth - 0.5) * 2;
     if (z > depth)
         discard;
-    FragColor = get_color(int(light_type));
+    FragColor = get_color(int(light_type)) * intensity;
 }

@@ -24,6 +24,7 @@ typedef struct light_vertex
 	light_type	type;
 	int8_t priority;
 	int8_t z;
+	uint8_t intensity_multiplier;
 } light_vertex;
 
 typedef struct light_quad

@@ -56,6 +56,7 @@ void system_draw_lighting_update(void **components, entity_index entity)
 		quad.vertices[v].texture_y = S_TEX_COORDS[v * 2 + 1];
 
 		quad.vertices[v].color = c_light->color;
+		quad.vertices[v].intensity_multiplier = c_light->intensity_multiplier;
 		quad.vertices[v].priority = c_light->priority;
 		quad.vertices[v].z = c_light->z;
 		quad.vertices[v].type = c_light->type;
