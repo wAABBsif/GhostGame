@@ -9,7 +9,7 @@ typedef struct ecs_system
 	system_func func;
 } ecs_system;
 
-void *system_retrieve_component(entity_id entity, component_type type, component_index *index);
+void *system_retrieve_component(entity_id entity, component_type type, entity_id *index);
 void systems_init(void);
 void systems_update(void);
 uint16_t systems_get_count(void);

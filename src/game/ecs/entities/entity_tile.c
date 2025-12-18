@@ -12,11 +12,11 @@ entity_id entity_tile_create(const uint8_t chunk_index)
 {
 	const entity_id result = entities_add();
 
-	component_transform *c_pos =  entity_add_component(result, COMPONENT_TYPE_TRANSFORM);
+	component_transform *c_pos = component_add(COMPONENT_TYPE_TRANSFORM, result);
 	c_pos->position = VEC2_ZERO;
 	c_pos->rotation = 0;
 
-	component_sprite *c_spr =  entity_add_component(result, COMPONENT_TYPE_SPRITE);
+	component_sprite *c_spr =  component_add(COMPONENT_TYPE_SPRITE, result);
 	c_spr->size = VEC2_ZERO;
 	c_spr->texture = HASH_INVALID;
 	c_spr->texture_pos = (vec2u16){0, 0};
@@ -26,10 +26,10 @@ entity_id entity_tile_create(const uint8_t chunk_index)
 	c_spr->use_camera_to_screen_matrix = false;
 	c_spr->draw_sorted = false;
 
-	component_collider *c_coll = entity_add_component(result, COMPONENT_TYPE_COLLIDER);
+	component_collider *c_coll = component_add(COMPONENT_TYPE_COLLIDER, result);
 	c_coll->radius = (vec2u8){0, 0};
 
-	component_tile *c_tile = entity_add_component(result, COMPONENT_TYPE_TILE);
+	component_tile *c_tile = component_add(COMPONENT_TYPE_TILE, result);
 	c_tile->chunk_index = chunk_index;
 
 	return result;

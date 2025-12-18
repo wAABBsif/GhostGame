@@ -4,7 +4,7 @@
 void entity_deletion_update()
 {
 	entity_id i = 0;
-	component_index component_indices[COMPONENT_TYPE_COUNT];
+	entity_id component_indices[COMPONENT_TYPE_COUNT];
 	for (component_type j = 0; j < COMPONENT_TYPE_COUNT; j++)
 		component_indices[j] = 0;
 
@@ -14,7 +14,7 @@ void entity_deletion_update()
 		{
 			for (component_type j = 0; j < COMPONENT_TYPE_COUNT; j++)
 			{
-				if (entity_has_component(i, j))
+				if (component_exists(j, i))
 					component_indices[j]++;
 			}
 
@@ -24,9 +24,9 @@ void entity_deletion_update()
 
 		for (component_type j = 1; j < COMPONENT_TYPE_COUNT; j++)
 		{
-			if (entity_has_component(i, j))
+			if (component_exists(j, i))
 			{
-				components_remove(j, component_indices[j]);
+				component_remove(j, component_indices[j]);
 				component_indices[j]--;
 			}
 		}

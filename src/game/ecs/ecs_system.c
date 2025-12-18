@@ -25,12 +25,12 @@ const ecs_system GAME_SYSTEMS[] =
 	(ecs_system){COMPONENT_MASK(COMPONENT_TYPE_TRANSFORM) | COMPONENT_MASK(COMPONENT_TYPE_LIGHT), system_draw_lighting_update}
 };
 
-void *system_retrieve_component(const entity_id entity, const component_type type, component_index *index)
+void *system_retrieve_component(const entity_id entity, const component_type type, entity_id *index)
 {
-	if (!entity_has_component(entity, type))
+	if (!component_exists(type, entity))
 		return NULL;
 
-	void *result = components_get_index(type, *index);
+	void *result = component_get(type, *index);
 	(*index)++;
 	return result;
 }
@@ -59,11 +59,18 @@ void systems_update(void)
 		for (entity_id entity = 0; entity < entities_get_count(); entity++)
 		{
 			void *components[COMPONENT_TYPE_COUNT];
-			if ((entity_get_component_mask(entity) & GAME_SYSTEMS[sys].components) != GAME_SYSTEMS[sys].components)
+			component_type type_index;
+
+			for (type_index = 0; type_index < component_count; type_index++)
+			{
+				components[type_index] = component_get(component_types[type_index], entity);
+				if (components[type_index] == NULL)
+					break;
+			}
+
+			if (type_index != component_count)
 				continue;
 
-			for (component_type type_index = 0; type_index < component_count; type_index++)
-				components[type_index] = components_get_index(component_types[type_index], entity);
 			GAME_SYSTEMS[sys].func(entity, components);
 		}
 	}

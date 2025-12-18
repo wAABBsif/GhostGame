@@ -20,8 +20,8 @@ bool collision_check_point_box(const vec2 point, const vec2 pos, const vec2 radi
 
 collision_data collision_overlap_point(const vec2 point, const entity_id ignore_index)
 {
-	component_index transform_index = 0;
-	component_index collider_index = 0;
+	entity_id transform_index = 0;
+	entity_id collider_index = 0;
 
 	for (entity_id i = 0; i < entities_get_count(); i++)
 	{
@@ -45,7 +45,7 @@ collision_data collision_overlap_point(const vec2 point, const entity_id ignore_
 		return (collision_data){c_transform, c_collider, i};
 	}
 
-	return (collision_data){NULL, NULL, entity_id_INVALID};
+	return (collision_data){NULL, NULL, ENTITY_ID_INVALID};
 }
 
 vec2 collision_get_closest_point(const vec2 point, const vec2 pos, const vec2 radius)

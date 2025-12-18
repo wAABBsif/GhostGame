@@ -73,8 +73,8 @@ static chunk_index s_check_chunk_index(const uint8_t index)
 
 void system_tiles_load_level(void)
 {
-	component_index sprite_index = 0;
-	component_index tile_index = 0;
+	entity_id sprite_index = 0;
+	entity_id tile_index = 0;
 
 	for (entity_id i = 0; i < entities_get_count(); i++)
 	{
