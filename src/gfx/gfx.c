@@ -14,6 +14,7 @@
 #include "sprite.h"
 #include "SDL3/SDL_video.h"
 
+static game_window *s_window;
 static SDL_GLContext s_context = NULL;
 
 camera cam;
@@ -29,9 +30,9 @@ void gfx_init(void)
 {
 	LOG_MESSAGE("Initializing graphics...");
 
-	game_window *window = window_create();
+	s_window = window_create();
 	assert(window != NULL);
-	window_make_context_current();
+	window_make_context_current(s_window);
 
 	const int glad_status = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
 	assert(glad_status);
@@ -41,7 +42,7 @@ void gfx_init(void)
 	camera_init();
 
 	int width, height;
-	window_get_size(&width, &height);
+	window_get_size(s_window, &width, &height);
 	glViewport(0, 0, width, height);
 
 	glEnable(GL_DEPTH_TEST);
@@ -77,7 +78,7 @@ void gfx_draw(void)
 
 	camera_render_to_screen(&cam);
 
-	window_swap_buffers();
+	window_swap_buffers(s_window);
 }
 
 void gfx_terminate(void)
@@ -89,5 +90,10 @@ void gfx_terminate(void)
 	shader_clear();
 	texture_clear();
 	camera_terminate();
-	window_destroy();
+	window_destroy(s_window);
+}
+
+game_window *gfx_get_window(void)
+{
+	return s_window;
 }

@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "core/logging.h"
+#include "gfx/gfx.h"
 #include "gfx/window.h"
 #include "input/input.h"
 #include "SDL3/SDL.h"
@@ -55,6 +56,6 @@ void _sdl_interface_handle_events(void)
 		if (event.type == SDL_EVENT_QUIT)
 			_is_ready_to_quit = true;
 		input_handle_sdl_event(&event);
-		window_handle_event(&event);
+		window_handle_event(gfx_get_window(), &event);
 	}
 }
