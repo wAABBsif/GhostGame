@@ -21,15 +21,14 @@ void log_flush()
 	fflush(s_log_file);
 }
 
-static void s_log_vraw(const char *format, va_list args)
-{
-	vprintf(format, args);
-	vfprintf(s_log_file, format, args);
-}
-
 void log_raw(const char *format, ...)
 {
-	va_list args;
+	va_list args, args_file;
 	va_start(args, format);
-	s_log_vraw(format, args);
+	va_copy(args_file, args);
+
+	vprintf(format, args);
+	va_end(args);
+	vfprintf(s_log_file, format, args_file);
+	va_end(args_file);
 }
