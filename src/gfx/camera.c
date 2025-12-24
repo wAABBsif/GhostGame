@@ -9,6 +9,7 @@
 #include "gfx/gfx.h"
 #include "gfx/shader.h"
 #include "glad/glad.h"
+#include "SDL3/SDL_stdinc.h"
 
 #define MIN_ASPECT_RATIO	(5.0f / 4.0f)
 #define MAX_ASPECT_RATIO	(7.0f / 3.0f)

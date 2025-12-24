@@ -29,11 +29,10 @@ void gfx_init(void)
 {
 	LOG_MESSAGE("Initializing graphics...");
 
-	SDL_Window *window = window_create();
+	game_window *window = window_create();
 	assert(window != NULL);
+	window_make_context_current();
 
-	s_context = SDL_GL_CreateContext(window);
-	SDL_GL_MakeCurrent(window, s_context);
 	const int glad_status = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
 	assert(glad_status);
 
@@ -78,7 +77,7 @@ void gfx_draw(void)
 
 	camera_render_to_screen(&cam);
 
-	SDL_GL_SwapWindow(window_get_sdl_handle());
+	window_swap_buffers();
 }
 
 void gfx_terminate(void)
