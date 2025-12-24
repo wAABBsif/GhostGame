@@ -20,10 +20,10 @@ const static vec2 S_VERTEX_QUADS[4] =
 	{-0.5f, +0.5f}
 };
 
-void system_draw_sprites_update(entity_id entity, void **components)
+void system_draw_sprites_update(entity_id entity)
 {
-	const component_transform *c_transform = components[0];
-	const component_sprite *c_sprite = components[1];
+	const component_transform *c_transform = component_get(COMPONENT_TYPE_TRANSFORM, entity);
+	const component_sprite *c_sprite = component_get(COMPONENT_TYPE_SPRITE, entity);;
 
 	if (!sprite_simple_cull(c_transform->position, c_sprite->size))
 		return;

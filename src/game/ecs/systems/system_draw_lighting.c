@@ -29,10 +29,10 @@ const static uint16_t S_TEX_COORDS[8] =
 	0, 0
 };
 
-void system_draw_lighting_update(entity_id entity, void **components)
+void system_draw_lighting_update(entity_id entity)
 {
-	const component_transform *c_transform = components[0];
-	const component_light *c_light = components[1];
+	const component_transform *c_transform = component_get(COMPONENT_TYPE_TRANSFORM, entity);
+	const component_light *c_light = component_get(COMPONENT_TYPE_LIGHT, entity);
 
 	const vec2 rounded_position = vec2_truncate(c_transform->position);
 

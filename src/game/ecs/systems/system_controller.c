@@ -9,8 +9,8 @@ const controller_func CONTROLLER_FUNCS[] =
 	controller_player
 };
 
-void system_controller_update(entity_id entity, void **components)
+void system_controller_update(const entity_id entity)
 {
-	component_controller *c_controller = components[0];
+	component_controller *c_controller = component_get(COMPONENT_TYPE_CONTROLLER, entity);
 	CONTROLLER_FUNCS[c_controller->type](c_controller, entity);
 }

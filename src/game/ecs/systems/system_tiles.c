@@ -107,15 +107,15 @@ void system_tiles_begin_frame(void)
 	}
 }
 
-void system_tiles_update(entity_id entity, void **components)
+void system_tiles_update(entity_id entity)
 {
 	if (!s_marked_dirty)
 		return;
 
-	component_transform *c_transform = components[0];
-	component_sprite *c_sprite = components[1];
-	component_collider *c_collider = components[2];
-	component_tile *c_tile = components[3];
+	component_transform *c_transform = component_get(COMPONENT_TYPE_TRANSFORM, entity);
+	component_sprite *c_sprite = component_get(COMPONENT_TYPE_SPRITE, entity);
+	component_collider *c_collider = component_get(COMPONENT_TYPE_COLLIDER, entity);
+	component_tile *c_tile = component_get(COMPONENT_TYPE_TILE, entity);
 
 	if (s_screen_chunk_indices[c_tile->chunk_index] < 0)
 		return;

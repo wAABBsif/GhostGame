@@ -42,7 +42,7 @@ void game_run(void)
 	LOG_MESSAGE("Terminated successfully!");
 }
 
-static void my_cute_lil_update(entity_id entity, void **components)
+static void my_cute_lil_update(entity_id entity)
 {
 	component_transform *transform = component_get(COMPONENT_TYPE_TRANSFORM, entity);
 	component_kinematic_body *kinematics = component_get(COMPONENT_TYPE_KINEMATIC_BODY, entity);

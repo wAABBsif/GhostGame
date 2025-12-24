@@ -1,8 +1,5 @@
 ﻿#include "ecs_system.h"
 
-#include <stddef.h>
-#include <tgmath.h>
-
 #include "ecs_entity.h"
 #include "core/game_time.h"
 #include "core/logging.h"
@@ -58,20 +55,18 @@ void systems_update(void)
 
 		for (entity_id entity = 0; entity < entities_get_count(); entity++)
 		{
-			void *components[COMPONENT_TYPE_COUNT];
 			component_type type_index;
 
 			for (type_index = 0; type_index < component_count; type_index++)
 			{
-				components[type_index] = component_get(component_types[type_index], entity);
-				if (components[type_index] == NULL)
+				if (!component_exists(component_types[type_index], entity))
 					break;
 			}
 
 			if (type_index != component_count)
 				continue;
 
-			GAME_SYSTEMS[sys].func(entity, components);
+			GAME_SYSTEMS[sys].func(entity);
 		}
 	}
 }

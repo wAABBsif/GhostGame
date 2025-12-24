@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "ecs_entity.h"
 
-typedef void (*system_func)(entity_id entity, void **components);
+typedef void (*system_func)(entity_id entity);
 
 typedef struct ecs_system
 {
