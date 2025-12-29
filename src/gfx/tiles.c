@@ -83,8 +83,11 @@ void draw_tiles(void)
 {
 	shader_set(s_shader);
 
-	glBindBuffer(GL_ARRAY_BUFFER, s_vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(s_quads), s_quads);
+	if (s_is_marked_dirty)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, s_vbo);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(s_quads), s_quads);
+	}
 
 	texture_set(texture_get_id(tile_atlas_get_texture(level_get_tile_atlas())), 0);
 	shader_set_int32_t(s_shader, "atlas_texture", 0);
