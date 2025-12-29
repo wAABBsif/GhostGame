@@ -36,5 +36,5 @@ struct
     } size;
     
     boolean has_collision;
-    boolean is_sorted;
+    uint8   padding
 } tiles[tile_count];
