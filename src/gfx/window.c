@@ -36,7 +36,7 @@ game_window *window_create(void)
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 	window->sdl_window = SDL_CreateWindow(WINDOW_TITLE, WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT, WINDOW_FLAGS);
-	assert(s_window != NULL);
+	assert(window != NULL);
 
 	SDL_SetWindowMinimumSize(window->sdl_window, WINDOW_MIN_HEIGHT, WINDOW_MIN_HEIGHT);
 

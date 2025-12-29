@@ -128,7 +128,7 @@ static uint16_t s_get_ordered_index(const int8_t z, const uint16_t start, const 
 
 void add_sprite_quad(const sprite_quad *quad)
 {
-	assert(s_unsorted_count + s_sorted_count < MAX_SPRITES);
+	assert(s_sorted_count < MAX_SPRITES);
 
 	const uint16_t index = s_get_ordered_index(quad->vertices->z, 0, s_sorted_count);
 	memmove(s_quads + index + 1, s_quads + index, sizeof(sprite_quad) * (s_sorted_count - index));

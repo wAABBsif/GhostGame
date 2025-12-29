@@ -31,7 +31,7 @@ void gfx_init(void)
 	LOG_MESSAGE("Initializing graphics...");
 
 	s_window = window_create();
-	assert(window != NULL);
+	assert(s_window != NULL);
 	window_make_context_current(s_window);
 
 	const int glad_status = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
