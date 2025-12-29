@@ -9,6 +9,7 @@
 #include "gfx/gfx.h"
 #include "gfx/shader.h"
 #include "glad/glad.h"
+#include "SDL3/SDL_stdinc.h"
 
 #define MIN_ASPECT_RATIO	(5.0f / 4.0f)
 #define MAX_ASPECT_RATIO	(7.0f / 3.0f)
@@ -67,14 +68,14 @@ void camera_terminate()
 
 static vec2 get_matrix_scale(const float scale)
 {
-	float aspect = window_get_aspect_ratio();
+	float aspect = window_get_aspect_ratio(gfx_get_window());
 	aspect = SDL_clamp(aspect, MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
 	return (vec2){2 / scale, 2 / scale * aspect};
 }
 
 static vec2 get_matrix_scale_inverted(const float scale)
 {
-	float aspect = window_get_aspect_ratio();
+	float aspect = window_get_aspect_ratio(gfx_get_window());
 	aspect = SDL_clamp(aspect, MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
 	return (vec2){scale / 2, scale / 2 / aspect};
 }
@@ -223,7 +224,7 @@ void camera_texture_free_depth_texture(const camera_texture *cam_texture)
 
 vec2 camera_get_render_size(const camera *cam)
 {
-	float aspect = window_get_aspect_ratio();
+	float aspect = window_get_aspect_ratio(gfx_get_window());
 	aspect = SDL_clamp(aspect, MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
 	return (vec2){cam->render_size, cam->render_size / aspect};
 }
@@ -279,7 +280,7 @@ void camera_bind_lighting_framebuffer(const camera* cam)
 void camera_unbind_framebuffer(void)
 {
 	int width, height;
-	window_get_size(&width, &height);
+	window_get_size(gfx_get_window(), &width, &height);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
@@ -327,7 +328,7 @@ void camera_window_resize(const camera *cam)
 	camera_texture_create_color_texture(&get_main_camera()->lighting_texture, size);
 	camera_texture_create_depth_texture(&get_main_camera()->lighting_texture, size);
 
-	const float aspect = window_get_aspect_ratio();
+	const float aspect = window_get_aspect_ratio(gfx_get_window());
 	vec2 vertex_scale = VEC2_ONE;
 	if (aspect < MIN_ASPECT_RATIO)
 		vertex_scale.y = aspect / MIN_ASPECT_RATIO;

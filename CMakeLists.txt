@@ -93,6 +93,8 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/entities/entity_actor.h
 		src/game/ecs/ecs_tag.c
 		src/game/ecs/ecs_tag.h
+		src/gfx/tiles.c
+		src/gfx/tiles.h
 )
 
 include_directories(src)

@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <string.h>
 
-static entity_index s_entity_count;
+static entity_id s_entity_count;
 static ecs_entity s_entities[ECS_MAX_ENTITIES];
 
 ecs_entity *entities_get()
@@ -11,61 +11,39 @@ ecs_entity *entities_get()
 	return s_entities;
 }
 
-entity_index entities_get_count()
+entity_id entities_get_count()
 {
 	return s_entity_count;
 }
 
-entity_index entities_add()
+entity_id entities_add()
 {
-	const entity_index result = s_entity_count;
+	const entity_id result = s_entity_count;
 	s_entities[s_entity_count] = (ecs_entity){0};
 	s_entity_count++;
 	return result;
 }
 
-void entities_remove(const entity_index index)
+void entities_remove(const entity_id index)
 {
 	s_entity_count--;
 	memmove(&s_entities[index], &s_entities[index + 1], sizeof(ecs_entity) * (s_entity_count - index));
 }
 
-void entity_queue_remove(const entity_index index)
+void entity_queue_remove(const entity_id index)
 {
-	if (entity_has_component(index, TAG_DELETION))
-		return;
 	entity_set_tag(index, TAG_DELETION, true);
 }
 
-bool entity_has_component(const entity_index index, const component_type component)
+bool entity_get_tag(const entity_id index, const ecs_tag tag)
 {
-	return s_entities[index].components & COMPONENT_GET_MASK(component);
+	return s_entities[index].tags & COMPONENT_MASK(tag);
 }
 
-void entity_enable_component(const entity_index index, const component_type type)
-{
-	ecs_entity *e = &s_entities[index];
-
-	assert(!entity_has_component(index, type));
-	e->components |= COMPONENT_GET_MASK(type);
-}
-
-void *entity_add_component(const component_type type)
-{
-	entity_enable_component(s_entity_count - 1, type);
-	const component_index c_index = components_add(type);
-	return components_get_index(type, c_index);
-}
-
-bool entity_get_tag(const entity_index index, const ecs_tag tag)
-{
-	return s_entities[index].tags & COMPONENT_GET_MASK(tag);
-}
-
-void entity_set_tag(const entity_index index, const ecs_tag tag, bool const value)
+void entity_set_tag(const entity_id index, const ecs_tag tag, bool const value)
 {
 	if (value)
-		s_entities[index].tags |= COMPONENT_GET_MASK(tag);
+		s_entities[index].tags |= COMPONENT_MASK(tag);
 	else
-		s_entities[index].tags &= ~COMPONENT_GET_MASK(tag);
+		s_entities[index].tags &= ~COMPONENT_MASK(tag);
 }

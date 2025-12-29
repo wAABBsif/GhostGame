@@ -1,4 +1,5 @@
-rewrite ECS!!
+optimize ECS
+try to decouple more libraries
 optimize tiles
 rewrite audio
 audio ECS

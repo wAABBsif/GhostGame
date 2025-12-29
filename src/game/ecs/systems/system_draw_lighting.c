@@ -29,15 +29,11 @@ const static uint16_t S_TEX_COORDS[8] =
 	0, 0
 };
 
-void system_draw_lighting_update(void **components, entity_index entity)
+void system_draw_lighting_update(entity_id entity)
 {
-	if (!entity_has_component(entity, COMPONENT_TYPE_LIGHT))
-		return;
+	const component_transform *c_transform = component_get(COMPONENT_TYPE_TRANSFORM, entity);
+	const component_light *c_light = component_get(COMPONENT_TYPE_LIGHT, entity);
 
-	assert(entity_has_component(entity, COMPONENT_TYPE_TRANSFORM));
-
-	const component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
-	const component_light *c_light = components[COMPONENT_TYPE_LIGHT];
 	const vec2 rounded_position = vec2_truncate(c_transform->position);
 
 	if (!sprite_simple_cull(rounded_position, c_light->size))
@@ -56,6 +52,7 @@ void system_draw_lighting_update(void **components, entity_index entity)
 		quad.vertices[v].texture_y = S_TEX_COORDS[v * 2 + 1];
 
 		quad.vertices[v].color = c_light->color;
+		quad.vertices[v].intensity_multiplier = c_light->intensity_multiplier;
 		quad.vertices[v].priority = c_light->priority;
 		quad.vertices[v].z = c_light->z;
 		quad.vertices[v].type = c_light->type;

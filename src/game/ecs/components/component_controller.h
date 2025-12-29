@@ -6,7 +6,9 @@ typedef uint16_t controller_type;
 
 #define CONTROLLER_TYPE_PLAYER	0
 
-typedef void (*controller_func)(void **components);
+typedef struct component_controller component_controller;
+
+typedef void (*controller_func)(component_controller *controller, entity_id entity);
 
 typedef struct component_controller
 {

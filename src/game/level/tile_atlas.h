@@ -12,7 +12,6 @@ typedef struct atlas_tile
 	vec2u16 position;
 	vec2u8 size;
 	bool has_collision;
-	bool is_sorted;
 } atlas_tile;
 
 typedef hash tile_atlas_h;

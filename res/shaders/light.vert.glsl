@@ -4,8 +4,10 @@ layout(location = 2) in vec4 in_color;
 layout(location = 3) in int in_light_type;
 layout(location = 4) in float in_priority;
 layout(location = 5) in float in_z;
+layout(location = 6) in float in_intensity;
 
 out vec2 tex_coords;
+out float intensity;
 out vec4 color;
 out float light_type;
 out float z;
@@ -21,4 +23,5 @@ void main()
     color = in_color;
     light_type = float(in_light_type);
     z = -in_z;
+    intensity = in_intensity;
 }

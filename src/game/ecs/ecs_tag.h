@@ -7,3 +7,4 @@
 #define TAG_GET_MASK(tag)		(1 << (tag))
 
 typedef uint16_t ecs_tag;
+typedef uint16_t tag_mask;

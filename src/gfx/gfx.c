@@ -12,8 +12,10 @@
 #include "camera.h"
 #include "lighting.h"
 #include "sprite.h"
+#include "tiles.h"
 #include "SDL3/SDL_video.h"
 
+static game_window *s_window;
 static SDL_GLContext s_context = NULL;
 
 camera cam;
@@ -29,11 +31,10 @@ void gfx_init(void)
 {
 	LOG_MESSAGE("Initializing graphics...");
 
-	SDL_Window *window = window_create();
-	assert(window != NULL);
+	s_window = window_create();
+	assert(s_window != NULL);
+	window_make_context_current(s_window);
 
-	s_context = SDL_GL_CreateContext(window);
-	SDL_GL_MakeCurrent(window, s_context);
 	const int glad_status = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
 	assert(glad_status);
 
@@ -42,7 +43,7 @@ void gfx_init(void)
 	camera_init();
 
 	int width, height;
-	window_get_size(&width, &height);
+	window_get_size(s_window, &width, &height);
 	glViewport(0, 0, width, height);
 
 	glEnable(GL_DEPTH_TEST);
@@ -54,6 +55,7 @@ void gfx_init(void)
 	SDL_GL_SetSwapInterval(0);
 
 	test_camera_init();
+	tiles_init();
 	sprite_init();
 	lighting_init();
 }
@@ -64,6 +66,7 @@ void gfx_draw(void)
 	glClearColor(0.2, 0.3, 0.5, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	draw_tiles();
 	draw_sprites();
 
 	camera_bind_lighting_framebuffer(&cam);
@@ -78,7 +81,7 @@ void gfx_draw(void)
 
 	camera_render_to_screen(&cam);
 
-	SDL_GL_SwapWindow(window_get_sdl_handle());
+	window_swap_buffers(s_window);
 }
 
 void gfx_terminate(void)
@@ -87,8 +90,14 @@ void gfx_terminate(void)
 
 	lighting_terminate();
 	sprite_terminate();
+	tiles_terminate();
 	shader_clear();
 	texture_clear();
 	camera_terminate();
-	window_destroy();
+	window_destroy(s_window);
+}
+
+game_window *gfx_get_window(void)
+{
+	return s_window;
 }

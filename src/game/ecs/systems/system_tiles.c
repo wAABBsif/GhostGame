@@ -14,10 +14,11 @@
 #include "game/ecs/entities/entity_tile.h"
 #include "game/level/level.h"
 #include "gfx/camera.h"
+#include "gfx/tiles.h"
 
 static chunk_index s_screen_chunk_indices[4] = {-1, -1, -1, -1};
 
-static bool s_marked_dirty;
+static bool s_is_marked_dirty;
 static uint16_t s_tile_count_per_frame = 0;
 
 static int8_t s_get_screen_chunk_from_position(const vec2 position)
@@ -35,6 +36,8 @@ static int8_t s_get_screen_chunk_from_position(const vec2 position)
 
 	if (displacement.y < -LEVEL_CHUNK_HEIGHT_IN_PIXELS)
 		return -1;
+
+	//normal xy quadrants
 
 	if (displacement.x >= 0)
 	{
@@ -73,27 +76,12 @@ static chunk_index s_check_chunk_index(const uint8_t index)
 
 void system_tiles_load_level(void)
 {
-	component_index sprite_index = 0;
-	component_index tile_index = 0;
 
-	for (entity_index i = 0; i < entities_get_count(); i++)
-	{
-		component_sprite *c_sprite = system_retrieve_component(i, COMPONENT_TYPE_SPRITE, &sprite_index);
-		component_tile *c_tile = system_retrieve_component(i, COMPONENT_TYPE_TILE, &tile_index);
-
-		if (!c_tile)
-			continue;
-
-		assert(c_sprite);
-
-		entity_tile_from_atlas(level_get_tile_atlas(), c_sprite);
-		entity_tile_from_atlas(level_get_tile_atlas(), c_sprite);
-	}
 }
 
 void system_tiles_begin_frame(void)
 {
-	s_marked_dirty = false;
+	s_is_marked_dirty = false;
 	s_tile_count_per_frame = 0;
 
 	for (int i = 0; i < 4; i++)
@@ -102,32 +90,27 @@ void system_tiles_begin_frame(void)
 		if (result == s_screen_chunk_indices[i])
 			continue;
 
-		s_marked_dirty = true;
+		s_is_marked_dirty = true;
 		s_screen_chunk_indices[i] = result;
 	}
+
+	set_tile_origin(vec2_sub(level_chunk_position_to_vec2(*level_get_chunk_position(s_screen_chunk_indices[0])), (vec2){256, 128}));
 }
 
-void system_tiles_update(void **components, entity_index entity)
+void system_tiles_update(const entity_id entity)
 {
-	if (!s_marked_dirty)
+	if (!s_is_marked_dirty)
 		return;
 
-	if (!entity_has_component(entity, COMPONENT_TYPE_TILE))
-		return;
-
-	assert(entity_has_component(entity, COMPONENT_TYPE_TRANSFORM));
-	assert(entity_has_component(entity, COMPONENT_TYPE_SPRITE));
-	assert(entity_has_component(entity, COMPONENT_TYPE_COLLIDER));
-
-	component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
-	component_sprite *c_sprite = components[COMPONENT_TYPE_SPRITE];
-	component_collider *c_collider = components[COMPONENT_TYPE_COLLIDER];
-	component_tile *c_tile = components[COMPONENT_TYPE_TILE];
+	component_transform *c_transform = component_get(COMPONENT_TYPE_TRANSFORM, entity);
+	component_collider *c_collider = component_get(COMPONENT_TYPE_COLLIDER, entity);
+	const component_tile *c_tile = component_get(COMPONENT_TYPE_TILE, entity);
 
 	if (s_screen_chunk_indices[c_tile->chunk_index] < 0)
 		return;
 
-	entity_tile_from_chunk(s_screen_chunk_indices[c_tile->chunk_index], s_tile_count_per_frame, c_transform, c_sprite, c_collider);
+	entity_tile_from_chunk(s_screen_chunk_indices[c_tile->chunk_index], s_tile_count_per_frame, c_transform, c_collider);
+	entity_tile_to_quad(s_screen_chunk_indices[c_tile->chunk_index], c_tile->chunk_index, s_tile_count_per_frame, c_transform);
 
 	s_tile_count_per_frame = (s_tile_count_per_frame + 1) % LEVEL_CHUNK_SIZE;
 }

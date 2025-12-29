@@ -56,7 +56,7 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 #define LOG_WARNING(format, ...)														\
 ({																						\
 	char message_start[LOG_SPACE];														\
-	snprintf(message_start, LOG_SPACE, "[MESSAGE (%s:%d)]", __FILE_NAME__, __LINE__);	\
+	snprintf(message_start, LOG_SPACE, "[WARNING (%s:%d)]", __FILE_NAME__, __LINE__);	\
 	const int length = strlen(message_start);											\
 	for (int i = length; i < LOG_SPACE - 1; i++)										\
 		message_start[i] = ' ';															\
@@ -73,7 +73,7 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 #define LOG_ERROR(format, ...)															\
 ({																						\
 	char message_start[LOG_SPACE];														\
-	snprintf(message_start, LOG_SPACE, "[MESSAGE (%s:%d)]", __FILE_NAME__, __LINE__);	\
+	snprintf(message_start, LOG_SPACE, "[ERROR (%s:%d)]", __FILE_NAME__, __LINE__);	\
 	const int length = strlen(message_start);											\
 	for (int i = length; i < LOG_SPACE - 1; i++)										\
 		message_start[i] = ' ';															\

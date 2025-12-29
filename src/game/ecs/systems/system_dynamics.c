@@ -47,16 +47,11 @@ static void s_system_dynamics_collision_response(component_transform *c_transfor
 	c_transform->position = vec2_add(c_transform->position, vec2_mul(normal, vec2_mag(vec2_sub(point, closest_point))));
 }
 
-void system_dynamics_update(void **components, entity_index entity)
+void system_dynamics_update(const entity_id entity)
 {
-	if (!entity_has_component(entity, COMPONENT_TYPE_COLLIDER) || !entity_has_component(entity, COMPONENT_TYPE_KINEMATIC_BODY))
-		return;
-
-	assert(entity_has_component(entity, COMPONENT_TYPE_TRANSFORM));
-
-	component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
-	component_kinematic_body *c_kinematics = components[COMPONENT_TYPE_KINEMATIC_BODY];
-	component_collider *c_collider = components[COMPONENT_TYPE_COLLIDER];
+	component_transform *c_transform = component_get(COMPONENT_TYPE_TRANSFORM, entity);;
+	component_kinematic_body *c_kinematics = component_get(COMPONENT_TYPE_KINEMATIC_BODY, entity);;
+	component_collider *c_collider = component_get(COMPONENT_TYPE_COLLIDER, entity);
 
 	const vec2 x_check_position = (vec2){c_transform->position.x + (float)c_collider->radius.x * (c_kinematics->velocity.x > 0 ? 1.0 : -1.0), c_transform->position.y};
 	const collision_data x_collision_data = collision_overlap_point(x_check_position, entity);

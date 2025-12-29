@@ -1,8 +1,5 @@
 ﻿#include "ecs_system.h"
 
-#include <stddef.h>
-#include <tgmath.h>
-
 #include "ecs_entity.h"
 #include "core/game_time.h"
 #include "core/logging.h"
@@ -14,57 +11,83 @@
 #include "systems/system_tiles.h"
 #include "systems/system_update.h"
 
-typedef void (*system_init_func)();
-typedef void (*system_update_func)(void **components, entity_index entity);
-
-const system_init_func INIT_SYSTEMS[] = {};
-
-const system_update_func UPDATE_SYSTEMS[] =
+const ecs_system GAME_SYSTEMS[] =
 {
-	system_controller_update,
-	system_tiles_update,
-	system_update_update,
-	system_dynamics_update,
-	system_kinematics_update,
-	system_draw_sprites_update,
-	system_draw_lighting_update
+	(ecs_system){COMPONENT_MASK(COMPONENT_TYPE_CONTROLLER), system_controller_update},
+	(ecs_system){COMPONENT_MASK(COMPONENT_TYPE_TRANSFORM) | COMPONENT_MASK(COMPONENT_TYPE_COLLIDER) | COMPONENT_MASK(COMPONENT_TYPE_TILE), system_tiles_update},
+	(ecs_system){COMPONENT_MASK(COMPONENT_TYPE_UPDATE), system_update_update},
+	(ecs_system){COMPONENT_MASK(COMPONENT_TYPE_TRANSFORM) | COMPONENT_MASK(COMPONENT_TYPE_KINEMATIC_BODY) | COMPONENT_MASK(COMPONENT_TYPE_COLLIDER), system_dynamics_update},
+	(ecs_system){COMPONENT_MASK(COMPONENT_TYPE_TRANSFORM) | COMPONENT_MASK(COMPONENT_TYPE_KINEMATIC_BODY), system_kinematics_update},
+	(ecs_system){COMPONENT_MASK(COMPONENT_TYPE_TRANSFORM) | COMPONENT_MASK(COMPONENT_TYPE_SPRITE), system_draw_sprites_update},
+	(ecs_system){COMPONENT_MASK(COMPONENT_TYPE_TRANSFORM) | COMPONENT_MASK(COMPONENT_TYPE_LIGHT), system_draw_lighting_update}
 };
 
-void *system_retrieve_component(const entity_index entity, const component_type type, component_index *index)
+void *system_retrieve_component(const entity_id entity, const component_type type, entity_id *index)
 {
-	if (!entity_has_component(entity, type))
+	if (!component_exists(type, entity))
 		return NULL;
 
-	void *result = components_get_index(type, *index);
+	void *result = component_get(type, *index);
 	(*index)++;
 	return result;
 }
 
 void systems_init(void)
 {
-	for (int i = 0; i < sizeof(INIT_SYSTEMS) / sizeof(system_init_func); i++)
-	{
-		INIT_SYSTEMS[i]();
-	}
+
 }
 
 void systems_update(void)
 {
-	void *components[COMPONENT_TYPE_COUNT];
-	for (component_type j = 0; j < COMPONENT_TYPE_COUNT; j++)
-		components[j] = components_get(j);
-
-	for (entity_index entity = 0; entity < entities_get_count(); entity++)
+	for (uint16_t sys = 0; sys < systems_get_count(); sys++)
 	{
-		for (int system = 0; system < sizeof(UPDATE_SYSTEMS) / sizeof(system_update_func); system++)
-		{
-			UPDATE_SYSTEMS[system](components, entity);
-		}
+		uint16_t component_count = 0;
+		component_type component_types[COMPONENT_TYPE_COUNT];
 
 		for (component_type type = 0; type < COMPONENT_TYPE_COUNT; type++)
 		{
-			if (entity_has_component(entity, type))
-				components[type] += components_get_size(type);
+			if (!system_requires_component(GAME_SYSTEMS + sys, type))
+				continue;
+
+			component_types[component_count] = type;
+			component_count++;
+		}
+
+		for (entity_id entity = 0; entity < entities_get_count(); entity++)
+		{
+			component_type type_index;
+
+			for (type_index = 0; type_index < component_count; type_index++)
+			{
+				if (!component_exists(component_types[type_index], entity))
+					break;
+			}
+
+			if (type_index != component_count)
+				continue;
+
+			GAME_SYSTEMS[sys].func(entity);
 		}
 	}
+}
+
+uint16_t systems_get_count(void)
+{
+	return sizeof(GAME_SYSTEMS) / sizeof(GAME_SYSTEMS[0]);
+}
+
+bool system_requires_component(const ecs_system *system, const component_type type)
+{
+	return system->components & COMPONENT_MASK(type);
+}
+
+uint16_t system_get_component_count(const ecs_system *system)
+{
+	uint16_t count = 0;
+	for (component_type type = 0; type < COMPONENT_TYPE_COUNT; type++)
+	{
+		if (system_requires_component(system, type))
+			count++;
+	}
+	return count;
 }

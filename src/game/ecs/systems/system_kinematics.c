@@ -9,15 +9,10 @@
 #include "../components/component_transform.h"
 #include "../components/component_kinematic_body.h"
 
-void system_kinematics_update(void **components, const entity_index entity)
+void system_kinematics_update(const entity_id entity)
 {
-	if (!entity_has_component(entity, COMPONENT_TYPE_KINEMATIC_BODY))
-		return;
-
-	assert(entity_has_component(entity, COMPONENT_TYPE_TRANSFORM));
-
-	component_transform *c_transform = components[COMPONENT_TYPE_TRANSFORM];
-	component_kinematic_body *c_kinematics = components[COMPONENT_TYPE_KINEMATIC_BODY];
+	component_transform *c_transform = component_get(COMPONENT_TYPE_TRANSFORM, entity);
+	const component_kinematic_body *c_kinematics = component_get(COMPONENT_TYPE_KINEMATIC_BODY, entity);
 
 	c_transform->position = vec2_add(c_transform->position, vec2_mul(c_kinematics->velocity, game_time_get_delta()));
 }
