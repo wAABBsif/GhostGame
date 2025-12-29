@@ -122,7 +122,7 @@ static uint16_t s_get_ordered_index(const int8_t z, const uint16_t start, const 
 	if (mid_z < z)
 		return s_get_ordered_index(z, mid + 1, end);
 	if (mid_z > z)
-		return s_get_ordered_index(z, start, mid);
+		return s_get_ordered_index(z, start, mid - 1);
 	return mid;
 }
 
@@ -130,8 +130,8 @@ void add_sprite_quad(const sprite_quad *quad)
 {
 	assert(s_unsorted_count + s_sorted_count < MAX_SPRITES);
 
-	const uint16_t index = s_get_ordered_index(quad->vertices->z, MAX_SPRITES - s_sorted_count - 1, MAX_SPRITES - 1);
-	memmove(s_quads + MAX_SPRITES - s_sorted_count - 1, s_quads + MAX_SPRITES - s_sorted_count, sizeof(sprite_quad) * (1 + s_sorted_count + index - MAX_SPRITES));
+	const uint16_t index = s_get_ordered_index(quad->vertices->z, 0, s_sorted_count);
+	memmove(s_quads + index + 1, s_quads + index, sizeof(sprite_quad) * (s_sorted_count - index));
 	s_quads[index] = *quad;
 	s_sorted_count++;
 }
@@ -153,8 +153,6 @@ uint8_t sprite_get_texture_num(const texture_h h)
 
 void draw_sprites(void)
 {
-	memmove(s_quads, s_quads + MAX_SPRITES - s_sorted_count, sizeof(sprite_quad) * s_sorted_count);
-
 	shader_set(s_shader);
 
 	glBindBuffer(GL_ARRAY_BUFFER, s_vbo);
