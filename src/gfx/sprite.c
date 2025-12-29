@@ -21,7 +21,7 @@ static uint8_t s_texture_count;
 static texture_h s_textures[MAX_SPRITE_TEXTURES];
 
 static sprite_quad s_quads[MAX_SPRITES];
-static uint16_t s_sorted_count;
+static uint16_t s_sprite_count;
 
 void sprite_init(void)
 {
@@ -84,7 +84,7 @@ void sprite_terminate(void)
 	glDeleteBuffers(1, &s_ibo);
 
 	s_texture_count = 0;
-	s_sorted_count = 0;
+	s_sprite_count = 0;
 }
 
 bool sprite_simple_cull(const vec2 position, vec2 size)
@@ -128,12 +128,12 @@ static uint16_t s_get_ordered_index(const int8_t z, const uint16_t start, const 
 
 void add_sprite_quad(const sprite_quad *quad)
 {
-	assert(s_sorted_count < MAX_SPRITES);
+	assert(s_sprite_count < MAX_SPRITES);
 
-	const uint16_t index = s_get_ordered_index(quad->vertices->z, 0, s_sorted_count);
-	memmove(s_quads + index + 1, s_quads + index, sizeof(sprite_quad) * (s_sorted_count - index));
+	const uint16_t index = s_get_ordered_index(quad->vertices->z, 0, s_sprite_count);
+	memmove(s_quads + index + 1, s_quads + index, sizeof(sprite_quad) * (s_sprite_count - index));
 	s_quads[index] = *quad;
-	s_sorted_count++;
+	s_sprite_count++;
 }
 
 uint8_t sprite_get_texture_num(const texture_h h)
@@ -156,7 +156,7 @@ void draw_sprites(void)
 	shader_set(s_shader);
 
 	glBindBuffer(GL_ARRAY_BUFFER, s_vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(sprite_quad) * s_sorted_count, s_quads);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(sprite_quad) * s_sprite_count, s_quads);
 
 	for (int i = 0; i < s_texture_count; i++)
 	{
@@ -171,8 +171,8 @@ void draw_sprites(void)
 	shader_set_mat3(s_shader, "camera_to_screen_matrix", camera_to_screen_matrix(get_main_camera()));
 
 	glBindVertexArray(s_vao);
-	glDrawElements(GL_TRIANGLES, s_sorted_count * 6, GL_UNSIGNED_SHORT, 0);
+	glDrawElements(GL_TRIANGLES, s_sprite_count * 6, GL_UNSIGNED_SHORT, 0);
 
 	s_texture_count = 0;
-	s_sorted_count = 0;
+	s_sprite_count = 0;
 }
