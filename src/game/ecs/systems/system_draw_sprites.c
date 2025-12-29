@@ -55,5 +55,5 @@ void system_draw_sprites_update(entity_id entity)
 		quad.vertices[v].texture_index = sprite_get_texture_num(c_sprite->texture);
 	}
 
-	add_sprite_quad(&quad, c_sprite->draw_sorted);
+	add_sprite_quad(&quad);
 }

@@ -24,7 +24,6 @@ entity_id entity_tile_create(const uint8_t chunk_index)
 	c_spr->color = COLOR_WHITE;
 	c_spr->z = 0;
 	c_spr->use_camera_to_screen_matrix = false;
-	c_spr->draw_sorted = false;
 
 	component_collider *c_coll = component_add(COMPONENT_TYPE_COLLIDER, result);
 	c_coll->radius = (vec2u8){0, 0};
@@ -50,7 +49,6 @@ void entity_tile_from_chunk(const chunk_index chunk, const uint16_t tile_index, 
 	c_sprite->texture_pos = atlas_entry.position;
 	c_sprite->texture_size = (vec2u16){atlas_entry.size.x, atlas_entry.size.y};
 	c_sprite->z = t.z;
-	c_sprite->draw_sorted = atlas_entry.is_sorted;
 
 	if (atlas_entry.has_collision)
 	{

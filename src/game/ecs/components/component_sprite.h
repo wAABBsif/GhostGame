@@ -15,5 +15,4 @@ typedef struct component_sprite
 	color    color;
 	int8_t z;
 	bool use_camera_to_screen_matrix;
-	bool draw_sorted;
 } component_sprite;

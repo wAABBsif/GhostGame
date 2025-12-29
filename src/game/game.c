@@ -69,7 +69,7 @@ static void s_game_init(void)
 
 	level_load("res/levels/test.level");
 
-	entity_id plr = entities_add();
+	const entity_id plr = entities_add();
 
 	component_transform *c_pos =  component_add(COMPONENT_TYPE_TRANSFORM, plr);
 	c_pos->position = VEC2_ZERO;
@@ -83,7 +83,6 @@ static void s_game_init(void)
 	c_sprite->color = COLOR_WHITE;
 	c_sprite->z = 2;
 	c_sprite->use_camera_to_screen_matrix = false;
-	c_sprite->draw_sorted = false;
 
 	component_light *c_light = component_add(COMPONENT_TYPE_LIGHT, plr);
 	c_light->size = (vec2){32, 32};

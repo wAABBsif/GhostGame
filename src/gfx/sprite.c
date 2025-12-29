@@ -21,7 +21,6 @@ static uint8_t s_texture_count;
 static texture_h s_textures[MAX_SPRITE_TEXTURES];
 
 static sprite_quad s_quads[MAX_SPRITES];
-static uint16_t s_unsorted_count;
 static uint16_t s_sorted_count;
 
 void sprite_init(void)
@@ -86,7 +85,6 @@ void sprite_terminate(void)
 
 	s_texture_count = 0;
 	s_sorted_count = 0;
-	s_unsorted_count = 0;
 }
 
 bool sprite_simple_cull(const vec2 position, vec2 size)
@@ -128,22 +126,14 @@ static uint16_t s_get_ordered_index(const int8_t z, const uint16_t start, const 
 	return mid;
 }
 
-void add_sprite_quad(const sprite_quad *quad, const bool is_sorted)
+void add_sprite_quad(const sprite_quad *quad)
 {
 	assert(s_unsorted_count + s_sorted_count < MAX_SPRITES);
 
-	if (is_sorted)
-	{
-		const uint16_t index = s_get_ordered_index(quad->vertices->z, MAX_SPRITES - s_sorted_count - 1, MAX_SPRITES - 1);
-		memmove(s_quads + MAX_SPRITES - s_sorted_count - 1, s_quads + MAX_SPRITES - s_sorted_count, sizeof(sprite_quad) * (1 + s_sorted_count + index - MAX_SPRITES));
-		s_quads[index] = *quad;
-		s_sorted_count++;
-	}
-	else
-	{
-		s_quads[s_unsorted_count] = *quad;
-		s_unsorted_count++;
-	}
+	const uint16_t index = s_get_ordered_index(quad->vertices->z, MAX_SPRITES - s_sorted_count - 1, MAX_SPRITES - 1);
+	memmove(s_quads + MAX_SPRITES - s_sorted_count - 1, s_quads + MAX_SPRITES - s_sorted_count, sizeof(sprite_quad) * (1 + s_sorted_count + index - MAX_SPRITES));
+	s_quads[index] = *quad;
+	s_sorted_count++;
 }
 
 uint8_t sprite_get_texture_num(const texture_h h)
@@ -163,12 +153,12 @@ uint8_t sprite_get_texture_num(const texture_h h)
 
 void draw_sprites(void)
 {
-	memmove(s_quads + s_unsorted_count, s_quads + MAX_SPRITES - s_sorted_count, sizeof(sprite_quad) * s_sorted_count);
+	memmove(s_quads, s_quads + MAX_SPRITES - s_sorted_count, sizeof(sprite_quad) * s_sorted_count);
 
 	shader_set(s_shader);
 
 	glBindBuffer(GL_ARRAY_BUFFER, s_vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(sprite_quad) * (s_unsorted_count + s_sorted_count), s_quads);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(sprite_quad) * s_sorted_count, s_quads);
 
 	for (int i = 0; i < s_texture_count; i++)
 	{
@@ -183,9 +173,8 @@ void draw_sprites(void)
 	shader_set_mat3(s_shader, "camera_to_screen_matrix", camera_to_screen_matrix(get_main_camera()));
 
 	glBindVertexArray(s_vao);
-	glDrawElements(GL_TRIANGLES, (s_unsorted_count + s_sorted_count) * 6, GL_UNSIGNED_SHORT, 0);
+	glDrawElements(GL_TRIANGLES, s_sorted_count * 6, GL_UNSIGNED_SHORT, 0);
 
 	s_texture_count = 0;
-	s_unsorted_count = 0;
 	s_sorted_count = 0;
 }

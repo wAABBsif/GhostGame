@@ -13,7 +13,7 @@ typedef struct sprite_vertex
 	vec2i16 position;
 	vec2u16 texture_size;
 
-	color    color;
+	color  color;
 	int8_t z;
 	bool use_camera_to_screen_matrix;
 	uint8_t texture_index;
@@ -29,5 +29,5 @@ void sprite_terminate(void);
 
 bool sprite_simple_cull(vec2 position, vec2 size);
 uint8_t sprite_get_texture_num(texture_h h);
-void add_sprite_quad(const sprite_quad *quad, bool is_sorted);
+void add_sprite_quad(const sprite_quad *quad);
 void draw_sprites(void);
