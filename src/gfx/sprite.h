@@ -5,7 +5,7 @@
 #include "texture.h"
 #include "core/vec2.h"
 
-#define MAX_SPRITES				2048
+#define MAX_SPRITES				256
 #define MAX_SPRITE_TEXTURES		16
 
 typedef struct sprite_vertex
