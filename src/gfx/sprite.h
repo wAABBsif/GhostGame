@@ -11,7 +11,7 @@
 typedef struct sprite_vertex
 {
 	vec2i16 position;
-	vec2u16 texture_size;
+	vec2u16 texture_coords;
 
 	color  color;
 	int8_t z;

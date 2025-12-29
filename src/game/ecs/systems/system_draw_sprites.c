@@ -47,7 +47,7 @@ void system_draw_sprites_update(entity_id entity)
 		int32_t w, h;
 		texture_get_size(c_sprite->texture, &w, &h);
 
-		quad.vertices[v].texture_size = (vec2u16){(float)tex_coords[v * 2] / (float)w * 65535.0f, (float)tex_coords[v * 2 + 1] / (float)h * 65535.0f};
+		quad.vertices[v].texture_coords = (vec2u16){(float)tex_coords[v * 2] / (float)w * 65535.0f, (float)tex_coords[v * 2 + 1] / (float)h * 65535.0f};
 
 		quad.vertices[v].color = c_sprite->color;
 		quad.vertices[v].z = c_sprite->z;

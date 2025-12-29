@@ -12,6 +12,7 @@
 #include "camera.h"
 #include "lighting.h"
 #include "sprite.h"
+#include "tiles.h"
 #include "SDL3/SDL_video.h"
 
 static game_window *s_window;
@@ -54,6 +55,7 @@ void gfx_init(void)
 	SDL_GL_SetSwapInterval(0);
 
 	test_camera_init();
+	tiles_init();
 	sprite_init();
 	lighting_init();
 }
@@ -64,6 +66,7 @@ void gfx_draw(void)
 	glClearColor(0.2, 0.3, 0.5, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	draw_tiles();
 	draw_sprites();
 
 	camera_bind_lighting_framebuffer(&cam);
@@ -87,6 +90,7 @@ void gfx_terminate(void)
 
 	lighting_terminate();
 	sprite_terminate();
+	tiles_terminate();
 	shader_clear();
 	texture_clear();
 	camera_terminate();

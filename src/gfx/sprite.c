@@ -32,14 +32,14 @@ void sprite_init(void)
 
 	glGenBuffers(1, &s_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, s_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(sprite_quad) * MAX_SPRITES, s_quads, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(s_quads), s_quads, GL_DYNAMIC_DRAW);
 
 	//x, y
 	glVertexAttribPointer(0, 2, GL_SHORT, false, sizeof(sprite_vertex), (void *)offsetof(sprite_vertex, position));
 	glEnableVertexAttribArray(0);
 
 	//texture_x, texture_y
-	glVertexAttribPointer(1, 2, GL_UNSIGNED_SHORT, true, sizeof(sprite_vertex), (void *)offsetof(sprite_vertex, texture_size));
+	glVertexAttribPointer(1, 2, GL_UNSIGNED_SHORT, true, sizeof(sprite_vertex), (void *)offsetof(sprite_vertex, texture_coords));
 	glEnableVertexAttribArray(1);
 
 	//color

@@ -7,7 +7,7 @@
 
 typedef struct tile_atlas tile_atlas;
 
-typedef struct atlas_tile
+typedef struct atlaas_tile
 {
 	vec2u16 position;
 	vec2u8 size;
