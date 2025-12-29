@@ -1,3 +1,7 @@
+lib/GLAD
+lib/SDL
+lib/SDL_mixer
+
 __pycache__
 bin
 .idea
