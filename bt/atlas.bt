@@ -17,8 +17,8 @@ uint8   padding[14];
 
 typedef enum <uint8>
 {
-    True,
-    False
+    False,
+    True
 } boolean;
 
 struct
