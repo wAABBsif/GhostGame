@@ -1,13 +1,8 @@
-optimize ECS
-try to decouple more libraries
-optimize tiles
 rewrite audio
 audio ECS
-message system
+replace update with scripting
 hitbox/hurtbox
 health system
-movement parameters
-texture atlas
 program player and basic enemies
 camera brain system
 mouse-based aim
