@@ -49,7 +49,7 @@ void camera_init()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(camera_quad_vertex), (void*)offsetof(camera_quad_vertex, tex_coord));
 	glEnableVertexAttribArray(1);
 
-	const int indices[6] = QUAD_INDICES;
+	const uint16_t indices[6] = QUAD_INDICES;
 	glGenBuffers(1, &s_index_buffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_index_buffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -300,7 +300,7 @@ void camera_render_to_screen(const camera *cam)
 	shader_set_vec2(s_shader, "resolution", camera_get_render_size(cam));
 
 	glBindVertexArray(s_vertex_array);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 }
 
 void camera_get_bounds(const camera *cam, vec2 *bounds_min, vec2 *bounds_max)
