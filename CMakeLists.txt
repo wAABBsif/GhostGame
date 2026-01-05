@@ -102,10 +102,6 @@ add_subdirectory(lib/SDL EXCLUDE_FROM_ALL)
 include_directories(lib/SDL/include)
 target_link_libraries(${PROJECT_NAME} SDL3::SDL3)
 
-add_subdirectory(lib/SDL_mixer EXCLUDE_FROM_ALL)
-include_directories(lib/SDL_mixer/include)
-target_link_libraries(${PROJECT_NAME} SDL3_mixer::SDL3_mixer)
-
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} OpenGL::GL)
 
