@@ -101,3 +101,19 @@ game_window *gfx_get_window(void)
 {
 	return s_window;
 }
+
+uint16_t *gfx_generate_quad_indices(const uint16_t quad_count, uint16_t *element_count)
+{
+	const uint16_t indices_per_quad[6] = {0, 1, 2, 2, 3, 0};
+	uint16_t *result = malloc(sizeof(indices_per_quad) * quad_count);
+
+	for (int i = 0; i < 6 * quad_count; i++)
+	{
+		const int index = i % 6;
+		const int quad = i / 6;
+		result[i] = indices_per_quad[index] + 4 * quad;
+	}
+
+	*element_count = 6 * quad_count;
+	return result;
+}

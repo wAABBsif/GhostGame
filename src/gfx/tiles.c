@@ -42,17 +42,12 @@ void tiles_init(void)
 	glVertexAttribPointer(2, 1, GL_BYTE, true, sizeof(tile_vertex), (void *)offsetof(tile_vertex, z));
 	glEnableVertexAttribArray(2);
 
-	const uint16_t quad_indices[6] = QUAD_INDICES;
-	uint16_t indices[6 * MAX_TILES];
-	for (int i = 0; i < 6 * MAX_TILES; i++)
-	{
-		const int index = i % 6;
-		const int quad = i / 6;
-		indices[i] = quad_indices[index] + 4 * quad;
-	}
+	uint16_t element_count;
+	uint16_t *indices = gfx_generate_quad_indices(MAX_TILES, &element_count);
 	glGenBuffers(1, &s_ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, element_count * 2, indices, GL_STATIC_DRAW);
+	free(indices);
 
 	glBindVertexArray(0);
 

@@ -2,6 +2,7 @@
 #include "camera.h"
 
 #include <assert.h>
+#include <stdlib.h>
 
 #include "gfx/window.h"
 #include "core/vec2.h"
@@ -49,10 +50,12 @@ void camera_init()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(camera_quad_vertex), (void*)offsetof(camera_quad_vertex, tex_coord));
 	glEnableVertexAttribArray(1);
 
-	const uint16_t indices[6] = QUAD_INDICES;
+	uint16_t element_count;
+	uint16_t *indices = gfx_generate_quad_indices(1, &element_count);
 	glGenBuffers(1, &s_index_buffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, element_count * 2, indices, GL_STATIC_DRAW);
+	free(indices);
 
 	glBindVertexArray(0);
 
