@@ -31,8 +31,6 @@ add_executable(GhostGame src/main.c
 		src/gfx/texture.c
 		src/gfx/texture.h
 		src/gfx/color.h
-		src/audio/audio.c
-		src/audio/audio.h
 		src/core/hash.h
 		src/input/input.c
 		src/input/input.h
