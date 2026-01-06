@@ -8,6 +8,7 @@
 #include "core/mat3.h"
 #include "game/level/level.h"
 #include "glad/glad.h"
+#include <stdlib.h>
 
 static uint32_t s_vao;
 static uint32_t s_vbo;
