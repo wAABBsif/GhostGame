@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "window.h"
 
@@ -11,4 +12,5 @@ void gfx_terminate(void);
 
 game_window *gfx_get_window(void);
 
-uint16_t *gfx_generate_quad_indices(const uint16_t quad_count, uint16_t *element_count);
+uint16_t gfx_get_length_of_element_array(uint16_t quad_count);
+void gfx_generate_quad_elements(uint16_t *ptr, uint16_t quad_count);

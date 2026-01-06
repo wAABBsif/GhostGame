@@ -50,12 +50,13 @@ void camera_init()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(camera_quad_vertex), (void*)offsetof(camera_quad_vertex, tex_coord));
 	glEnableVertexAttribArray(1);
 
-	uint16_t element_count;
-	uint16_t *indices = gfx_generate_quad_indices(1, &element_count);
+	const uint16_t element_buffer_length = gfx_get_length_of_element_array(1);
+	uint16_t *element_indices = malloc(element_buffer_length * sizeof(uint16_t));
+	gfx_generate_quad_elements(element_indices, 1);
 	glGenBuffers(1, &s_index_buffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, element_count * 2, indices, GL_STATIC_DRAW);
-	free(indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * element_buffer_length, element_indices, GL_STATIC_DRAW);
+	free(element_indices);
 
 	glBindVertexArray(0);
 
