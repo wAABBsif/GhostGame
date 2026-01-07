@@ -102,13 +102,21 @@ add_subdirectory(lib/SDL EXCLUDE_FROM_ALL)
 include_directories(lib/SDL/include)
 target_link_libraries(${PROJECT_NAME} SDL3::SDL3)
 
-find_package(OpenAL CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME} OpenAL::OpenAL)
-
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} OpenGL::GL)
 
 include_directories(lib/GLAD/include)
+
+if (WIN32)
+	add_library(OpenAL STATIC IMPORTED)
+	set_target_properties(OpenAL PROPERTIES
+			IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/AL/OpenAL32.lib"
+	)
+	target_link_libraries(${PROJECT_NAME} OpenAL)
+else ()
+	find_package(OpenAL CONFIG REQUIRED)
+	target_link_libraries(${PROJECT_NAME} OpenAL::OpenAL)
+endif ()
 
 target_link_libraries(${PROJECT_NAME} m)
 
