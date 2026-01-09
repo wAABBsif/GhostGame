@@ -32,7 +32,11 @@ void gfx_init(void)
 	LOG_MESSAGE("Initializing graphics...");
 
 	s_window = window_create();
-	assert(s_window != NULL);
+	if (s_window == NULL)
+	{
+		LOG_ERROR("Window creation failed");
+		exit(EXIT_FAILURE);
+	}
 	window_make_context_current(s_window);
 
 	const int glad_status = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
