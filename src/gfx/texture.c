@@ -83,7 +83,7 @@ void texture_unload(const texture_h h)
 	const size_t index = hash_map_get_index(&s_textures, h);
 	assert(index != HASH_INVALID);
 	const texture t = s_texture_entries[index];
-	glDeleteProgram(t.id);
+	glDeleteTextures(1, &t.id);
 	hash_map_remove(&s_textures, index);
 }
 
