@@ -2,6 +2,7 @@
 #include "AL/alc.h"
 #include <stdlib.h>
 
+#include "sound.h"
 #include "core/logging.h"
 
 static ALCdevice *s_device;
@@ -26,6 +27,8 @@ void audio_init()
 	}
 
 	alcMakeContextCurrent(s_context);
+
+	sounds_init();
 }
 
 void audio_update()
@@ -36,6 +39,8 @@ void audio_update()
 void audio_terminate()
 {
 	LOG_MESSAGE("Terminating audio...");
+
+	sounds_clear();
 
 	alcDestroyContext(s_context);
 	alcCloseDevice(s_device);
