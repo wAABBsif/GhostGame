@@ -4,6 +4,7 @@
 #include "ecs/ecs_component.h"
 #include "ecs/ecs_entity.h"
 #include "sdl_interface.h"
+#include "audio/audio.h"
 #include "ecs/ecs_system.h"
 #include "core/game_time.h"
 #include "core/logging.h"
@@ -60,6 +61,7 @@ static void s_game_init(void)
 	game_time_init();
 	input_init();
 	gfx_init();
+	audio_init();
 	components_init();
 	systems_init();
 	tile_atlas_init();
@@ -118,6 +120,7 @@ static void s_game_update(void)
 	system_tiles_begin_frame();
 	systems_update();
 	gfx_draw();
+	audio_update();
 }
 
 static void s_game_terminate(void)
@@ -125,6 +128,7 @@ static void s_game_terminate(void)
 	tile_atlas_clear();
 	components_terminate();
 	input_terminate();
+	audio_terminate();
 	gfx_terminate();
 	sdl_interface_terminate();
 }

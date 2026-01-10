@@ -93,6 +93,8 @@ add_executable(GhostGame src/main.c
 		src/game/ecs/ecs_tag.h
 		src/gfx/tiles.c
 		src/gfx/tiles.h
+		src/audio/audio.c
+		src/audio/audio.h
 )
 
 include_directories(src)
