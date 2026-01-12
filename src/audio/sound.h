@@ -18,3 +18,5 @@ void sounds_clear(void);
 sound_h sound_load(const char* name);
 void sound_unload(sound_h h);
 sound_h sound_get(const char* name);
+
+int32_t sound_get_buffer(sound_h h);

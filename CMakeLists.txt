@@ -97,6 +97,8 @@ add_executable(GhostGame src/main.c
 		src/audio/audio.h
 		src/audio/sound.c
 		src/audio/sound.h
+		src/audio/audio_source.c
+		src/audio/audio_source.h
 )
 
 include_directories(src)

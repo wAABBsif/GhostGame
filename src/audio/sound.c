@@ -90,3 +90,10 @@ sound_h sound_get(const char* name)
 	assert(hash_map_get_index(&s_sounds, h) != HASH_INVALID);
 	return h;
 }
+
+int32_t sound_get_buffer(const sound_h h)
+{
+	const size_t index = hash_map_get_index(&s_sounds, h);
+	assert(index != HASH_INVALID);
+	return s_sound_entries[index].id;
+}
