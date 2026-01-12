@@ -62,7 +62,7 @@ sound_h sound_load(const char* name)
 	s.key = hash_string(name);
 
 	ALenum format = audio_spec.channels == 1 ? AL_FORMAT_MONO8 : AL_FORMAT_STEREO8;
-	format += audio_spec.format == SDL_AUDIO_S16LE ? 0 : 1;
+	format += audio_spec.format == SDL_AUDIO_S16LE ? 1 : 0;
 
 	alGenBuffers(1, &s.id);
 	alBufferData(s.id, format, audio_buffer, (int)audio_buffer_size, audio_spec.freq);
