@@ -47,13 +47,13 @@ sound_h sound_load(const char* name)
 	const bool wav_result = SDL_LoadWAV(name, &audio_spec, &audio_buffer, &audio_buffer_size);
 	if (!wav_result)
 	{
-		LOG_ERROR("Failed to load audio file: %s", SDL_GetError());
+		LOG_ERROR("Failed to load audio file: %s", name);
 		return 0;
 	}
 
-	if (audio_spec.format != SDL_AUDIO_S16LE && audio_spec.format != SDL_AUDIO_S8)
+	if (audio_spec.format != SDL_AUDIO_S16LE && audio_spec.format != SDL_AUDIO_S8 || audio_spec.channels > 2)
 	{
-		LOG_ERROR("Unsupported audio format: %s");
+		LOG_ERROR("Unsupported audio format: %s", name);
 		return 0;
 	}
 
