@@ -28,15 +28,15 @@ source_id audio_source_create(void)
 	{
 		int32_t state;
 		alGetSourcei(s_sources[i], AL_SOURCE_STATE, &state);
-		if (state != AL_PLAYING)
-		{
-			alSourcef(s_sources[i], AL_PITCH, 1.0f);
-			alSourcef(s_sources[i], AL_GAIN, 1.0f);
-			alSource3f(s_sources[i], AL_POSITION, 0, 0, 0);
-			alSource3f(s_sources[i], AL_VELOCITY, 0, 0, 0);
-			alSourcei(s_sources[i], AL_LOOPING, AL_FALSE);
-			return i;
-		}
+		if (state == AL_PLAYING)
+			continue;
+
+		alSourcef(s_sources[i], AL_PITCH, 1.0f);
+		alSourcef(s_sources[i], AL_GAIN, 1.0f);
+		alSource3f(s_sources[i], AL_POSITION, 0, 0, 0);
+		alSource3f(s_sources[i], AL_VELOCITY, 0, 0, 0);
+		alSourcei(s_sources[i], AL_LOOPING, AL_FALSE);
+		return i;
 	}
 
 	return SOURCE_ID_INVALID;
