@@ -1,4 +1,3 @@
-#pragma once
 #include "sound.h"
 
 #include <assert.h>
