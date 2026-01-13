@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "audio_source.h"
+#include "music.h"
 #include "sound.h"
 #include "core/logging.h"
 
@@ -30,7 +31,15 @@ void audio_init()
 	alcMakeContextCurrent(s_context);
 
 	sounds_init();
+	music_init();
 	audio_sources_init();
+
+	sound_h a = sound_load("res/audio/sound.wav");
+	source_id s = audio_source_create();
+	audio_source_set_sound(s, a);
+	audio_source_play(s);
+
+	music_play("res/audio/a.ogg");
 }
 
 void audio_update()
@@ -43,6 +52,7 @@ void audio_terminate()
 	LOG_MESSAGE("Terminating audio...");
 
 	audio_sources_terminate();
+	music_clear();
 	sounds_clear();
 
 	alcDestroyContext(s_context);

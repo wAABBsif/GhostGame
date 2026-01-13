@@ -99,6 +99,10 @@ add_executable(GhostGame src/main.c
 		src/audio/sound.h
 		src/audio/audio_source.c
 		src/audio/audio_source.h
+		src/audio/music.c
+		src/audio/music.h
+		src/audio/vorbis_implementation.c
+		src/audio/vorbis_implementation.h
 )
 
 include_directories(src)
