@@ -93,15 +93,15 @@ bool music_play(const char* name)
 
 void music_stop(void)
 {
-
+	alSourceStop(s_source);
 }
 
 void music_pause(void)
 {
-
+	alSourcePause(s_source);
 }
 
 void music_resume(void)
 {
-
+	alSourcePlay(s_source);
 }
