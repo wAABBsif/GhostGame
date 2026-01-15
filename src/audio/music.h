@@ -1,7 +1,7 @@
 #pragma once
 #include <stdbool.h>
 
-#define MUSIC_BUFFER_SAMPLE_COUNT	1000000
+#define MUSIC_BUFFER_SAMPLE_COUNT	65536
 #define MUSIC_BUFFER_COUNT	2
 
 void music_init(void);

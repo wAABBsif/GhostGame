@@ -39,12 +39,12 @@ void audio_init()
 	audio_source_set_sound(s, a);
 	audio_source_play(s);
 
-	music_play("res/audio/a.ogg");
+	music_play("res/audio/music.ogg");
 }
 
 void audio_update()
 {
-
+	music_update();
 }
 
 void audio_terminate()

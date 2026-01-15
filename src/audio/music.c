@@ -10,6 +10,7 @@
 static stb_vorbis *s_stream;
 static ALenum s_format;
 static uint32_t s_sample_rate;
+static int32_t s_channels;
 
 static uint32_t s_buffers[MUSIC_BUFFER_COUNT];
 static uint32_t s_source;
@@ -21,11 +22,32 @@ void music_init(void)
 
 	alGenBuffers(MUSIC_BUFFER_COUNT, s_buffers);
 	alGenSources(1, &s_source);
+	alSourcef(s_source, AL_PITCH, 1.0f);
+	alSourcef(s_source, AL_GAIN, 1.0f);
+	alSource3f(s_source, AL_POSITION, 0, 0, 0);
+	alSource3f(s_source, AL_VELOCITY, 0, 0, 0);
+	alSourcei(s_source, AL_LOOPING, AL_FALSE);
 }
 
 void music_update(void)
 {
+	int processed;
+	alGetSourcei(s_source, AL_BUFFERS_PROCESSED, &processed);
+	for (int i = 0; i < processed; i++)
+	{
+		uint32_t which;
+		alSourceUnqueueBuffers(s_source, 1, &which);
 
+		int actual_buffer_size = stb_vorbis_get_samples_short_interleaved(s_stream, s_channels, s_current_buffer, MUSIC_BUFFER_SAMPLE_COUNT);
+		if (actual_buffer_size <= 0)
+		{
+			stb_vorbis_seek_start(s_stream);
+			actual_buffer_size = stb_vorbis_get_samples_short_interleaved(s_stream, s_channels, s_current_buffer, MUSIC_BUFFER_SAMPLE_COUNT);
+		}
+
+		alBufferData(which, s_format, s_current_buffer, actual_buffer_size * sizeof(short) * 2, s_sample_rate);
+		alSourceQueueBuffers(s_source, 1, &which);
+	}
 }
 
 void music_clear(void)
@@ -40,13 +62,6 @@ void music_clear(void)
 
 bool music_play(const char* name)
 {
-	alSourcei(s_source, AL_BUFFER, s_buffers[0]);
-	alSourcef(s_source, AL_PITCH, 1.0f);
-	alSourcef(s_source, AL_GAIN, 1.0f);
-	alSource3f(s_source, AL_POSITION, 0, 0, 0);
-	alSource3f(s_source, AL_VELOCITY, 0, 0, 0);
-	alSourcei(s_source, AL_LOOPING, AL_FALSE);
-
 	s_stream = stb_vorbis_open_filename(name, NULL, NULL);
 	const stb_vorbis_info info = stb_vorbis_get_info(s_stream);
 	if (info.channels > 2)
@@ -57,9 +72,18 @@ bool music_play(const char* name)
 
 	s_format = info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 	s_sample_rate = info.sample_rate;
+	s_channels = info.channels;
 
-	stb_vorbis_get_samples_short_interleaved(s_stream, info.channels, s_current_buffer, MUSIC_BUFFER_SAMPLE_COUNT);
-	alBufferData(s_buffers[0], s_format, s_current_buffer, MUSIC_BUFFER_SAMPLE_COUNT * sizeof(short), info.sample_rate);
+	for (int i = 0; i < MUSIC_BUFFER_COUNT; i++)
+	{
+		const int actual_buffer_size = stb_vorbis_get_samples_short_interleaved(s_stream, s_channels, s_current_buffer, MUSIC_BUFFER_SAMPLE_COUNT);
+		alBufferData(s_buffers[i], s_format, s_current_buffer, actual_buffer_size * sizeof(short) * 2, s_sample_rate);
+	}
+
+	int processed;
+	alGetSourcei(s_source, AL_BUFFERS_PROCESSED, &processed);
+	alSourceUnqueueBuffers(s_source, processed, NULL);
+	alSourceQueueBuffers(s_source, MUSIC_BUFFER_COUNT, s_buffers);
 
 	LOG_MESSAGE("Playing music %s", name);
 	alSourcePlay(s_source);
