@@ -1,0 +1,155 @@
+#pragma once
+#if defined(IS_DEBUG)
+
+#ifdef __cplusplus
+#define C_FUNC extern "C"
+#else
+#define C_FUNC
+#endif
+
+#include "core/vec2.h"
+
+#define IMGUI_CONFIG_FLAGS_NONE                     (0)
+#define IMGUI_CONFIG_FLAGS_NAV_ENABLE_KEYBOARD      (1 << 0)
+#define IMGUI_CONFIG_FLAGS_NAV_ENABLE_GAMEPAD       (1 << 1)
+#define IMGUI_CONFIG_FLAGS_NO_MOUSE                 (1 << 4)
+#define IMGUI_CONFIG_FLAGS_NO_MOUSE_CURSOR_CHANGE   (1 << 5)
+#define IMGUI_CONFIG_FLAGS_NO_KEYBOARD              (1 << 6)
+#define IMGUI_CONFIG_FLAGS_DOCKING_ENABLE           (1 << 7)
+#define IMGUI_CONFIG_FLAGS_VIEWPORTS_ENABLE         (1 << 10)
+#define IMGUI_CONFIG_FLAGS_IS_SRGB                  (1 << 20)
+#define IMGUI_CONFIG_FLAGS_IS_TOUCH_SCREEN          (1 << 21)
+
+typedef struct imgui_io
+{
+    uint32_t ConfigFlags;
+    uint32_t BackendFlags;
+    vec2 DisplaySize;
+    vec2 DisplayFramebufferScale;
+    float DeltaTime;
+    float IniSavingRate;
+    const char* IniFilename;
+    const char* LogFilename;
+    void* UserData;
+    void* Fonts;
+    void* FontDefault;
+    bool FontAllowUserScaling;
+    bool ConfigNavSwapGamepadButtons;
+    bool ConfigNavMoveSetMousePos;
+    bool ConfigNavCaptureKeyboard;
+    bool ConfigNavEscapeClearFocusItem;
+    bool ConfigNavEscapeClearFocusWindow;
+    bool ConfigNavCursorVisibleAuto;
+    bool ConfigNavCursorVisibleAlways;
+    bool ConfigDockingNoSplit;
+    bool ConfigDockingNoDockingOver;
+    bool ConfigDockingWithShift;
+    bool ConfigDockingAlwaysTabBar;
+    bool ConfigDockingTransparentPayload;
+    bool ConfigViewportsNoAutoMerge;
+    bool ConfigViewportsNoTaskBarIcon;
+    bool ConfigViewportsNoDecoration;
+    bool ConfigViewportsNoDefaultParent;
+    bool ConfigViewportsPlatformFocusSetsImGuiFocus;
+    bool ConfigDpiScaleFonts;
+    bool ConfigDpiScaleViewports;
+    bool MouseDrawCursor;
+    bool ConfigMacOSXBehaviors;
+    bool ConfigInputTrickleEventQueue;
+    bool ConfigInputTextCursorBlink;
+    bool ConfigInputTextEnterKeepActive;
+    bool ConfigDragClickToInputText;
+    bool ConfigWindowsResizeFromEdges;
+    bool ConfigWindowsMoveFromTitleBarOnly;
+    bool ConfigWindowsCopyContentsWithCtrlC;
+    bool ConfigScrollbarScrollByPage;
+    float ConfigMemoryCompactTimer;
+    float MouseDoubleClickTime;
+    float MouseDoubleClickMaxDist;
+    float MouseDragThreshold;
+    float KeyRepeatDelay;
+    float KeyRepeatRate;
+    bool ConfigErrorRecovery;
+    bool ConfigErrorRecoveryEnableAssert;
+    bool ConfigErrorRecoveryEnableDebugLog;
+    bool ConfigErrorRecoveryEnableTooltip;
+    bool ConfigDebugIsDebuggerPresent;
+    bool ConfigDebugHighlightIdConflicts;
+    bool ConfigDebugHighlightIdConflictsShowItemPicker;
+    bool ConfigDebugBeginReturnValueOnce;
+    bool ConfigDebugBeginReturnValueLoop;
+    bool ConfigDebugIgnoreFocusLoss;
+    bool ConfigDebugIniSettings;
+    const char* BackendPlatformName;
+    const char* BackendRendererName;
+    void* BackendPlatformUserData;
+    void* BackendRendererUserData;
+    void* BackendLanguageUserData;
+    bool WantCaptureMouse;
+    bool WantCaptureKeyboard;
+    bool WantTextInput;
+    bool WantSetMousePos;
+    bool WantSaveIniSettings;
+    bool NavActive;
+    bool NavVisible;
+    float Framerate;
+    int MetricsRenderVertices;
+    int MetricsRenderIndices;
+    int MetricsRenderWindows;
+    int MetricsActiveWindows;
+    vec2 MouseDelta;
+    void* Ctx;
+    vec2 MousePos;
+    bool MouseDown[5];
+    float MouseWheel;
+    float MouseWheelH;
+    uint32_t MouseSource;
+    uint32_t MouseHoveredViewport;
+    bool KeyCtrl;
+    bool KeyShift;
+    bool KeyAlt;
+    bool KeySuper;
+    int32_t KeyMods;
+    struct { bool Down; float DownDuration; float DownDurationPrev; float AnalogValue;} KeysData[667 - 512];
+    bool WantCaptureMouseUnlessPopupClose;
+    vec2 MousePosPrev;
+    vec2 MouseClickedPos[5];
+    double MouseClickedTime[5];
+    bool MouseClicked[5];
+    bool MouseDoubleClicked[5];
+    uint16_t MouseClickedCount[5];
+    uint16_t MouseClickedLastCount[5];
+    bool MouseReleased[5];
+    double MouseReleasedTime[5];
+    bool MouseDownOwned[5];
+    bool MouseDownOwnedUnlessPopupClose[5];
+    bool MouseWheelRequestAxisSwap;
+    bool MouseCtrlLeftAsRightClick;
+    float MouseDownDuration[5];
+    float MouseDownDurationPrev[5];
+    vec2 MouseDragMaxDistanceAbs[5];
+    float MouseDragMaxDistanceSqr[5];
+    float PenPressure;
+    bool AppFocusLost;
+    bool AppAcceptingEvents;
+    uint16_t InputQueueSurrogate;
+    struct ImVector_ImWchar {int Size;int Capacity;void* Data;} InputQueueCharacters;
+} imgui_io;
+
+C_FUNC void imgui_create_context();
+C_FUNC imgui_io *imgui_get_io();
+C_FUNC void imgui_impl_sdl3_init_for_opengl(void *window, void *context);
+C_FUNC void imgui_impl_opengl3_init();
+C_FUNC void imgui_impl_sdl3_process_event(void *event);
+C_FUNC void imgui_impl_opengl3_new_frame();
+C_FUNC void imgui_impl_sdl3_new_frame();
+C_FUNC void imgui_new_frame();
+C_FUNC void imgui_render();
+C_FUNC void imgui_impl_opengl3_render_draw_data();
+C_FUNC void imgui_impl_opengl3_shutdown();
+C_FUNC void imgui_impl_sdl3_shutdown();
+C_FUNC void imgui_destroy_context();
+
+C_FUNC void imgui_show_demo_window();
+
+#endif
