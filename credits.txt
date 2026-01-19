@@ -1,6 +1,10 @@
 this file just reminds me of everything i used
 
+opengl
+openal
 SDL
 GLAD
 stb_image
 stb_vorbis
+imgui
+cimgui

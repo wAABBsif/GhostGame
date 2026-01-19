@@ -34,6 +34,8 @@ void audio_init()
 	music_init();
 	audio_sources_init();
 
+	return;
+
 	sound_h a = sound_load("res/audio/sound.wav");
 	source_id s = audio_source_create();
 	audio_source_set_sound(s, a);
