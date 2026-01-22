@@ -6,6 +6,7 @@
 
 #include "core/logging.h"
 #include "camera.h"
+#include "debug_ui/imgui_impl.h"
 #include "glad/glad.h"
 #include "SDL3/SDL_events.h"
 
@@ -105,4 +106,13 @@ void window_make_context_current(const game_window *window)
 void window_swap_buffers(const game_window *window)
 {
 	SDL_GL_SwapWindow(window->sdl_window);
+}
+
+void window_initialize_for_debug_ui(const game_window *window)
+{
+#if defined(IS_DEBUG)
+
+	imgui_impl_sdl3_init_for_opengl(window->sdl_window, window->sdl_context);
+	
+#endif
 }

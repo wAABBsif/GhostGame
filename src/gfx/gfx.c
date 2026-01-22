@@ -13,6 +13,7 @@
 #include "lighting.h"
 #include "sprite.h"
 #include "tiles.h"
+#include "debug_ui/debug_ui.h"
 #include "SDL3/SDL_video.h"
 
 static game_window *s_window;
@@ -62,10 +63,13 @@ void gfx_init(void)
 	tiles_init();
 	sprite_init();
 	lighting_init();
+	debug_ui_init();
 }
 
 void gfx_draw(void)
 {
+	debug_ui_update();
+
 	camera_bind_main_framebuffer(&cam);
 	glClearColor(0.2, 0.3, 0.5, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -85,6 +89,8 @@ void gfx_draw(void)
 
 	camera_render_to_screen(&cam);
 
+	debug_ui_draw();
+
 	window_swap_buffers(s_window);
 }
 
@@ -92,6 +98,7 @@ void gfx_terminate(void)
 {
 	LOG_MESSAGE("Terminating graphics...");
 
+	debug_ui_terminate();
 	lighting_terminate();
 	sprite_terminate();
 	tiles_terminate();
