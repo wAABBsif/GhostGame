@@ -144,12 +144,16 @@ C_FUNC void imgui_impl_sdl3_process_event(void *event);
 C_FUNC void imgui_impl_opengl3_new_frame();
 C_FUNC void imgui_impl_sdl3_new_frame();
 C_FUNC void imgui_new_frame();
+C_FUNC void imgui_end_frame();
 C_FUNC void imgui_render();
 C_FUNC void imgui_impl_opengl3_render_draw_data();
 C_FUNC void imgui_impl_opengl3_shutdown();
 C_FUNC void imgui_impl_sdl3_shutdown();
 C_FUNC void imgui_destroy_context();
 
+C_FUNC void imgui_dock_space_over_viewport();
 C_FUNC void imgui_show_demo_window();
+C_FUNC void imgui_update_platform_windows();
+C_FUNC void imgui_render_platform_windows_default();
 
 #endif

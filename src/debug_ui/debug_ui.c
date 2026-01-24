@@ -20,6 +20,7 @@ void debug_ui_init()
 
 	window_initialize_for_debug_ui(gfx_get_window());
 	imgui_impl_opengl3_init();
+
 #endif
 }
 
@@ -40,6 +41,7 @@ void debug_ui_update()
 	imgui_impl_opengl3_new_frame();
 	imgui_impl_sdl3_new_frame();
 	imgui_new_frame();
+	imgui_dock_space_over_viewport();
 	imgui_show_demo_window();
 #endif
 }

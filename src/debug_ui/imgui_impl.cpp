@@ -44,6 +44,11 @@ void imgui_new_frame()
 	ImGui::NewFrame();
 }
 
+void imgui_end_frame()
+{
+	ImGui::EndFrame();
+}
+
 void imgui_render()
 {
 	ImGui::Render();
@@ -69,9 +74,24 @@ void imgui_destroy_context()
 	ImGui::DestroyContext();
 }
 
+void imgui_dock_space_over_viewport()
+{
+	ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+}
+
 void imgui_show_demo_window()
 {
 	ImGui::ShowDemoWindow();
+}
+
+void imgui_update_platform_windows()
+{
+	ImGui::UpdatePlatformWindows();
+}
+
+void imgui_render_platform_windows_default()
+{
+	ImGui::RenderPlatformWindowsDefault();
 }
 
 #endif
