@@ -20,6 +20,48 @@
 #define IMGUI_CONFIG_FLAGS_IS_SRGB                  (1 << 20)
 #define IMGUI_CONFIG_FLAGS_IS_TOUCH_SCREEN          (1 << 21)
 
+#define IMGUI_CHILD_FLAGS_NONE                      (0)
+#define IMGUI_CHILD_FLAGS_BORDERS                   (1 << 0)
+#define IMGUI_CHILD_FLAGS_ALWAYS_USE_WINDOW_PADDING (1 << 1)
+#define IMGUI_CHILD_FLAGS_RESIZE_X                  (1 << 2)
+#define IMGUI_CHILD_FLAGS_RESIZE_Y                  (1 << 3)
+#define IMGUI_CHILD_FLAGS_AUTO_RESIZE_X             (1 << 4)
+#define IMGUI_CHILD_FLAGS_AUTO_RESIZE_Y             (1 << 5)
+#define IMGUI_CHILD_FLAGS_ALWAYS_AUTO_RESIZE        (1 << 6)
+#define IMGUI_CHILD_FLAGS_FRAME_STYLE               (1 << 7)
+#define IMGUI_CHILD_FLAGS_NAV_FLATTENED             (1 << 8)
+
+#define IMGUI_WINDOW_FLAGS_NONE                             (0)
+#define IMGUI_WINDOW_FLAGS_NO_TITLE_BAR                     (1 << 0)
+#define IMGUI_WINDOW_FLAGS_NO_RESIZE                        (1 << 1)
+#define IMGUI_WINDOW_FLAGS_NO_MOVE                          (1 << 2)
+#define IMGUI_WINDOW_FLAGS_NO_SCROLLBAR                     (1 << 3)
+#define IMGUI_WINDOW_FLAGS_NO_SCROLL_WITH_MOUSE             (1 << 4)
+#define IMGUI_WINDOW_FLAGS_NO_COLLAPSE                      (1 << 5)
+#define IMGUI_WINDOW_FLAGS_ALWAYS_AUTO_RESIZE               (1 << 6)
+#define IMGUI_WINDOW_FLAGS_NO_BACKGROUND                    (1 << 7)
+#define IMGUI_WINDOW_FLAGS_NO_SAVED_SETTINGS                (1 << 8)
+#define IMGUI_WINDOW_FLAGS_NO_MOUSE_INPUTS                  (1 << 9)
+#define IMGUI_WINDOW_FLAGS_MENU_BAR                         (1 << 10)
+#define IMGUI_WINDOW_FLAGS_HORIZONTAL_SCROLL_BAR            (1 << 11)
+#define IMGUI_WINDOW_FLAGS_NO_FOCUS_ON_APPEARING            (1 << 12)
+#define IMGUI_WINDOW_FLAGS_NO_BRING_TO_FRONT_ON_FOCUS       (1 << 13)
+#define IMGUI_WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR        (1 << 14)
+#define IMGUI_WINDOW_FLAGS_ALWAYS_HORIZONTAL_SCROLLBAR      (1 << 15)
+#define IMGUI_WINDOW_FLAGS_NO_NAV_INPUTS                    (1 << 16)
+#define IMGUI_WINDOW_FLAGS_NO_NAV_FOCUS                     (1 << 17)
+#define IMGUI_WINDOW_FLAGS_UNSAVED_DOCUMENT                 (1 << 18)
+#define IMGUI_WINDOW_FLAGS_NO_DOCKING                       (1 << 19)
+#define IMGUI_WINDOW_FLAGS_NO_NAV                           (IMGUI_WINDOW_FLAGS_NO_NAV_INPUTS | IMGUI_WINDOW_FLAGS_NO_NAV_FOCUS)
+#define IMGUI_WINDOW_FLAGS_NO_DECORATION                    (IMGUI_WINDOW_FLAGS_NO_TITLE_BAR | IMGUI_WINDOW_FLAGS_NO_RESIZE | IMGUI_WINDOW_FLAGS_NO_SCROLLBAR | IMGUI_WINDOW_FLAGS_NO_COLLAPSE)
+#define IMGUI_WINDOW_FLAGS_NO_INPUTS                        (IMGUI_WINDOW_FLAGS_NO_MOUSE_INPUTS | IMGUI_WINDOW_FLAGS_NO_NAV_INPUTS | IMGUI_WINDOW_FLAGS_NO_NAV_FOCUS)
+#define IMGUI_WINDOW_FLAGS_DOCK_NODE_HOST                   (1 << 23)
+#define IMGUI_WINDOW_FLAGS_CHILD_WINDOW                     (1 << 24)
+#define IMGUI_WINDOW_FLAGS_TOOLTIP                          (1 << 25)
+#define IMGUI_WINDOW_FLAGS_POPUP                            (1 << 26)
+#define IMGUI_WINDOW_FLAGS_MODAL                            (1 << 27)
+#define IMGUI_WINDOW_FLAGS_CHILD_MENU                       (1 << 28)
+
 typedef struct imgui_io
 {
     uint32_t ConfigFlags;
@@ -133,7 +175,7 @@ typedef struct imgui_io
     bool AppFocusLost;
     bool AppAcceptingEvents;
     uint16_t InputQueueSurrogate;
-    struct ImVector_ImWchar {int Size;int Capacity;void* Data;} InputQueueCharacters;
+    struct ImVector_ImWchar {int Size; int Capacity; void* Data;} InputQueueCharacters;
 } imgui_io;
 
 C_FUNC void imgui_create_context();
@@ -155,5 +197,12 @@ C_FUNC void imgui_dock_space_over_viewport();
 C_FUNC void imgui_show_demo_window();
 C_FUNC void imgui_update_platform_windows();
 C_FUNC void imgui_render_platform_windows_default();
+
+C_FUNC void imgui_begin(const char *name);
+C_FUNC void imgui_end();
+
+C_FUNC void imgui_text(const char *text);
+C_FUNC bool imgui_begin_child(const char* str_id, vec2 size, int child_flags, int window_flags);
+C_FUNC void imgui_end_child();
 
 #endif

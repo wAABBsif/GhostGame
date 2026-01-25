@@ -94,4 +94,30 @@ void imgui_render_platform_windows_default()
 	ImGui::RenderPlatformWindowsDefault();
 }
 
+void imgui_begin(const char *name)
+{
+	ImGui::Begin(name);
+}
+
+void imgui_end()
+{
+	ImGui::End();
+}
+
+void imgui_text(const char *text)
+{
+	ImGui::Text(text);
+}
+
+bool imgui_begin_child(const char* str_id, const vec2 size, const int child_flags, const int window_flags)
+{
+	const auto im_size = ImVec2(size.x, size.y);
+	return ImGui::BeginChild(str_id, im_size, child_flags, window_flags);
+}
+
+void imgui_end_child()
+{
+	ImGui::EndChild();
+}
+
 #endif

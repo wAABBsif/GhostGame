@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define LOG_MESSAGE_MAX_SIZE	128
+
 void log_init();
 void log_raw(const char *format, ...);
 void log_flush();

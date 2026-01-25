@@ -132,6 +132,8 @@ add_executable(GhostGame src/main.c
 		src/debug_ui/debug_ui.c
 		src/debug_ui/debug_ui.h
 		${IMGUI_FILES}
+		src/debug_ui/log_window.c
+		src/debug_ui/log_window.h
 )
 
 include_directories(src)
