@@ -112,7 +112,7 @@ void window_initialize_for_debug_ui(const game_window *window)
 {
 #if defined(IS_DEBUG)
 
-	imgui_impl_sdl3_init_for_opengl(window->sdl_window, window->sdl_context);
+	imgui_sdl3_init_for_opengl(window->sdl_window, window->sdl_context);
 	
 #endif
 }

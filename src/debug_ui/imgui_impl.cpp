@@ -4,39 +4,64 @@
 #include "imgui/backends/imgui_impl_sdl3.h"
 #include "imgui/backends/imgui_impl_opengl3.h"
 
-void imgui_create_context()
-{
-	ImGui::CreateContext();
-}
-
 imgui_io *imgui_get_io()
 {
 	return reinterpret_cast<imgui_io*>(&ImGui::GetIO());
 }
 
-void imgui_impl_sdl3_init_for_opengl(void *window, void *context)
+void *imgui_create_context(void *shared_font_atlas)
 {
-	ImGui_ImplSDL3_InitForOpenGL(static_cast<SDL_Window*>(window), context);
+	return ImGui::CreateContext(static_cast<ImFontAtlas *>(shared_font_atlas));
 }
 
-void imgui_impl_opengl3_init()
+void imgui_destroy_context(void *ctx)
 {
-	ImGui_ImplOpenGL3_Init();
+	ImGui::DestroyContext(static_cast<ImGuiContext *>(ctx));
 }
 
-void imgui_impl_sdl3_process_event(void *event)
+bool imgui_opengl3_init(const char *glsl_version)
 {
-	ImGui_ImplSDL3_ProcessEvent(static_cast<SDL_Event*>(event));
+	return ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
-void imgui_impl_opengl3_new_frame()
+void imgui_opengl3_new_frame()
 {
 	ImGui_ImplOpenGL3_NewFrame();
 }
 
-void imgui_impl_sdl3_new_frame()
+void imgui_impl_opengl3_render_draw_data(void *draw_data)
+{
+	ImGui_ImplOpenGL3_RenderDrawData(static_cast<ImDrawData *>(draw_data));
+}
+
+void imgui_impl_opengl3_shutdown()
+{
+	ImGui_ImplOpenGL3_Shutdown();
+}
+
+bool imgui_sdl3_init_for_opengl(void *window, void *context)
+{
+	return ImGui_ImplSDL3_InitForOpenGL(static_cast<SDL_Window*>(window), context);
+}
+
+void imgui_sdl3_new_frame()
 {
 	ImGui_ImplSDL3_NewFrame();
+}
+
+bool imgui_sdl3_process_event(void *event)
+{
+	return ImGui_ImplSDL3_ProcessEvent(static_cast<SDL_Event*>(event));
+}
+
+void imgui_sdl3_shutdown()
+{
+	ImGui_ImplSDL3_Shutdown();
+}
+
+void *imgui_get_draw_data()
+{
+	return ImGui::GetDrawData();
 }
 
 void imgui_new_frame()
@@ -54,34 +79,9 @@ void imgui_render()
 	ImGui::Render();
 }
 
-void imgui_impl_opengl3_render_draw_data()
+imgui_id imgui_dock_space_over_viewport()
 {
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void imgui_impl_opengl3_shutdown()
-{
-	ImGui_ImplOpenGL3_Shutdown();
-}
-
-void imgui_impl_sdl3_shutdown()
-{
-	ImGui_ImplSDL3_Shutdown();
-}
-
-void imgui_destroy_context()
-{
-	ImGui::DestroyContext();
-}
-
-void imgui_dock_space_over_viewport()
-{
-	ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-}
-
-void imgui_show_demo_window()
-{
-	ImGui::ShowDemoWindow();
+	return ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 }
 
 void imgui_update_platform_windows()
@@ -89,14 +89,19 @@ void imgui_update_platform_windows()
 	ImGui::UpdatePlatformWindows();
 }
 
-void imgui_render_platform_windows_default()
+void imgui_render_platform_windows_default(void *platform_render_arg, void *renderer_render_arg)
 {
-	ImGui::RenderPlatformWindowsDefault();
+	ImGui::RenderPlatformWindowsDefault(platform_render_arg, renderer_render_arg);
 }
 
-void imgui_begin(const char *name)
+void imgui_show_demo_window(bool *p_open)
 {
-	ImGui::Begin(name);
+	ImGui::ShowDemoWindow(p_open);
+}
+
+bool imgui_begin(const char *name, bool *p_open, const imgui_window_flags flags)
+{
+	return ImGui::Begin(name, p_open, flags);
 }
 
 void imgui_end()
@@ -104,12 +109,16 @@ void imgui_end()
 	ImGui::End();
 }
 
-void imgui_text(const char *text)
+void imgui_text(const char *fmt, ...)
 {
-	ImGui::Text(text);
+	va_list args;
+	va_start(args, fmt);
+
+	ImGui::TextV(fmt, args);
+	va_end(args);
 }
 
-bool imgui_begin_child(const char* str_id, const vec2 size, const int child_flags, const int window_flags)
+bool imgui_begin_child(const char* str_id, const vec2 size, const imgui_child_flags child_flags, const imgui_window_flags window_flags)
 {
 	const auto im_size = ImVec2(size.x, size.y);
 	return ImGui::BeginChild(str_id, im_size, child_flags, window_flags);

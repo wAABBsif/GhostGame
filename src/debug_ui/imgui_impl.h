@@ -62,10 +62,16 @@
 #define IMGUI_WINDOW_FLAGS_MODAL                            (1 << 27)
 #define IMGUI_WINDOW_FLAGS_CHILD_MENU                       (1 << 28)
 
+typedef uint32_t imgui_id;
+typedef int32_t imgui_config_flags;
+typedef int32_t imgui_backend_flags;
+typedef int32_t imgui_window_flags;
+typedef int32_t imgui_child_flags;
+
 typedef struct imgui_io
 {
-    uint32_t ConfigFlags;
-    uint32_t BackendFlags;
+    imgui_config_flags ConfigFlags;
+    imgui_backend_flags BackendFlags;
     vec2 DisplaySize;
     vec2 DisplayFramebufferScale;
     float DeltaTime;
@@ -178,31 +184,36 @@ typedef struct imgui_io
     struct ImVector_ImWchar {int Size; int Capacity; void* Data;} InputQueueCharacters;
 } imgui_io;
 
-C_FUNC void imgui_create_context();
 C_FUNC imgui_io *imgui_get_io();
-C_FUNC void imgui_impl_sdl3_init_for_opengl(void *window, void *context);
-C_FUNC void imgui_impl_opengl3_init();
-C_FUNC void imgui_impl_sdl3_process_event(void *event);
-C_FUNC void imgui_impl_opengl3_new_frame();
-C_FUNC void imgui_impl_sdl3_new_frame();
+C_FUNC void *imgui_create_context(void *shared_font_atlas);
+C_FUNC void imgui_destroy_context(void *ctx);
+
+C_FUNC bool imgui_opengl3_init(const char *glsl_version);
+C_FUNC void imgui_opengl3_new_frame();
+C_FUNC void imgui_impl_opengl3_render_draw_data(void *draw_data);
+C_FUNC void imgui_impl_opengl3_shutdown();
+
+C_FUNC bool imgui_sdl3_init_for_opengl(void *window, void *context);
+C_FUNC void imgui_sdl3_new_frame();
+C_FUNC bool imgui_sdl3_process_event(void *event);
+C_FUNC void imgui_sdl3_shutdown();
+
+C_FUNC void *imgui_get_draw_data();
 C_FUNC void imgui_new_frame();
 C_FUNC void imgui_end_frame();
 C_FUNC void imgui_render();
-C_FUNC void imgui_impl_opengl3_render_draw_data();
-C_FUNC void imgui_impl_opengl3_shutdown();
-C_FUNC void imgui_impl_sdl3_shutdown();
-C_FUNC void imgui_destroy_context();
 
-C_FUNC void imgui_dock_space_over_viewport();
-C_FUNC void imgui_show_demo_window();
+C_FUNC imgui_id imgui_dock_space_over_viewport();
 C_FUNC void imgui_update_platform_windows();
-C_FUNC void imgui_render_platform_windows_default();
+C_FUNC void imgui_render_platform_windows_default(void *platform_render_arg, void *renderer_render_arg);
 
-C_FUNC void imgui_begin(const char *name);
+C_FUNC void imgui_show_demo_window(bool *p_open);
+
+C_FUNC bool imgui_begin(const char *name, bool *p_open, imgui_window_flags flags);
 C_FUNC void imgui_end();
 
-C_FUNC void imgui_text(const char *text);
-C_FUNC bool imgui_begin_child(const char* str_id, vec2 size, int child_flags, int window_flags);
+C_FUNC void imgui_text(const char *fmt, ...);
+C_FUNC bool imgui_begin_child(const char* str_id, vec2 size, imgui_child_flags child_flags, imgui_window_flags window_flags);
 C_FUNC void imgui_end_child();
 
 #endif

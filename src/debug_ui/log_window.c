@@ -11,7 +11,7 @@ static size_t s_char_buffer_size = 1;
 void log_window_update()
 {
 #if defined(IS_DEBUG)
-	imgui_begin("Log");
+	imgui_begin("Log", NULL, IMGUI_WINDOW_FLAGS_NONE);
 	imgui_begin_child("log_box", VEC2_ZERO, IMGUI_CHILD_FLAGS_BORDERS, IMGUI_WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR);
 	imgui_text(s_char_buffer);
 	imgui_end_child();
