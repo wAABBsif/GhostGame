@@ -1,6 +1,5 @@
 #include "audio_source.h"
 
-#include <assert.h>
 #include <string.h>
 
 #include "AL/al.h"

@@ -1,8 +1,8 @@
 #include "collision.h"
 
-#include <assert.h>
 #include <math.h>
 
+#include "game_assert.h"
 #include "core/game_time.h"
 #include "core/logging.h"
 #include "game/ecs/ecs_system.h"
@@ -34,7 +34,7 @@ collision_data collision_overlap_point(const vec2 point, const entity_id ignore_
 		if (*(uint16_t *)c_collider == 0)
 			continue;
 
-		assert(c_transform);
+		GAME_ASSERT(c_transform);
 
 		if (!collision_check_point_box(point, c_transform->position, (vec2){c_collider->radius.x, c_collider->radius.y}))
 			continue;

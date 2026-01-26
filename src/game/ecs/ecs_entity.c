@@ -1,6 +1,5 @@
 ﻿#include "ecs_entity.h"
 
-#include <assert.h>
 #include <string.h>
 
 static entity_id s_entity_count;

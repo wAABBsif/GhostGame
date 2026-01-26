@@ -1,6 +1,5 @@
 ﻿#include "system_kinematics.h"
 
-#include <assert.h>
 
 #include "core/game_time.h"
 #include "../ecs_component.h"

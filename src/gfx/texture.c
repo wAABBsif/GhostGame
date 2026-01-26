@@ -1,6 +1,5 @@
 ﻿#include "texture.h"
 
-#include <assert.h>
 
 #include "core/hash_map.h"
 #include "core/logging.h"
@@ -8,6 +7,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "core/game_assert.h"
 
 typedef struct texture
 {
@@ -73,7 +73,7 @@ texture_h texture_load(const char* name)
 
 	LOG_MESSAGE("Loaded texture %s", name);
 	const size_t add_result = hash_map_add(&s_textures, &t);
-	assert(add_result != HASH_INVALID);
+	GAME_ASSERT(add_result != HASH_INVALID);
 
 	return t.key;
 }
@@ -81,7 +81,7 @@ texture_h texture_load(const char* name)
 void texture_unload(const texture_h h)
 {
 	const size_t index = hash_map_get_index(&s_textures, h);
-	assert(index != HASH_INVALID);
+	GAME_ASSERT(index != HASH_INVALID);
 	const texture t = s_texture_entries[index];
 	glDeleteTextures(1, &t.id);
 	hash_map_remove(&s_textures, index);
@@ -90,7 +90,7 @@ void texture_unload(const texture_h h)
 texture_h texture_get(const char* name)
 {
 	const hash h = hash_string(name);
-	assert(hash_map_get_index(&s_textures, h) != HASH_INVALID);
+	GAME_ASSERT(hash_map_get_index(&s_textures, h) != HASH_INVALID);
 	return h;
 }
 

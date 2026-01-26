@@ -1,11 +1,11 @@
 ﻿#include "window.h"
 
-#include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
 #include "core/logging.h"
 #include "camera.h"
+#include "core/game_assert.h"
 #include "debug_ui/imgui_impl.h"
 #include "glad/glad.h"
 #include "SDL3/SDL_events.h"
@@ -58,9 +58,9 @@ void window_destroy(game_window *window)
 
 void window_get_size(const game_window *window, int *width, int *height)
 {
-	assert(window != NULL);
-	assert(width != NULL);
-	assert(height != NULL);
+	GAME_ASSERT(window != NULL);
+	GAME_ASSERT(width != NULL);
+	GAME_ASSERT(height != NULL);
 
 	SDL_GetWindowSize(window->sdl_window, width, height);
 }

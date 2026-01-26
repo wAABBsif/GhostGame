@@ -1,6 +1,5 @@
 ﻿#include "system_tiles.h"
 
-#include <assert.h>
 #include <string.h>
 
 #include "core/game_time.h"

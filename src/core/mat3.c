@@ -1,11 +1,11 @@
 ﻿#include "mat3.h"
 
-#include <assert.h>
 
 #include "vec2.h"
 
 #include <math.h>
 
+#include "game_assert.h"
 #include "logging.h"
 
 mat3 mat3_multiply(const mat3 a, const mat3 b)
@@ -43,7 +43,7 @@ float mat3_determinant(const mat3 m)
 mat3 mat3_inverse(const mat3 m)
 {
 	const float determinant = mat3_determinant(m);
-	assert(determinant != 0);
+	GAME_ASSERT(determinant != 0);
 
 	return mat3_multiplyf((mat3)
 	{
@@ -111,8 +111,8 @@ mat3 mat3_scale(const mat3 m, const vec2 scale)
 
 mat3 mat3_from_ortho(const float right, const float left, const float top, const float bottom)
 {
-	assert(right != left);
-	assert(top != bottom);
+	GAME_ASSERT(right != left);
+	GAME_ASSERT(top != bottom);
 
 	return (mat3)
 	{

@@ -5,6 +5,7 @@
 #include "ecs/ecs_entity.h"
 #include "sdl_interface.h"
 #include "audio/audio.h"
+#include "core/game_assert.h"
 #include "ecs/ecs_system.h"
 #include "core/game_time.h"
 #include "core/logging.h"

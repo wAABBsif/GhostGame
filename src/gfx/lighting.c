@@ -1,6 +1,5 @@
 #include "lighting.h"
 
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -8,6 +7,7 @@
 #include "gfx.h"
 #include "shader.h"
 #include "window.h"
+#include "core/game_assert.h"
 #include "core/logging.h"
 #include "core/mat3.h"
 #include "core/vec2.h"
@@ -104,7 +104,7 @@ static uint16_t s_get_ordered_index(const int8_t z, const uint16_t start, const 
 
 void add_light_quad(const light_quad *quad)
 {
-	assert(s_light_count < MAX_LIGHTS);
+	GAME_ASSERT(s_light_count < MAX_LIGHTS);
 
 	const uint16_t index = s_get_ordered_index(quad->vertices->priority, 0, s_light_count);
 	memmove(s_quads + index + 1, s_quads + index, sizeof(light_quad) * (s_light_count - index));

@@ -1,6 +1,5 @@
 ﻿#include "gfx.h"
 
-#include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 
@@ -13,6 +12,7 @@
 #include "lighting.h"
 #include "sprite.h"
 #include "tiles.h"
+#include "core/game_assert.h"
 #include "debug_ui/debug_ui.h"
 #include "SDL3/SDL_video.h"
 
@@ -41,7 +41,7 @@ void gfx_init(void)
 	window_make_context_current(s_window);
 
 	const int glad_status = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
-	assert(glad_status);
+	GAME_ASSERT(glad_status);
 
 	shader_init();
 	texture_init();

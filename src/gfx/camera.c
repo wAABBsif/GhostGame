@@ -1,7 +1,6 @@
 #include <math.h>
 #include "camera.h"
 
-#include <assert.h>
 #include <stdlib.h>
 
 #include "gfx/window.h"

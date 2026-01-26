@@ -1,6 +1,5 @@
 ﻿#include "sprite.h"
 
-#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -9,6 +8,7 @@
 #include "gfx.h"
 #include "shader.h"
 #include "texture.h"
+#include "core/game_assert.h"
 #include "core/logging.h"
 #include "core/mat3.h"
 #include "glad/glad.h"
@@ -125,7 +125,7 @@ static uint16_t s_get_ordered_index(const int8_t z, const uint16_t start, const 
 
 void add_sprite_quad(const sprite_quad *quad)
 {
-	assert(s_sprite_count < MAX_SPRITES);
+	GAME_ASSERT(s_sprite_count < MAX_SPRITES);
 
 	const uint16_t index = s_get_ordered_index(quad->vertices->z, 0, s_sprite_count);
 	memmove(s_quads + index + 1, s_quads + index, sizeof(sprite_quad) * (s_sprite_count - index));
@@ -135,7 +135,7 @@ void add_sprite_quad(const sprite_quad *quad)
 
 uint8_t sprite_get_texture_num(const texture_h h)
 {
-	assert(s_texture_count < MAX_SPRITE_TEXTURES);
+	GAME_ASSERT(s_texture_count < MAX_SPRITE_TEXTURES);
 
 	for (uint8_t i = 0; i < s_texture_count; i++)
 	{

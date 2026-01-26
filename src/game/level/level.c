@@ -1,8 +1,8 @@
 #include "level.h"
 
-#include <assert.h>
 #include <stdlib.h>
 
+#include "core/game_assert.h"
 #include "core/logging.h"
 #include "game/ecs/entities/entity_tile.h"
 #include "game/ecs/systems/system_tiles.h"
@@ -21,9 +21,9 @@ void levels_init()
 
 void level_load(const char* filename)
 {
-	assert(s_level.position_data == NULL);
-	assert(s_level.tile_data == NULL);
-	assert(s_level.object_data == NULL);
+	GAME_ASSERT(s_level.position_data == NULL);
+	GAME_ASSERT(s_level.tile_data == NULL);
+	GAME_ASSERT(s_level.object_data == NULL);
 
 	SDL_IOStream* stream = SDL_IOFromFile(filename, "r");
 	if (stream == NULL)
@@ -90,19 +90,19 @@ chunk_index level_get_chunk_count(void)
 
 const chunk_position *level_get_chunk_position(const chunk_index index)
 {
-	assert(index < level_get_chunk_count());
+	GAME_ASSERT(index < level_get_chunk_count());
 	return s_level.position_data + index;
 }
 
 const tile_chunk *level_get_tile_chunk(const chunk_index index)
 {
-	assert(index < level_get_chunk_count());
+	GAME_ASSERT(index < level_get_chunk_count());
 	return s_level.tile_data + index;
 }
 
 const object_chunk *level_get_object_chunk(const chunk_index index)
 {
-	assert(index < level_get_chunk_count());
+	GAME_ASSERT(index < level_get_chunk_count());
 	return s_level.object_data + index;
 }
 

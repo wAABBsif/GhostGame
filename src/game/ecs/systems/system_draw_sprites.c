@@ -1,6 +1,5 @@
 ﻿#include "system_draw_sprites.h"
 
-#include <assert.h>
 #include <math.h>
 
 #include "core/game_time.h"

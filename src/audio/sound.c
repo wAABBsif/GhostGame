@@ -1,8 +1,8 @@
 #include "sound.h"
 
-#include <assert.h>
 
 #include "AL/al.h"
+#include "core/game_assert.h"
 #include "core/hash_map.h"
 #include "core/logging.h"
 #include "SDL3/SDL_audio.h"
@@ -69,7 +69,7 @@ sound_h sound_load(const char* name)
 
 	LOG_MESSAGE("Loaded sound %s", name);
 	const size_t add_result = hash_map_add(&s_sounds, &s);
-	assert(add_result != HASH_INVALID);
+	GAME_ASSERT(add_result != HASH_INVALID);
 
 	return s.key;
 }
@@ -77,7 +77,7 @@ sound_h sound_load(const char* name)
 void sound_unload(sound_h h)
 {
 	const size_t index = hash_map_get_index(&s_sounds, h);
-	assert(index != HASH_INVALID);
+	GAME_ASSERT(index != HASH_INVALID);
 	const sound t = s_sound_entries[index];
 	alDeleteBuffers(1, &t.id);
 	hash_map_remove(&s_sounds, index);
@@ -86,13 +86,13 @@ void sound_unload(sound_h h)
 sound_h sound_get(const char* name)
 {
 	const hash h = hash_string(name);
-	assert(hash_map_get_index(&s_sounds, h) != HASH_INVALID);
+	GAME_ASSERT(hash_map_get_index(&s_sounds, h) != HASH_INVALID);
 	return h;
 }
 
 int32_t sound_get_buffer(const sound_h h)
 {
 	const size_t index = hash_map_get_index(&s_sounds, h);
-	assert(index != HASH_INVALID);
+	GAME_ASSERT(index != HASH_INVALID);
 	return s_sound_entries[index].id;
 }

@@ -1,6 +1,5 @@
 ﻿#include "ecs_component.h"
 
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,6 +14,7 @@
 #include "components/component_update.h"
 #include "components/component_controller.h"
 #include "components/component_movement_properties.h"
+#include "core/game_assert.h"
 #include "game/level/level.h"
 
 entity_id s_sparse_components[ECS_MAX_ENTITIES][COMPONENT_TYPE_COUNT];
@@ -88,9 +88,9 @@ void components_terminate(void)
 
 void *component_add(const component_type type, const entity_id index)
 {
-	assert(index < ECS_MAX_ENTITIES);
-	assert(type < COMPONENT_TYPE_COUNT);
-	assert(s_component_set[type].sparse[index] < 0);
+	GAME_ASSERT(index < ECS_MAX_ENTITIES);
+	GAME_ASSERT(type < COMPONENT_TYPE_COUNT);
+	GAME_ASSERT(s_component_set[type].sparse[index] < 0);
 
 	s_component_set[type].sparse[index] = s_component_set[type].entity_count;
 	void *result = s_component_set[type].dense + s_component_set[type].entity_count * COMPONENT_ENTRIES[type].size;
@@ -101,9 +101,9 @@ void *component_add(const component_type type, const entity_id index)
 
 void component_remove(const component_type type, const entity_id index)
 {
-	assert(index < ECS_MAX_ENTITIES);
-	assert(type < COMPONENT_TYPE_COUNT);
-	assert(s_component_set[type].sparse[index] >= 0);
+	GAME_ASSERT(index < ECS_MAX_ENTITIES);
+	GAME_ASSERT(type < COMPONENT_TYPE_COUNT);
+	GAME_ASSERT(s_component_set[type].sparse[index] >= 0);
 
 	s_component_set[type].sparse[index] = -1;
 	s_component_set[type].entity_count--;
@@ -112,8 +112,8 @@ void component_remove(const component_type type, const entity_id index)
 
 bool component_exists(const component_type type, const entity_id index)
 {
-	assert(index < ECS_MAX_ENTITIES);
-	assert(type < COMPONENT_TYPE_COUNT);
+	GAME_ASSERT(index < ECS_MAX_ENTITIES);
+	GAME_ASSERT(type < COMPONENT_TYPE_COUNT);
 
 	const entity_id dense_idx = s_component_set[type].sparse[index];
 	return dense_idx >= 0;
@@ -122,8 +122,8 @@ bool component_exists(const component_type type, const entity_id index)
 
 void *component_get(const component_type type, const entity_id index)
 {
-	assert(index < ECS_MAX_ENTITIES);
-	assert(type < COMPONENT_TYPE_COUNT);
+	GAME_ASSERT(index < ECS_MAX_ENTITIES);
+	GAME_ASSERT(type < COMPONENT_TYPE_COUNT);
 
 	const entity_id dense_idx = s_component_set[type].sparse[index];
 	if (!component_exists(type, index))

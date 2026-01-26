@@ -1,7 +1,7 @@
 ﻿#include "sdl_interface.h"
 
-#include <assert.h>
 
+#include "core/game_assert.h"
 #include "core/logging.h"
 #include "debug_ui/debug_ui.h"
 #include "gfx/gfx.h"
@@ -27,7 +27,7 @@ bool sdl_interface_init(void)
 	LOG_MESSAGE("Initializing SDL...");
 
 	const bool successfully_init = SDL_Init(INIT_FLAGS);
-	assert(successfully_init);
+	GAME_ASSERT(successfully_init);
 
 	return true;
 }

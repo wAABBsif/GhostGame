@@ -1,6 +1,5 @@
 ﻿#include "system_dynamics.h"
 
-#include <assert.h>
 #include <stddef.h>
 
 #include "core/game_time.h"

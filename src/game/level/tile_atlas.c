@@ -1,9 +1,9 @@
 ﻿#include "tile_atlas.h"
 
-#include <assert.h>
 #include <stdalign.h>
 #include <stdlib.h>
 
+#include "core/game_assert.h"
 #include "core/hash_map.h"
 #include "core/logging.h"
 #include "SDL3/SDL_iostream.h"
@@ -72,7 +72,7 @@ tile_atlas_h tile_atlas_load(const char* filename)
 
 	LOG_MESSAGE("Loaded tile atlas %s", filename);
 	const size_t add_result = hash_map_add(&s_tile_atlases, &entry);
-	assert(add_result != HASH_INVALID);
+	GAME_ASSERT(add_result != HASH_INVALID);
 
 	return entry.key;
 }
@@ -80,7 +80,7 @@ tile_atlas_h tile_atlas_load(const char* filename)
 void tile_atlas_unload(const tile_atlas_h h)
 {
 	const size_t index = hash_map_get_index(&s_tile_atlases, h);
-	assert(index != HASH_INVALID);
+	GAME_ASSERT(index != HASH_INVALID);
 	free(s_tile_atlas_entries[index].value);
 	hash_map_remove(&s_tile_atlases, index);
 }
@@ -88,7 +88,7 @@ void tile_atlas_unload(const tile_atlas_h h)
 tile_atlas_h tile_atlas_get(const char* name)
 {
 	const hash h = hash_string(name);
-	assert(hash_map_get_index(&s_tile_atlases, h) != HASH_INVALID);
+	GAME_ASSERT(hash_map_get_index(&s_tile_atlases, h) != HASH_INVALID);
 	return h;
 }
 
@@ -99,7 +99,7 @@ uint32_t tile_atlas_get_size(const uint16_t tile_count)
 
 atlas_tile tile_atlas_get_tile(const tile_atlas_h atlas, const uint16_t tile)
 {
-	assert(tile < tile_atlas_get_tile_count(atlas));
+	GAME_ASSERT(tile < tile_atlas_get_tile_count(atlas));
 	return s_tile_atlas_entries[hash_map_get_index(&s_tile_atlases, atlas)].value->tiles[tile];
 }
 
