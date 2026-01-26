@@ -1,5 +1,6 @@
 #pragma once
 #if defined(IS_DEBUG)
+#include "gfx/color.h"
 
 #ifdef __cplusplus
 #define C_FUNC extern "C"
@@ -62,11 +63,14 @@
 #define IMGUI_WINDOW_FLAGS_MODAL                            (1 << 27)
 #define IMGUI_WINDOW_FLAGS_CHILD_MENU                       (1 << 28)
 
+#define IMGUI_COL_TEXT                                      0
+
 typedef uint32_t imgui_id;
 typedef int32_t imgui_config_flags;
 typedef int32_t imgui_backend_flags;
 typedef int32_t imgui_window_flags;
 typedef int32_t imgui_child_flags;
+typedef int32_t imgui_col;
 
 typedef struct imgui_io
 {
@@ -213,6 +217,11 @@ C_FUNC bool imgui_begin(const char *name, bool *p_open, imgui_window_flags flags
 C_FUNC void imgui_end();
 
 C_FUNC void imgui_text(const char *fmt, ...);
+C_FUNC void imgui_bullet_text(const char *fmt, ...);
+
+C_FUNC void imgui_push_style_color(imgui_col col, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+C_FUNC void imgui_pop_style_color(int count);
+
 C_FUNC bool imgui_begin_child(const char* str_id, vec2 size, imgui_child_flags child_flags, imgui_window_flags window_flags);
 C_FUNC void imgui_end_child();
 

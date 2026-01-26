@@ -1,42 +1,22 @@
 ﻿#pragma once
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
-#define LOG_MESSAGE_MAX_SIZE	128
+#define LOG_MESSAGE_MAX_SIZE	255
+
+#define LOG_COLOR_WHITE			0
+#define LOG_COLOR_YELLOW		1
+#define LOG_COLOR_RED			2
+
+typedef uint8_t log_color;
 
 void log_init();
 void log_raw(const char *format, ...);
 void log_flush();
 
-#if defined(WIN32)
-#include <windows.h>
-#define SET_CONSOLE_TEXT_COLOR_WHITE()													\
-{																						\
-HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);										\
-SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);	\
-}
-#define SET_CONSOLE_TEXT_COLOR_YELLOW()													\
-{																						\
-HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);										\
-SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN);					\
-}
-#define SET_CONSOLE_TEXT_COLOR_RED()													\
-{																						\
-HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);										\
-SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
-}
-#elif defined(linux)
-#define SET_CONSOLE_TEXT_COLOR_WHITE()	printf("\x1b[0m")
-#define SET_CONSOLE_TEXT_COLOR_YELLOW()	printf("\x1b[33m")
-#define SET_CONSOLE_TEXT_COLOR_RED()	printf("\x1b[31m")
-#endif
-
-#ifndef SET_CONSOLE_TEXT_COLOR_WHITE
-#define SET_CONSOLE_TEXT_COLOR_WHITE()
-#define SET_CONSOLE_TEXT_COLOR_YELLOW()
-#define SET_CONSOLE_TEXT_COLOR_RED()
-#endif
+void set_console_text_color(log_color color);
 
 #define LOG_SPACE	48
 
@@ -64,12 +44,12 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 		message_start[i] = ' ';															\
 	message_start[LOG_SPACE - 1] = 0;													\
 																						\
-	SET_CONSOLE_TEXT_COLOR_YELLOW();													\
+	set_console_text_color(LOG_COLOR_YELLOW);											\
 	log_raw(message_start);																\
 	log_raw(format, ##__VA_ARGS__);														\
 	log_raw("\n");																		\
 	log_flush();																		\
-	SET_CONSOLE_TEXT_COLOR_WHITE();														\
+	set_console_text_color(LOG_COLOR_WHITE);											\
 })
 
 #define LOG_ERROR(format, ...)															\
@@ -81,10 +61,10 @@ SetConsoleTextAttribute(hConsole, FOREGROUND_RED);										\
 		message_start[i] = ' ';															\
 	message_start[LOG_SPACE - 1] = 0;													\
 																						\
-	SET_CONSOLE_TEXT_COLOR_RED();														\
+	set_console_text_color(LOG_COLOR_RED);												\
 	log_raw(message_start);																\
 	log_raw(format, ##__VA_ARGS__);														\
 	log_raw("\n");																		\
 	log_flush();																		\
-	SET_CONSOLE_TEXT_COLOR_WHITE();														\
+	set_console_text_color(LOG_COLOR_WHITE);											\
 })

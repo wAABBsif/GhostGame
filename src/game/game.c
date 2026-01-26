@@ -31,7 +31,7 @@ static bool s_is_game_running(void);
 void game_run(void)
 {
 	s_game_init();
-	LOG_MESSAGE("Initialized successfully!\n");
+	LOG_MESSAGE("Initialized successfully!");
 
 	while (s_is_game_running())
 	{

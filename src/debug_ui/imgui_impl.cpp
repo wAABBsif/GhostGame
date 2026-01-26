@@ -1,5 +1,7 @@
 #if defined(IS_DEBUG)
 #include "imgui_impl.h"
+
+#include "gfx/color.h"
 #include "imgui/imgui.h"
 #include "imgui/backends/imgui_impl_sdl3.h"
 #include "imgui/backends/imgui_impl_opengl3.h"
@@ -118,6 +120,15 @@ void imgui_text(const char *fmt, ...)
 	va_end(args);
 }
 
+void imgui_bullet_text(const char *fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+
+	ImGui::BulletTextV(fmt, args);
+	va_end(args);
+}
+
 bool imgui_begin_child(const char* str_id, const vec2 size, const imgui_child_flags child_flags, const imgui_window_flags window_flags)
 {
 	const auto im_size = ImVec2(size.x, size.y);
@@ -127,6 +138,16 @@ bool imgui_begin_child(const char* str_id, const vec2 size, const imgui_child_fl
 void imgui_end_child()
 {
 	ImGui::EndChild();
+}
+
+void imgui_push_style_color(const imgui_col col, const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a)
+{
+	ImGui::PushStyleColor(col, IM_COL32(r, g, b, a));
+}
+
+void imgui_pop_style_color(const int count)
+{
+	ImGui::PopStyleColor(count);
 }
 
 #endif

@@ -1,10 +1,15 @@
 ﻿#include "logging.h"
 
+#include <assert.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "debug_ui/log_window.h"
+
+#if defined(WIN32)
+#include <windows.h>
+#endif
 
 static FILE *s_log_file = NULL;
 
@@ -21,6 +26,7 @@ void log_init()
 void log_flush()
 {
 	fflush(s_log_file);
+	log_window_new_message();
 }
 
 void log_raw(const char *format, ...)
@@ -37,4 +43,25 @@ void log_raw(const char *format, ...)
 	printf("%s", s_temp_buffer);
 	fprintf(s_log_file, "%s", s_temp_buffer);
 	log_window_append_message(s_temp_buffer);
+}
+
+void set_console_text_color(log_color color)
+{
+	log_window_set_message_color(color);
+#if defined(WIN32)
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (color == LOG_COLOR_WHITE)
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	else if (color == LOG_COLOR_YELLOW)
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN);
+	else if (color == LOG_COLOR_RED)
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+#elif defined(linux)
+	if (color == LOG_COLOR_WHITE)
+		printf("\x1b[0m");
+	else if (color == LOG_COLOR_YELLOW)
+		printf("\x1b[33m");
+	else if (color == LOG_COLOR_RED)
+		printf("\x1b[31m");
+#endif
 }
