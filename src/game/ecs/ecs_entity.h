@@ -19,6 +19,7 @@ entity_id entities_get_count();
 entity_id entities_add();
 void entities_remove(entity_id index);
 
+bool entity_exists(entity_id index);
 void entity_queue_remove(entity_id index);
 
 bool entity_get_tag(entity_id index, ecs_tag tag);

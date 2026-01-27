@@ -1,6 +1,7 @@
 #include "debug_ui.h"
 #include "imgui_impl.h"
 #include "log_window.h"
+#include "objects_window.h"
 #include "core/logging.h"
 #include "gfx/gfx.h"
 #include "gfx/window.h"
@@ -42,7 +43,9 @@ void debug_ui_update()
 	imgui_sdl3_new_frame();
 	imgui_new_frame();
 	imgui_dock_space_over_viewport();
+
 	log_window_update();
+	objects_window_update();
 #endif
 }
 

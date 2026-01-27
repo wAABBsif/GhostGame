@@ -1,7 +1,8 @@
 #pragma once
 #include <stdint.h>
 
-#define TAG_DELETION			0
+#define TAG_ACTIVE				0
+#define TAG_DELETION			1
 
 #define TAG_COUNT				1
 #define TAG_GET_MASK(tag)		(1 << (tag))

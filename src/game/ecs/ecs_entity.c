@@ -19,6 +19,7 @@ entity_id entities_add()
 {
 	const entity_id result = s_entity_count;
 	s_entities[s_entity_count] = (ecs_entity){0};
+	entity_set_tag(s_entity_count, TAG_ACTIVE, true);
 	s_entity_count++;
 	return result;
 }
@@ -29,8 +30,14 @@ void entities_remove(const entity_id index)
 	memmove(&s_entities[index], &s_entities[index + 1], sizeof(ecs_entity) * (s_entity_count - index));
 }
 
+bool entity_exists(const entity_id index)
+{
+	return entity_get_tag(index, TAG_ACTIVE);
+}
+
 void entity_queue_remove(const entity_id index)
 {
+	entity_set_tag(index, TAG_ACTIVE, false);
 	entity_set_tag(index, TAG_DELETION, true);
 }
 

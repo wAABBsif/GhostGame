@@ -63,14 +63,24 @@
 #define IMGUI_WINDOW_FLAGS_MODAL                            (1 << 27)
 #define IMGUI_WINDOW_FLAGS_CHILD_MENU                       (1 << 28)
 
+#define IMGUI_SELECTABLE_FLAGS_NONE                         (0)
+#define IMGUI_SELECTABLE_FLAGS_NO_AUTO_CLOSE_POPUPS         (1 << 0)
+#define IMGUI_SELECTABLE_FLAGS_SPAN_ALL_COLUMNS             (1 << 1)
+#define IMGUI_SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK           (1 << 2)
+#define IMGUI_SELECTABLE_FLAGS_DISABLED                     (1 << 3)
+#define IMGUI_SELECTABLE_FLAGS_ALLOW_OVERLAP                (1 << 4)
+#define IMGUI_SELECTABLE_FLAGS_HIGHLIGHT                    (1 << 5)
+#define IMGUI_SELECTABLE_FLAGS_SELECT_ON_NAV                (1 << 6)
+
 #define IMGUI_COL_TEXT                                      0
 
 typedef uint32_t imgui_id;
+typedef int32_t imgui_col;
 typedef int32_t imgui_config_flags;
 typedef int32_t imgui_backend_flags;
 typedef int32_t imgui_window_flags;
 typedef int32_t imgui_child_flags;
-typedef int32_t imgui_col;
+typedef int32_t imgui_selectable_flags;
 
 typedef struct imgui_io
 {
@@ -216,13 +226,19 @@ C_FUNC void imgui_show_demo_window(bool *p_open);
 C_FUNC bool imgui_begin(const char *name, bool *p_open, imgui_window_flags flags);
 C_FUNC void imgui_end();
 
-C_FUNC void imgui_text(const char *fmt, ...);
-C_FUNC void imgui_bullet_text(const char *fmt, ...);
+C_FUNC vec2 imgui_get_content_region_avail();
 
 C_FUNC void imgui_push_style_color(imgui_col col, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 C_FUNC void imgui_pop_style_color(int count);
 
+C_FUNC void imgui_text(const char *fmt, ...);
+C_FUNC void imgui_bullet_text(const char *fmt, ...);
+
 C_FUNC bool imgui_begin_child(const char* str_id, vec2 size, imgui_child_flags child_flags, imgui_window_flags window_flags);
 C_FUNC void imgui_end_child();
+
+C_FUNC bool imgui_begin_listbox(const char *label, vec2 size);
+C_FUNC void imgui_end_listbox();
+C_FUNC bool imgui_selectable(const char *label, bool selected, imgui_selectable_flags flags, vec2 size);
 
 #endif

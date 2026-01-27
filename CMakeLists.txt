@@ -25,6 +25,8 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 			lib/imgui/backends/imgui_impl_sdl3.h
 			lib/imgui/backends/imgui_impl_opengl3.cpp
 			lib/imgui/backends/imgui_impl_opengl3.h
+			src/debug_ui/objects_window.c
+			src/debug_ui/objects_window.h
 	)
 endif ()
 

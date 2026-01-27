@@ -111,6 +111,22 @@ void imgui_end()
 	ImGui::End();
 }
 
+void imgui_push_style_color(const imgui_col col, const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a)
+{
+	ImGui::PushStyleColor(col, IM_COL32(r, g, b, a));
+}
+
+void imgui_pop_style_color(const int count)
+{
+	ImGui::PopStyleColor(count);
+}
+
+vec2 imgui_get_content_region_avail()
+{
+	const ImVec2 v = ImGui::GetContentRegionAvail();
+	return (vec2){v.x, v.y};
+}
+
 void imgui_text(const char *fmt, ...)
 {
 	va_list args;
@@ -140,14 +156,21 @@ void imgui_end_child()
 	ImGui::EndChild();
 }
 
-void imgui_push_style_color(const imgui_col col, const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a)
+bool imgui_begin_listbox(const char *label, vec2 size)
 {
-	ImGui::PushStyleColor(col, IM_COL32(r, g, b, a));
+	const auto im_size = ImVec2(size.x, size.y);
+	return ImGui::BeginListBox(label, im_size);
 }
 
-void imgui_pop_style_color(const int count)
+void imgui_end_listbox()
 {
-	ImGui::PopStyleColor(count);
+	ImGui::EndListBox();
+}
+
+bool imgui_selectable(const char *label, const bool selected, const imgui_selectable_flags flags, const vec2 size)
+{
+	const auto im_size = ImVec2(size.x, size.y);
+	return ImGui::Selectable(label, selected, flags, im_size);
 }
 
 #endif
