@@ -105,9 +105,9 @@ void component_remove(const component_type type, const entity_id index)
 	GAME_ASSERT(type < COMPONENT_TYPE_COUNT);
 	GAME_ASSERT(s_component_set[type].sparse[index] >= 0);
 
+	memmove(component_get(type, index), component_get(type, s_component_set[type].entity_count), COMPONENT_ENTRIES[type].size);
 	s_component_set[type].sparse[index] = -1;
 	s_component_set[type].entity_count--;
-	memmove(component_get(type, index), component_get(type, s_component_set[type].entity_count), COMPONENT_ENTRIES[type].size);
 }
 
 bool component_exists(const component_type type, const entity_id index)
@@ -126,9 +126,6 @@ void *component_get(const component_type type, const entity_id index)
 	GAME_ASSERT(type < COMPONENT_TYPE_COUNT);
 
 	const entity_id dense_idx = s_component_set[type].sparse[index];
-	if (!component_exists(type, index))
-		return NULL;
-
 	return s_component_set[type].dense + dense_idx * COMPONENT_ENTRIES[type].size;
 }
 

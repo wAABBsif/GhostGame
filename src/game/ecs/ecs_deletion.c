@@ -26,7 +26,7 @@ void entity_deletion_update()
 		{
 			if (component_exists(j, i))
 			{
-				component_remove(j, component_indices[j]);
+				component_remove(j, i);
 				component_indices[j]--;
 			}
 		}
