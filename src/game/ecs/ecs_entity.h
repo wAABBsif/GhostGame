@@ -6,7 +6,7 @@
 #include "ecs_tag.h"
 
 #define ECS_MAX_ENTITIES 4096
-#define ENTITY_ID_INVALID UINT16_MAX
+#define ENTITY_ID_INVALID (-1)
 
 typedef struct ecs_entity
 {

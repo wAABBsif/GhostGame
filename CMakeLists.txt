@@ -25,8 +25,6 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 			lib/imgui/backends/imgui_impl_sdl3.h
 			lib/imgui/backends/imgui_impl_opengl3.cpp
 			lib/imgui/backends/imgui_impl_opengl3.h
-			src/debug_ui/objects_window.c
-			src/debug_ui/objects_window.h
 	)
 endif ()
 
@@ -133,10 +131,12 @@ add_executable(GhostGame src/main.c
 		src/debug_ui/imgui_impl.h
 		src/debug_ui/debug_ui.c
 		src/debug_ui/debug_ui.h
-		${IMGUI_FILES}
+		src/core/game_assert.h
 		src/debug_ui/log_window.c
 		src/debug_ui/log_window.h
-		src/core/game_assert.h
+		src/debug_ui/objects_window.c
+		src/debug_ui/objects_window.h
+		${IMGUI_FILES}
 )
 
 include_directories(src)

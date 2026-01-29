@@ -6,7 +6,7 @@
 #include "imgui_impl.h"
 #include "game/ecs/ecs_entity.h"
 
-static entity_id selected_entity;
+static entity_id selected_entity = ENTITY_ID_INVALID;
 
 void objects_window_update()
 {
@@ -25,4 +25,9 @@ void objects_window_update()
 	}
 	imgui_end_listbox();
 	imgui_end();
+}
+
+entity_id objects_window_get_id()
+{
+	return selected_entity;
 }

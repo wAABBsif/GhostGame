@@ -2,6 +2,7 @@
 #include "imgui_impl.h"
 #include "log_window.h"
 #include "objects_window.h"
+#include "core/game_time.h"
 #include "core/logging.h"
 #include "gfx/gfx.h"
 #include "gfx/window.h"
