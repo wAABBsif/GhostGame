@@ -27,7 +27,7 @@ void objects_window_update()
 	imgui_end();
 }
 
-entity_id objects_window_get_id()
+entity_id objects_window_get_selection()
 {
 	return selected_entity;
 }

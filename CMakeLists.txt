@@ -136,6 +136,8 @@ add_executable(GhostGame src/main.c
 		src/debug_ui/log_window.h
 		src/debug_ui/objects_window.c
 		src/debug_ui/objects_window.h
+		src/debug_ui/inspector_window.c
+		src/debug_ui/inspector_window.h
 		${IMGUI_FILES}
 )
 

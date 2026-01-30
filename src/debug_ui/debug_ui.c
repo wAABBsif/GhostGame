@@ -1,5 +1,6 @@
 #include "debug_ui.h"
 #include "imgui_impl.h"
+#include "inspector_window.h"
 #include "log_window.h"
 #include "objects_window.h"
 #include "core/game_time.h"
@@ -47,6 +48,7 @@ void debug_ui_update()
 
 	log_window_update();
 	objects_window_update();
+	inspector_window_update();
 #endif
 }
 

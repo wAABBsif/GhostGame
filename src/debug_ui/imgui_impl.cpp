@@ -111,6 +111,12 @@ void imgui_end()
 	ImGui::End();
 }
 
+vec2 imgui_get_content_region_avail()
+{
+	const ImVec2 v = ImGui::GetContentRegionAvail();
+	return (vec2){v.x, v.y};
+}
+
 void imgui_push_style_color(const imgui_col col, const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a)
 {
 	ImGui::PushStyleColor(col, IM_COL32(r, g, b, a));
@@ -121,10 +127,70 @@ void imgui_pop_style_color(const int count)
 	ImGui::PopStyleColor(count);
 }
 
-vec2 imgui_get_content_region_avail()
+bool imgui_input_int(const char *label, int *v, const int step, const int step_fast, const imgui_input_text_flags flags)
 {
-	const ImVec2 v = ImGui::GetContentRegionAvail();
-	return (vec2){v.x, v.y};
+	return ImGui::InputInt(label, v, step, step_fast, flags);
+}
+
+bool imgui_slider_int(const char *label, int *v, const int v_min, const int v_max, const char *format, const imgui_slider_flags flags)
+{
+	return ImGui::SliderInt(label, v, v_min, v_max, format, flags);
+}
+
+bool imgui_drag_int(const char *label, int *v, const float v_speed, const int v_min, const int v_max, const char *format, const imgui_slider_flags flags)
+{
+	return ImGui::DragInt(label, v, v_speed, v_min, v_max, format, flags);
+}
+
+bool imgui_drag_vec2u8(const char *label, vec2u8 *v, const float v_speed, const int v_min, const int v_max, const char *format, const imgui_slider_flags flags)
+{
+	int temp[2] = {v->x, v->y};
+	const bool result = ImGui::DragInt2(label, temp, v_speed, v_min, v_max, format, flags);
+	v->x = temp[0];
+	v->y = temp[1];
+	return result;
+}
+
+bool imgui_drag_vec2u16(const char *label, vec2u16 *v, const float v_speed, const int v_min, const int v_max, const char *format, const imgui_slider_flags flags)
+{
+	int temp[2] = {v->x, v->y};
+	const bool result = ImGui::DragInt2(label, temp, v_speed, v_min, v_max, format, flags);
+	v->x = temp[0];
+	v->y = temp[1];
+	return result;
+}
+
+bool imgui_drag_float(const char *label, float *v, const float v_speed, const float v_min, const float v_max, const char *format, const imgui_slider_flags flags)
+{
+	return ImGui::DragFloat(label, v, v_speed, v_min, v_max, format, flags);
+}
+
+bool imgui_drag_vec2(const char *label, vec2 *v, const float v_speed, const float v_min, const float v_max, const char *format, const imgui_slider_flags flags)
+{
+	return ImGui::DragFloat2(label, reinterpret_cast<float*>(v), v_speed, v_min, v_max, format, flags);
+}
+
+bool imgui_slider_vec2(const char *label, vec2 *v, const float v_min, const float v_max, const char *format, const imgui_slider_flags flags)
+{
+	return ImGui::SliderFloat2(label, reinterpret_cast<float*>(v), v_min, v_max, format, flags);
+}
+
+bool imgui_color_edit(const char *label, color *c, const imgui_color_edit_flags flags)
+{
+	float v[4];
+	v[0] = c->r / 255.0f;
+	v[1] = c->g / 255.0f;
+	v[2] = c->b / 255.0f;
+	v[3] = c->a / 255.0f;
+
+	const bool result = ImGui::ColorEdit4(label, v, flags);
+	c->r = v[0] * 255;
+	c->g = v[1] * 255;
+	c->b = v[2] * 255;
+	c->a = v[3] * 255;
+
+
+	return result;
 }
 
 void imgui_text(const char *fmt, ...)
@@ -145,6 +211,21 @@ void imgui_bullet_text(const char *fmt, ...)
 	va_end(args);
 }
 
+bool imgui_checkbox(const char *label, bool *v)
+{
+	return ImGui::Checkbox(label, v);
+}
+
+bool imgui_begin_combo(const char *label, const char *preview_value, imgui_combo_flags flags)
+{
+	return ImGui::BeginCombo(label, preview_value, flags);
+}
+
+void imgui_end_combo()
+{
+	ImGui::EndCombo();
+}
+
 bool imgui_begin_child(const char* str_id, const vec2 size, const imgui_child_flags child_flags, const imgui_window_flags window_flags)
 {
 	const auto im_size = ImVec2(size.x, size.y);
@@ -154,6 +235,11 @@ bool imgui_begin_child(const char* str_id, const vec2 size, const imgui_child_fl
 void imgui_end_child()
 {
 	ImGui::EndChild();
+}
+
+bool imgui_collapsing_header(const char *label)
+{
+	return ImGui::CollapsingHeader(label);
 }
 
 bool imgui_begin_listbox(const char *label, vec2 size)
