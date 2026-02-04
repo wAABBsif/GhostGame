@@ -165,6 +165,10 @@ else ()
 	target_link_libraries(${PROJECT_NAME} OpenAL::OpenAL)
 endif ()
 
+find_package(Lua51 REQUIRED)
+include_directories(/usr/local/include ${LUA_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${LUA_LIBRARIES})
+
 target_link_libraries(${PROJECT_NAME} m)
 
 if (WIN32)
