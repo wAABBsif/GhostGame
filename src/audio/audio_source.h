@@ -13,6 +13,7 @@ void audio_sources_init(void);
 void audio_sources_terminate(void);
 
 source_id audio_source_create(void);
+bool audio_source_is_playing(source_id source);
 void audio_source_play(source_id source);
 void audio_source_stop(source_id source);
 

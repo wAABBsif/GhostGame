@@ -25,9 +25,7 @@ source_id audio_source_create(void)
 {
 	for (source_id i = 0; i < MAX_AUDIO_SOURCES; i++)
 	{
-		int32_t state;
-		alGetSourcei(s_sources[i], AL_SOURCE_STATE, &state);
-		if (state == AL_PLAYING)
+		if (audio_source_is_playing(i))
 			continue;
 
 		alSourcef(s_sources[i], AL_PITCH, 1.0f);
@@ -49,6 +47,13 @@ void audio_source_play(const source_id source)
 void audio_source_stop(const source_id source)
 {
 	alSourceStop(s_sources[source]);
+}
+
+bool audio_source_is_playing(const source_id source)
+{
+	int32_t state;
+	alGetSourcei(s_sources[source], AL_SOURCE_STATE, &state);
+	return state == AL_PLAYING;
 }
 
 void audio_source_set_sound(const source_id source, const sound_h sound)
