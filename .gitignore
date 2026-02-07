@@ -58,3 +58,4 @@ dkms.conf
 /lib/GLAD/
 /lib/SDL/
 /lib/SDL_mixer/
+/.clangd
