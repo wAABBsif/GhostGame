@@ -23,7 +23,6 @@
 #include "gfx/gfx.h"
 #include "input/input.h"
 #include "level/tile_atlas.h"
-#include "scripting/scripting.h"
 
 static void s_game_init(void);
 static void s_game_update(void);
@@ -62,7 +61,6 @@ static void s_game_init(void)
 	sdl_interface_init();
 	game_time_init();
 	input_init();
-    scripting_init();
 	gfx_init();
 	audio_init();
 	components_init();
@@ -128,7 +126,6 @@ static void s_game_update(void)
 
 static void s_game_terminate(void)
 {
-    scripting_terminate();
 	tile_atlas_clear();
 	components_terminate();
 	input_terminate();

@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stddef.h>
 
+#include "game/ecs/components/component_movement_properties.h"
+#include "game/ecs/ecs_component.h"
 #include "imgui_impl.h"
 #include "objects_window.h"
 #include "game/ecs/ecs_entity.h"
@@ -166,8 +168,6 @@ void inspector_component_update(const entity_id entity)
 {
 	if (!imgui_collapsing_header("Update"))
 		return;
-
-	imgui_text("Planning on removing this component and replacing it with scripting...");
 }
 
 void inspector_component_controller(const entity_id entity)
@@ -218,5 +218,13 @@ void inspector_component_movement_properties(const entity_id entity)
 	if (!imgui_collapsing_header("Movement Properties"))
 		return;
 
-	imgui_text("Planning on removing this component and replacing it with scripting...");
+	component_movement_properties *movement_properties = component_get(COMPONENT_TYPE_MOVEMENT_PROPERTIES, entity);
+
+    imgui_drag_float("Acceleration", &movement_properties->acceleration, 1, 0, 0, "%.0f", 0);
+    imgui_drag_float("Ground Friction", &movement_properties->ground_friction, 1, 0, 0, "%.0f", 0);
+    imgui_drag_float("Wall Friction", &movement_properties->wall_friction, 1, 0, 0, "%.0f", 0);
+    imgui_drag_float("Deceleration", &movement_properties->deceleration, 1, 0, 0, "%.0f", 0);
+    imgui_drag_float("Drag", &movement_properties->drag, 0.001f, 0, 0, "%.3f", 0);
+    imgui_drag_float("Top Speed", &movement_properties->top_speed, 1, 0, 0, "%.0f", 0);
+    imgui_drag_float("Max Speed", &movement_properties->max_speed, 1, 0, 0, "%.0f", 0);
 }
