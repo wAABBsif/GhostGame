@@ -167,9 +167,15 @@ else ()
 	target_link_libraries(${PROJECT_NAME} OpenAL::OpenAL)
 endif ()
 
-find_package(Lua51 REQUIRED)
-include_directories(/usr/local/include ${LUA_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} ${LUA_LIBRARIES})
+if (WIN32)
+	add_subdirectory(lib/lua-cmake)
+	include_directories(lib/lua-cmake/src)
+	target_link_libraries(${PROJECT_NAME} lua_library_static)
+else ()
+	find_package(Lua51 REQUIRED)
+	include_directories(/usr/local/include ${LUA_INCLUDE_DIR})
+	target_link_libraries(${PROJECT_NAME} ${LUA_LIBRARIES})
+endif ()
 
 target_link_libraries(${PROJECT_NAME} m)
 
