@@ -3,7 +3,6 @@
 
 #include "ecs/ecs_component.h"
 #include "ecs/ecs_entity.h"
-#include "scripting/scripting.h"
 #include "sdl_interface.h"
 #include "audio/audio.h"
 #include "core/game_assert.h"

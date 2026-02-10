@@ -1,4 +1,3 @@
-replace update with scripting
 hitbox/hurtbox
 health system
 program player and basic enemies
